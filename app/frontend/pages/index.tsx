@@ -15,12 +15,21 @@ const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
         <Box className={styles.MainContent}>
           <Autocomplete
             disablePortal
+            sx={{ width: "100%" }}
             options={data}
             getOptionLabel={(data: streamer) => data.streamerName}
+            renderOption={(props, data) => (
+              <Box {...props}>
+                <img src={data.avatarUrl}
+                     alt={`${data.streamerName}'s avatar`}
+                     className={styles.AutoCompleteAvatarImg}/>
+                {data.streamerName}
+                <br/>
+              </Box>
+            )}
             renderInput={(params) => {
               return (<TextField label={"스트리머 닉네임을 입력해주세요."}
                                  {...params}
-                                 className={styles.SearchText}
                                  variant={"filled"} />)
             }} />
         </Box>
