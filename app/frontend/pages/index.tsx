@@ -1,7 +1,8 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next';
-import { Box, TextField } from "@material-ui/core";
+import { Box, Button, TextField } from "@material-ui/core";
 import Autocomplete from '@mui/material/Autocomplete';
 import type { streamer } from './api/streamers';
+import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import styles from '../styles/Home.module.css';
 
 const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
@@ -34,7 +35,17 @@ const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
             }} />
         </Box>
       </main>
-      <footer></footer>
+      <footer className={styles.Footer}>
+        <Button variant={"text"}
+                startIcon={<SupportAgentIcon />}
+                size={"large"}
+                className={styles.FooterButtonToServiceCenter}>
+          고객센터
+        </Button>
+        <div className={styles.FooterCopyRights}>
+          &copy; 2021 <a href={"https://github.com/team-irc"}>team-irc</a> all rights reserved.
+        </div>
+      </footer>
     </>
   );
 }

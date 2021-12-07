@@ -33,3 +33,25 @@
   height: 2rem;
   vertical-align: center;
 }
+
+.Footer {
+  width: 100vw;
+  height: 5rem;
+  background-color: var(--black);
+  position: relative;
+}
+
+.FooterButtonToServiceCenter {
+  color: var(--background-white) !important;
+  position: absolute !important;
+  right: 0;
+  height: 5rem !important;
+}
+
+.FooterCopyRights {
+  color: var(--background-white);
+  position: absolute;
+  bottom: 0;
+  padding-left: 1rem;
+  line-height: 5rem;
+}
