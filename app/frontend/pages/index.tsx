@@ -10,6 +10,7 @@ const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
       <main className={styles.Home}>
         <Box className={styles.MainContent}>
           <h1 className={styles.MainLogo}>트채통</h1>
+          <h2 className={styles.SubLogo}> | 트위치 채팅 통계 시스템</h2>
         </Box>
         <Box className={styles.MainContent}>
           <Autocomplete

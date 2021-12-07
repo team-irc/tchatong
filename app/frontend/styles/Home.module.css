@@ -14,9 +14,16 @@
 
 .MainLogo {
   color: var(--purple1);
-  margin: 0 auto 0 0;
+  margin: 0;
   font-size: clamp(2.625rem, 1.2857rem + 3.5714vw, 4rem);
   height: 6rem;
+  display: inline;
+}
+
+.SubLogo {
+  color: var(--purple1);
+  display: inline;
+  font-size: calc(clamp(2.625rem, 1.2857rem + 3.5714vw, 4rem) / 2);
 }
 
 .SearchText {
