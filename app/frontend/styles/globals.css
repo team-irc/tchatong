@@ -1,9 +1,21 @@
+:root {
+  --background-white: #FFFFFB;
+  --line: #D4D4D4;
+  --purple1: #8958D8;
+  --purple2: #A672F6;
+  --purple3: #C48DFF;
+  --purple4: #E2A9FF;
+  --purple5: #FFC6FF;
+}
+
 html,
 body {
   padding: 0;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
     Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  background-color: var(--background-white);
+  font-size: 18px;
 }
 
 a {
