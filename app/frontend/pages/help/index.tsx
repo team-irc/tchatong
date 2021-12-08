@@ -63,7 +63,7 @@ const Help: NextPage = () => {
           value={value}
           onChange={handleChange}
           aria-label="Vertical tabs example"
-          sx={{ borderRight: 1, borderColor: "divider" }}
+          sx={{ borderRight: 1, borderColor: "divider", width: "10rem" }}
         >
           <Tab label="FAQ" {...a11yProps(0)} />
           <Tab label="문의하기" {...a11yProps(1)} />
