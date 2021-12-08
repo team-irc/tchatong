@@ -4,7 +4,9 @@
   display: block;
   width: 100vw;
   height: 4rem;
+  background-color: var(--background-white);
   border-bottom: 1px solid var(--gray);
+  z-index: 100;
 }
 
 .Logo {
