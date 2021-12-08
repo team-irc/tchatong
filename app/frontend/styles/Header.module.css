@@ -1,0 +1,23 @@
+.Header {
+  position: fixed;
+  top: 0;
+  display: block;
+  width: 100vw;
+  height: 4rem;
+  border-bottom: 1px solid var(--gray);
+}
+
+.Logo {
+  color: var(--purple1) !important;
+  object-fit: fill !important;
+  height: 4rem !important;
+  font-size: 2rem !important;
+  margin-left: 1rem !important;
+}
+
+.AutoCompleteAvatarImg {
+  border-radius: 50%;
+  margin-right: 1rem;
+  width: 2rem;
+  height: 2rem;
+}

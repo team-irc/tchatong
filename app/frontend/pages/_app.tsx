@@ -1,6 +1,8 @@
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
 import Head from "next/head";
+import Footer from "../layout/footer";
+import Header from "../layout/header";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -9,7 +11,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>트채통 | 트위치 채팅 통계 시스템</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <Component {...pageProps} />
+      <Header>
+        <Footer>
+          <Component {...pageProps} />
+        </Footer>
+      </Header>
     </>
   );
 }
