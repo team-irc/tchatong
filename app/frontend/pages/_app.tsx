@@ -11,11 +11,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <title>트채통 | 트위치 채팅 통계 시스템</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </Head>
-      <Header>
-        <Footer>
-          <Component {...pageProps} />
-        </Footer>
-      </Header>
+      <Footer>
+        <Component {...pageProps} />
+      </Footer>
     </>
   );
 }
