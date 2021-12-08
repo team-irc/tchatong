@@ -22,3 +22,31 @@ services:
     entrypoint: >
       sh -c "npm ci
       && npm run start:dev"
+  crawler:
+    container_name: crawler
+    build:
+      context: ./app/crawler
+      dockerfile: Dockerfile
+    env_file:
+      - docker.env
+    volumes:
+      - ./crawler:/crawler
+    working_dir: /crawler
+    entrypoint: >
+      sh -c "make re && ./twicyrc"
+    depends_on:
+      - db
+  db:
+    container_name: db
+    build:
+      context: ./app/db
+      dockerfile: Dockerfile
+    volumes:
+      - ./db/data:/var/lib/mysql
+    ports:
+      - 3306:3306
+    working_dir: /
+    env_file:
+      - docker.env
+    entrypoint: >
+      sh -c "mysqld"
