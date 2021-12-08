@@ -30,7 +30,7 @@ services:
     env_file:
       - docker.env
     volumes:
-      - ./crawler:/crawler
+      - ./app/crawler:/crawler
     working_dir: /crawler
     entrypoint: >
       sh -c "make re && ./twicyrc"
@@ -42,7 +42,7 @@ services:
       context: ./app/db
       dockerfile: Dockerfile
     volumes:
-      - ./db/data:/var/lib/mysql
+      - ./app/db/data:/var/lib/mysql
     ports:
       - 3306:3306
     working_dir: /
