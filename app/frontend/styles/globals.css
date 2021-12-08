@@ -1,12 +1,12 @@
 :root {
-  --background-white: #FFFFFB;
-  --line: #D4D4D4;
-  --purple1: #8958D8;
-  --purple2: #A672F6;
-  --purple3: #C48DFF;
-  --purple4: #E2A9FF;
-  --purple5: #FFC6FF;
-  --gray: #E8E8E8;
+  --background-white: #fffffb;
+  --line: #d4d4d4;
+  --purple1: #8958d8;
+  --purple2: #a672f6;
+  --purple3: #c48dff;
+  --purple4: #e2a9ff;
+  --purple5: #ffc6ff;
+  --gray: #e8e8e8;
   --black: #232629;
 }
 

@@ -1,10 +1,10 @@
-import * as React from 'react';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+import * as React from "react";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import { NextPage } from "next";
-import Header from '../../layout/header';
+import Header from "../../layout/header";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -35,7 +35,7 @@ function TabPanel(props: TabPanelProps) {
 function a11yProps(index: number) {
   return {
     id: `vertical-tab-${index}`,
-    'aria-controls': `vertical-tabpanel-${index}`,
+    "aria-controls": `vertical-tabpanel-${index}`,
   };
 }
 
@@ -49,7 +49,13 @@ const Help: NextPage = () => {
   return (
     <Header>
       <Box
-        sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: 224 }}
+        sx={{
+          flexGrow: 1,
+          bgcolor: "background.paper",
+          display: "flex",
+          height: "calc(100vh - 4rem)",
+          marginTop: "4rem",
+        }}
       >
         <Tabs
           orientation="vertical"
@@ -57,15 +63,10 @@ const Help: NextPage = () => {
           value={value}
           onChange={handleChange}
           aria-label="Vertical tabs example"
-          sx={{ borderRight: 1, borderColor: 'divider' }}
+          sx={{ borderRight: 1, borderColor: "divider" }}
         >
-          <Tab label="Item One" {...a11yProps(0)} />
-          <Tab label="Item Two" {...a11yProps(1)} />
-          <Tab label="Item Three" {...a11yProps(2)} />
-          <Tab label="Item Four" {...a11yProps(3)} />
-          <Tab label="Item Five" {...a11yProps(4)} />
-          <Tab label="Item Six" {...a11yProps(5)} />
-          <Tab label="Item Seven" {...a11yProps(6)} />
+          <Tab label="FAQ" {...a11yProps(0)} />
+          <Tab label="문의하기" {...a11yProps(1)} />
         </Tabs>
         <TabPanel value={value} index={0}>
           Item One
@@ -73,24 +74,9 @@ const Help: NextPage = () => {
         <TabPanel value={value} index={1}>
           Item Two
         </TabPanel>
-        <TabPanel value={value} index={2}>
-          Item Three
-        </TabPanel>
-        <TabPanel value={value} index={3}>
-          Item Four
-        </TabPanel>
-        <TabPanel value={value} index={4}>
-          Item Five
-        </TabPanel>
-        <TabPanel value={value} index={5}>
-          Item Six
-        </TabPanel>
-        <TabPanel value={value} index={6}>
-          Item Seven
-        </TabPanel>
       </Box>
     </Header>
   );
-}
+};
 
 export default Help;
