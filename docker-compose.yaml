@@ -19,6 +19,8 @@ services:
       - ./app/backend:/backend
     ports:
       - "3000:3000"
+    env_file:
+      - docker.env
     entrypoint: >
       sh -c "npm ci
       && npm run start:dev"
