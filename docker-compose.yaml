@@ -50,3 +50,15 @@ services:
       - docker.env
     entrypoint: >
       sh -c "mysqld"
+  analyzer:
+    container_name: analyzer
+    build:
+      context: ./app/analyzer
+      dockerfile: Dockerfile
+    volumes:
+      - ./app/analyzer:/analyzer
+    working_dir: /analyzer/srcs
+    env_file:
+      - docker.env
+    entrypoint: >
+      sh -c "python3 main.py"
