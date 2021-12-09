@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { StatisticsResolver } from './statistics.resolver';
+import { ChatfireResolver } from './chatfire.resolver';
 
-describe('StatisticsResolver', () => {
-  let resolver: StatisticsResolver;
+describe('ChatfireResolver', () => {
+  let resolver: ChatfireResolver;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [StatisticsResolver],
+      providers: [ChatfireResolver],
     }).compile();
 
-    resolver = module.get<StatisticsResolver>(StatisticsResolver);
+    resolver = module.get<ChatfireResolver>(ChatfireResolver);
   });
 
   it('should be defined', () => {
