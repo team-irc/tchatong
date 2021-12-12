@@ -1,6 +1,20 @@
 .Frame {
   width: 80%;
-  height: 100vh;
+  height: calc(100vh - 4rem);
   margin: 4rem auto auto auto;
   padding: 1rem;
+}
+
+.StreamerImg {
+  border-radius: 50%;
+  vertical-align: top;
+  width: 10rem;
+  height: 10rem;
+  display: inline-block;
+}
+
+.StreamerInfoText {
+  display: inline-flex;
+  flex-direction: column;
+  margin-top: 1rem;
 }
