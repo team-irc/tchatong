@@ -11,9 +11,6 @@ export class ChatfireService {
   ) {}
 
   async getStreamerId(): Promise<Chatfire[]> {
-    console.log('getStreamer id');
-    const res = this.chatFireRepository.find();
-    console.log('res: ' + res);
     return this.chatFireRepository.find();
   }
 }

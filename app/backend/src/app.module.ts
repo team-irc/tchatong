@@ -5,6 +5,7 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ChatfireModule } from './chatfire/chatfire.module';
+import { StreamerModule } from './streamer/streamer.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ChatfireModule } from './chatfire/chatfire.module';
       synchronize: false,
     }),
     ChatfireModule,
+    StreamerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
