@@ -41,10 +41,10 @@
 
 .RecentlyUsedWord {
   margin: auto 0 auto auto;
+}
+
+.CardList {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  /*border-radius: 1rem;*/
-  /*background-color: var(--purple1);*/
-  /*color: var(--background-white);*/
+  justify-content: space-between;
+  padding: 2rem;
 }

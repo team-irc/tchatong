@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useRef } from "react";
+import { CSSProperties, FC, useEffect, useRef } from "react";
 import { Chart, registerables } from "chart.js";
 import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
@@ -25,6 +25,34 @@ for (let i = 1; i < 25; ++i) {
 }
 
 Object.freeze(arr);
+
+const StatisticsCard: FC<{
+  head: string;
+  body: string;
+  className?: string;
+  style?: CSSProperties;
+}> = ({ head, body, className, style }): JSX.Element => {
+  return (
+    <Card
+      className={className}
+      style={Object.assign(
+        { display: "flex", flexDirection: "column", alignItems: "center" },
+        style
+      )}
+    >
+      <span
+        style={{
+          padding: "1.2rem",
+          background: "var(--purple1)",
+          color: "var(--background-white)",
+        }}
+      >
+        {head}
+      </span>
+      <span style={{ padding: "1rem", fontSize: "2rem" }}>{body}</span>
+    </Card>
+  );
+};
 
 const Statistics: NextPage = (): JSX.Element => {
   const router = useRouter();
@@ -91,20 +119,20 @@ const Statistics: NextPage = (): JSX.Element => {
               마지막 방송: 30분 전
             </span>
           </span>
-          <Card className={styles.RecentlyUsedWord}>
-            <span
-              style={{
-                padding: "1rem",
-                background: "var(--purple1)",
-                color: "var(--background-white)",
-              }}
-            >
-              최근 가장 많이 쓰인 단어
-            </span>
-            <span style={{ padding: "1rem", fontSize: "2rem" }}>나락</span>
-          </Card>
+          <StatisticsCard
+            className={styles.RecentlyUsedWord}
+            head="최근 가장 많이 쓰인 단어"
+            body="나락"
+          />
         </Box>
-        <canvas id="chart" width="100%" height="30rem" />
+        <Box>
+          <canvas id="chart" width="100%" height="30rem" />
+          <Box className={styles.CardList}>
+            <StatisticsCard head="분당 평균 채팅 화력" body="분당 15회" />
+            <StatisticsCard head="분당 최고 채팅 화력" body="분당 30회" />
+            <StatisticsCard head="분당 최저 채팅 화력" body="분당 0회" />
+          </Box>
+        </Box>
       </div>
     </Header>
   );
