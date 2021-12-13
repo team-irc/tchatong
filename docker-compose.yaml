@@ -1,29 +1,29 @@
 version: "3.3"
 services:
-  frontend:
-    image: node:17-alpine3.12
-    container_name: frontend
-    working_dir: /frontend
-    volumes:
-      - ./app/frontend:/frontend
-    ports:
-      - "80:80"
-    entrypoint: >
-      sh -c "npm ci
-      && npm run dev"
-  backend:
-    image: node:17-alpine3.12
-    container_name: backend
-    working_dir: /backend
-    volumes:
-      - ./app/backend:/backend
-    ports:
-      - "3000:3000"
-    env_file:
-      - docker.env
-    entrypoint: >
-      sh -c "npm ci
-      && npm run start:dev"
+  # frontend:
+  #   image: node:17-alpine3.12
+  #   container_name: frontend
+  #   working_dir: /frontend
+  #   volumes:
+  #     - ./app/frontend:/frontend
+  #   ports:
+  #     - "80:80"
+  #   entrypoint: >
+  #     sh -c "npm ci
+  #     && npm run dev"
+  # backend:
+  #   image: node:17-alpine3.12
+  #   container_name: backend
+  #   working_dir: /backend
+  #   volumes:
+  #     - ./app/backend:/backend
+  #   ports:
+  #     - "3000:3000"
+  #   env_file:
+  #     - docker.env
+  #   entrypoint: >
+  #     sh -c "npm ci
+  #     && npm run start:dev"
   crawler:
     container_name: crawler
     build:
@@ -46,12 +46,13 @@ services:
     volumes:
       - ./app/db/data:/var/lib/mysql
     ports:
-      - 3306:3306
+      - 4406:3306
     working_dir: /
     env_file:
       - docker.env
     entrypoint: >
       sh -c "./dbconfig/mysqld.sh"
+# sh -c "while true; do sleep 1; done;"
   analyzer:
     container_name: analyzer
     build:

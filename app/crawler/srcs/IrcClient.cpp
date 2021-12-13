@@ -35,6 +35,9 @@ void		IrcClient::connect_db()
 
 void		IrcClient::init_db()
 {
+	_stmt->execute("USE twchat;");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'zilioner', '침착맨', 'https://static-cdn.jtvnw.net/jtv_user_pictures/89e29e2e-f165-40e6-bc0c-d42205935216-profile_image-70x70.png');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'handongsuk', '한동숙', 'https://static-cdn.jtvnw.net/jtv_user_pictures/c5a2baa2-74ed-4b72-b047-8326572c9bfa-profile_image-70x70.png');");
 	// _stmt->execute("CREATE DATABASE IF NOT EXISTS twchat;");
 	// _stmt->execute("USE twchat;");
 	// _stmt->execute("CREATE TABLE IF NOT EXISTS streamer(\
