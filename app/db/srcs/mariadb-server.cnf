@@ -5,6 +5,10 @@
 # this is read by the standalone daemon and embedded servers
 [server]
 
+[client]
+default-character-set = utf8mb4
+loose-default-character-set = utf8mb4
+
 # this is only for the mysqld standalone daemon
 [mysqld]
 user=root
@@ -13,7 +17,9 @@ datadir=/var/lib/mysql
 port=3306
 log-bin=/var/lib/mysql/mysl-bin
 bind-address=0.0.0.0
+character-set-client-handshake = FALSE
 character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
 #skip-name-resolve
 #skip-grant-tables
                          
