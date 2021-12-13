@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { NextPage } from "next";
 import Header from "../../layout/header";
+import Faq from "../../components/pages/help/faq";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -76,7 +77,7 @@ const Help: NextPage = () => {
           <Tab label="문의하기" {...a11yProps(1)} />
         </Tabs>
         <TabPanel value={value} index={0}>
-          Item One
+          <Faq />
         </TabPanel>
         <TabPanel value={value} index={1}>
           Item Two
