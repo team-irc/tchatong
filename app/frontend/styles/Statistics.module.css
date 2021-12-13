@@ -1,0 +1,50 @@
+.Frame {
+  width: 80%;
+  height: calc(100vh - 4rem);
+  margin: 4rem auto auto auto;
+  padding: 1rem;
+}
+
+.StreamerInfo {
+  display: flex;
+}
+
+.StreamerImg {
+  border-radius: 50%;
+  vertical-align: top;
+  width: 10rem;
+  height: 10rem;
+  display: inline-block;
+}
+
+.StreamerInfoText {
+  display: inline-flex;
+  flex-direction: column;
+  margin-top: 1rem;
+}
+
+.StreamerNick {
+  font-size: 2rem;
+  color: var(--purple1);
+}
+
+.StreamerFollowers {
+  font-size: 1rem;
+  color: var(--purple1);
+}
+
+.StreamerLastStreaming {
+  font-size: 1rem;
+  color: var(--purple1);
+  opacity: .5;
+}
+
+.RecentlyUsedWord {
+  margin: auto 0 auto auto;
+}
+
+.CardList {
+  display: flex;
+  justify-content: space-between;
+  padding: 2rem;
+}

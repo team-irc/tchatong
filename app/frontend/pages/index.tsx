@@ -1,11 +1,22 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
+import { NextRouter, useRouter } from "next/router";
 import { Box, TextField } from "@material-ui/core";
+import { useState, KeyboardEvent } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import type { streamer } from "./api/streamers";
 import styles from "../styles/Home.module.css";
-import Footer from "../layout/footer";
 
 const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
+  const router: NextRouter = useRouter();
+  const [textToSearch, setTextToSearch] = useState<string>("");
+
+  const searchBarKeyDown = (e: any) => {
+    console.log("keydown");
+    if (e.code === "Enter" && e.target.value) {
+      router.push(`/${e.target.value}`);
+    }
+  };
+
   return (
     <>
       <main className={styles.Home}>
@@ -18,6 +29,8 @@ const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
             disablePortal
             sx={{ width: "100%" }}
             options={data}
+            inputValue={textToSearch}
+            onInputChange={(_, value) => setTextToSearch(value)}
             getOptionLabel={(data: streamer) => data.streamerName}
             renderOption={(props, data) => (
               <Box {...props}>
@@ -35,6 +48,7 @@ const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
                 <TextField
                   label={"스트리머 닉네임을 입력해주세요."}
                   {...params}
+                  onKeyDown={searchBarKeyDown}
                   variant={"filled"}
                 />
               );
