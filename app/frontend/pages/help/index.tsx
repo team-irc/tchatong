@@ -63,7 +63,14 @@ const Help: NextPage = () => {
           value={value}
           onChange={handleChange}
           aria-label="Vertical tabs example"
-          sx={{ borderRight: 1, borderColor: "divider", width: "10rem" }}
+          TabIndicatorProps={{ style: { background: "var(--purple1)" } }}
+          sx={{
+            borderRight: 1,
+            borderColor: "divider",
+            width: "10rem",
+            color: "rgba(137,88,216,0.5)",
+            "& .Mui-selected": { color: "#8958d8 !important" },
+          }}
         >
           <Tab label="FAQ" {...a11yProps(0)} />
           <Tab label="문의하기" {...a11yProps(1)} />
