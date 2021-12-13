@@ -1,7 +1,8 @@
 import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import { NextRouter, useRouter } from "next/router";
 import { Box, TextField } from "@material-ui/core";
-import { useState, KeyboardEvent } from "react";
+import { useState } from "react";
+import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete from "@mui/material/Autocomplete";
 import type { streamer } from "./api/streamers";
 import styles from "../styles/Home.module.css";
@@ -9,6 +10,10 @@ import styles from "../styles/Home.module.css";
 const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
   const router: NextRouter = useRouter();
   const [textToSearch, setTextToSearch] = useState<string>("");
+
+  const searchButtonOnClick = () => {
+    router.push(`/${textToSearch}`);
+  };
 
   const searchBarKeyDown = (e: any) => {
     console.log("keydown");
@@ -27,6 +32,7 @@ const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
         <Box className={styles.MainContent}>
           <Autocomplete
             disablePortal
+            freeSolo
             sx={{ width: "100%" }}
             options={data}
             inputValue={textToSearch}
@@ -53,6 +59,15 @@ const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
                 />
               );
             }}
+          />
+          <SearchIcon
+            fontSize="large"
+            style={{
+              cursor: "pointer",
+              transform: "scale(1.5)",
+              marginLeft: "1rem",
+            }}
+            onClick={searchButtonOnClick}
           />
         </Box>
       </main>

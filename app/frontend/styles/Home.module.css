@@ -9,7 +9,9 @@
 }
 
 .MainContent {
+  display: flex;
   width: 65%;
+  align-items: center;
 }
 
 .MainLogo {

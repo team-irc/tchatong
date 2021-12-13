@@ -2,6 +2,7 @@ import { FC, useEffect, useState } from "react";
 import Link from "next/link";
 import { Button, Box, TextField } from "@material-ui/core";
 import Autocomplete from "@mui/material/Autocomplete";
+import SearchIcon from "@mui/icons-material/Search";
 import type { streamer } from "../pages/api/streamers";
 import styles from "../styles/Header.module.css";
 import { useRouter, NextRouter } from "next/router";
@@ -10,6 +11,10 @@ const Header: FC = ({ children }): JSX.Element => {
   const router: NextRouter = useRouter();
   const [streamerList, setStreamerList] = useState<streamer[]>([]);
   const [textToSearch, setTextToSearch] = useState<string>("");
+
+  const searchButtonOnClick = () => {
+    router.push(`/${textToSearch}`);
+  };
 
   const searchBarKeyDown = (e: any) => {
     console.log("keydown");
@@ -37,13 +42,8 @@ const Header: FC = ({ children }): JSX.Element => {
         </Link>
         <Autocomplete
           disablePortal
-          sx={{
-            position: "absolute",
-            right: 0,
-            top: 0,
-            padding: "5px",
-            width: "20%",
-          }}
+          freeSolo
+          className={styles.SearchBar}
           options={streamerList}
           inputValue={textToSearch}
           onInputChange={(_, value) => setTextToSearch(value)}
@@ -69,6 +69,15 @@ const Header: FC = ({ children }): JSX.Element => {
               />
             );
           }}
+        />
+        <SearchIcon
+          fontSize="large"
+          style={{
+            cursor: "pointer",
+            transform: "scale(1.5)",
+            marginLeft: "0.2rem",
+          }}
+          onClick={searchButtonOnClick}
         />
       </header>
       {children}
