@@ -36,8 +36,6 @@ services:
     working_dir: /crawler
     entrypoint: >
       sh -c "make re && ./twicyrc"
-    depends_on:
-      - db
   db:
     container_name: db
     build:
@@ -52,7 +50,6 @@ services:
       - docker.env
     entrypoint: >
       sh -c "./dbconfig/mysqld.sh"
-# sh -c "while true; do sleep 1; done;"
   analyzer:
     container_name: analyzer
     build:
@@ -64,7 +61,5 @@ services:
     env_file:
       - docker.env
     entrypoint: >
-      sh -c "python3 main.py"
-    depends_on:
-      - db
+      sh -c "python3 -u main.py"
 # while true; do sleep 1; done;

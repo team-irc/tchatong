@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS chatlog(
 );
 
 CREATE TABLE IF NOT EXISTS chatfire(
+  `id`            int          NOT NULL auto_increment PRIMARY KEY,
   `streamer_id`   VARCHAR(32),
   `date`          TIMESTAMP    NOT NULL,
   `count`         int,

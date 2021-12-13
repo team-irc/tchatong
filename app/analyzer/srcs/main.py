@@ -6,6 +6,9 @@ import time
 import os
 import threading
 
+DB_CONNECTION_RETRY_PERIOD: int = 10
+CHATFIRE_UPDATE_PERIOD: int = 30
+
 def get_last_date_from_chatfire(cursor: Cursor) -> tuple:
 	sql: str
 	
@@ -13,24 +16,27 @@ def get_last_date_from_chatfire(cursor: Cursor) -> tuple:
 	cursor.execute(sql)
 	return cursor.fetchall()
 
-def delete_last_chatfire(cursor: Cursor, res: tuple):
+def delete_last_chatfire(cursor: Cursor, res):
 	sql: str
 
-	sql = f"DELETE FROM chatlog WHERE (date = \'{res[0]['date']}\');"
-	print("DELETE SQL: ", sql)
+	sql = f"DELETE FROM chatfire WHERE (date = \'{res[0]['date']}\');"
+	# print("DELETE SQL:", sql)
 	cursor.execute(sql)
+	# print("commit start")
 	db.commit()
 	return 
 
-def get_chatlog_after_last_date(cursor: Cursor, res: tuple) -> tuple:
+def get_chatlog_after_last_date(cursor: Cursor, res) -> tuple:
 	sql: str
 
+	# print("get_chatlog_after_last_date start")
+	# print(res)
 	sql = f"select * from chatlog where (date >= \'{res[0]['date']}\');"
+	# print("execute sql")
 	cursor.execute(sql)
+	# print("fetchall")
 	res = cursor.fetchall()
-	print(res)
-	print(type(res))
-	print('get_chatlog end')
+	# print('get_chatlog end')
 	return res
 
 def save_chatfire_from_chatlog(cursor: Cursor, res3: tuple):
@@ -39,63 +45,72 @@ def save_chatfire_from_chatlog(cursor: Cursor, res3: tuple):
 	chatfire: pd.DataFrame
 	sql: str
 
-	print('save_chatfire_from_chatlog in')
-	print('res')
+	# print('save_chatfire_from_chatlog in')
+	# print('res')
 	# print(res)
 	df = pd.DataFrame(res3)
 	chatlog = df.set_index('date', drop=True) # Change date column to index for resample
 	chatfire = chatlog.groupby('streamer_id').resample('1T').count().content.reset_index(level=['streamer_id', 'date']).rename(columns = {'content': 'count'})
-	print('chatfire')
-	print(chatfire)
+	# print('chatfire')
+	# print(chatfire)
 	sql = f"INSERT INTO chatfire VALUES(default, %s, %s, %s);"
+	# print('execuetmany start')
 	cursor.executemany(sql, chatfire.values.tolist())
+	# print('db commit start')
+	db.commit()
+	# print("db commit success")
 
 
 def save_chatfire_from_last_date():
 	try:
-		print('while in')
+		# print('while in')
 		res = get_last_date_from_chatfire(cursor)
-		print('get last date', res)
+		# print('get last date', res)
 		if (res):
 			delete_last_chatfire(cursor, res)
 			res = get_chatlog_after_last_date(cursor, res)
-			print('chatlog after last date')
+			# print('chatlog after last date')
 			if (res):
-				print('if in')
+				# print('if in')
 				save_chatfire_from_chatlog(cursor, res)
-				db.commit()
-				print("db commit success")
 		else:
-			print('else in')
+			# print('else in')
 			sql = f"select * from chatlog;"
 			cursor.execute(sql)
-			print("execute success")
+			# print("execute success")
 			res2 = cursor.fetchmany(100)
 			while (res2):
-				print("fetch sucess")
+				# print("fetch sucess")
 				save_chatfire_from_chatlog(cursor, res2)
-				db.commit()
-				print('commit success')
 				res2 = cursor.fetchmany(100)
 
 	except:
-		print('[-] save_chatfire error')
+		# print('[-] save_chatfire error')
 		exit(1)
 
-def	main():
-	print("twitch-chat-analyzer start")
+def connect_db():
 	global db
-	db = pymysql.connect(
-		user=os.getenv('DB_USER'),
-		passwd=os.getenv('DB_PASSWORD'),
-		host=os.getenv('DB_HOST'),
-		db=os.getenv('DB_NAME'),
-		charset='utf8mb4'
-	)
-	print("db connected.")
 	global cursor 
-	cursor = db.cursor(pymysql.cursors.DictCursor)
-	print("cursor created")
+	try:
+		db = pymysql.connect(
+			user=os.getenv('DB_USER'),
+			passwd=os.getenv('DB_PASSWORD'),
+			host=os.getenv('DB_HOST'),
+			db=os.getenv('DB_NAME'),
+			charset='utf8mb4'
+		)
+		print("db connected")
+		cursor = db.cursor(pymysql.cursors.DictCursor)
+		# print("cursor created")
+	except:
+		print("[-] RETRY DB CONNECTION...")
+		time.sleep(DB_CONNECTION_RETRY_PERIOD)
+		connect_db()
+
+def	main():
+	# print("twitch-chat-analyzer start")
+
+	connect_db()
 
 	# 1분당 채팅수 기록
 	# chatfire ('streamer_id', 'date', 'count')
@@ -105,7 +120,7 @@ def	main():
 	# 	 - 중복 방지
 	while (True):
 		save_chatfire_from_last_date()
-		time.sleep(60)
+		time.sleep(CHATFIRE_UPDATE_PERIOD)
 
 if __name__ == '__main__':
 	main()
