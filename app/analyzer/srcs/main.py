@@ -65,7 +65,7 @@ def	main():
 		passwd=os.getenv('DB_PASSWORD'),
 		host=os.getenv('DB_HOST'),
 		db=os.getenv('DB_NAME'),
-		charset='utf8'
+		charset='utf8mb4'
 	)
 	global cursor 
 	cursor = db.cursor(pymysql.cursors.DictCursor)
@@ -76,12 +76,6 @@ def	main():
 	# 1. 실시간 기록 (매 1분마다)
 	# 2. 프로그램이 꺼져있던 시간동안 기록하지 못했던것 기록 (켜질때 한번만)
 	# 	 - 중복 방지
-	sql = "CREATE TABLE IF NOT EXISTS chatfire(\
-					streamer_id VARCHAR(32) NOT NULL,\
-					date TIMESTAMP NOT NULL,\
-					count int);"
-	cursor.execute(sql)
-	cursor.fetchall()
 	save_chatfire_from_last_date()
 
 if __name__ == '__main__':
