@@ -5,6 +5,10 @@
   padding: 1rem;
 }
 
+.StreamerInfo {
+  display: flex;
+}
+
 .StreamerImg {
   border-radius: 50%;
   vertical-align: top;
@@ -17,4 +21,30 @@
   display: inline-flex;
   flex-direction: column;
   margin-top: 1rem;
+}
+
+.StreamerNick {
+  font-size: 2rem;
+  color: var(--purple1);
+}
+
+.StreamerFollowers {
+  font-size: 1rem;
+  color: var(--purple1);
+}
+
+.StreamerLastStreaming {
+  font-size: 1rem;
+  color: var(--purple1);
+  opacity: .5;
+}
+
+.RecentlyUsedWord {
+  margin: auto 0 auto auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /*border-radius: 1rem;*/
+  /*background-color: var(--purple1);*/
+  /*color: var(--background-white);*/
 }
