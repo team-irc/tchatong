@@ -15,7 +15,7 @@ datadir=/var/lib/mysql
 port=3306
 log-bin=/var/lib/mysql/mysl-bin
 bind-address=0.0.0.0
-character-set-server=utf8
+character-set-server=utf8mb4
                          
 # Galera-related settings
 [galera]            

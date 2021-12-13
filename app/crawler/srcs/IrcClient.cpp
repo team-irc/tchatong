@@ -35,17 +35,17 @@ void		IrcClient::connect_db()
 
 void		IrcClient::init_db()
 {
-	_stmt->execute("CREATE DATABASE IF NOT EXISTS twchat;");
-	_stmt->execute("USE twchat;");
-	_stmt->execute("CREATE TABLE IF NOT EXISTS streamer(\
-									id int NOT NULL auto_increment primary key,\
-									streamer_id VARCHAR(32) NOT NULL);");
-	_stmt->execute("CREATE TABLE IF NOT EXISTS chatlog(\
-									streamer_id VARCHAR(32) NOT NULL,\
-									date TIMESTAMP DEFAULT NOW(),\
-									user_id VARCHAR(32) NOT NULL,\
-									content VARCHAR(256)\
-	);");
+	// _stmt->execute("CREATE DATABASE IF NOT EXISTS twchat;");
+	// _stmt->execute("USE twchat;");
+	// _stmt->execute("CREATE TABLE IF NOT EXISTS streamer(\
+	// 								id int NOT NULL auto_increment primary key,\
+	// 								streamer_id VARCHAR(32) NOT NULL);");
+	// _stmt->execute("CREATE TABLE IF NOT EXISTS chatlog(\
+	// 								streamer_id VARCHAR(32) NOT NULL,\
+	// 								date TIMESTAMP DEFAULT NOW(),\
+	// 								user_id VARCHAR(32) NOT NULL,\
+	// 								content VARCHAR(256)\
+	// );");
 }
 /*
 	@brief connect to twitch server socket when construct client

@@ -51,7 +51,7 @@ services:
     env_file:
       - docker.env
     entrypoint: >
-      sh -c "mysqld"
+      sh -c "./dbconfig/mysqld.sh"
   analyzer:
     container_name: analyzer
     build:
@@ -64,3 +64,6 @@ services:
       - docker.env
     entrypoint: >
       sh -c "python3 main.py"
+    depends_on:
+      - db
+# while true; do sleep 1; done;
