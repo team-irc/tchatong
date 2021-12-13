@@ -22,15 +22,25 @@ std::string	replace_special_characters(std::string const &str)
 
 void		IrcClient::connect_db()
 {
-	sql::mysql::MySQL_Driver *driver;
-	const char	*DB_HOST = std::getenv("DB_HOST");
-	const char	*DB_USER = std::getenv("DB_USER");
-	const char	*DB_PASS = std::getenv("DB_PASSWORD");
-	const char	*DB_NAME = std::getenv("DB_NAME");
+	try
+	{
+		sql::mysql::MySQL_Driver *driver;
+		const char	*DB_HOST = std::getenv("DB_HOST");
+		const char	*DB_USER = std::getenv("DB_USER");
+		const char	*DB_PASS = std::getenv("DB_PASSWORD");
+		const char	*DB_NAME = std::getenv("DB_NAME");
 
-	driver = sql::mysql::get_mysql_driver_instance();
-	_con = driver->connect("db:3306", DB_USER, DB_PASS);
-	_stmt = _con->createStatement();
+		driver = sql::mysql::get_mysql_driver_instance();
+		_con = driver->connect("db:3306", DB_USER, DB_PASS);
+		_stmt = _con->createStatement();
+	}
+	catch (sql::SQLException const &e)
+	{
+		std::cout << "[-] " << e.what() << std::endl;
+		std::cout << "Retry db connect" << std::endl;
+		sleep(RETRY_DB_CONNECTION_PERIOD);
+		connect_db();
+	}
 }
 
 void		IrcClient::init_db()

@@ -18,6 +18,8 @@
 #include "mysql_error.h" 
 #include "cppconn/statement.h" // Statement
 
+#define RETRY_DB_CONNECTION_PERIOD 10
+
 typedef struct	s_chat 
 {
 	std::string		channel;
