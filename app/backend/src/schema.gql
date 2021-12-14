@@ -14,6 +14,21 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Streamer {
+  id: Int!
+  streamer_id: String!
+  nick: String!
+  image_url: String!
+}
+
 type Query {
-  chatfire: [Chatfire!]!
+  Chatfire_all: [Chatfire!]!
+  Chatfire_streamerNick(nick: String!): [Chatfire!]!
+  Streamer_all: [Streamer!]!
+  Streamer_nick(nick: String!): Streamer!
+}
+
+type Mutation {
+  Streamer_new(image_url: String!, nick: String!, streamer_id: String!): Streamer!
+  Streamer_delete(streamer_id: String!): [Streamer!]!
 }
