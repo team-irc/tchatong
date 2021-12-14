@@ -48,17 +48,10 @@ void		IrcClient::init_db()
 	_stmt->execute("USE twchat;");
 	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'zilioner', '침착맨', 'https://static-cdn.jtvnw.net/jtv_user_pictures/89e29e2e-f165-40e6-bc0c-d42205935216-profile_image-70x70.png');");
 	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'handongsuk', '한동숙', 'https://static-cdn.jtvnw.net/jtv_user_pictures/c5a2baa2-74ed-4b72-b047-8326572c9bfa-profile_image-70x70.png');");
-	// _stmt->execute("CREATE DATABASE IF NOT EXISTS twchat;");
-	// _stmt->execute("USE twchat;");
-	// _stmt->execute("CREATE TABLE IF NOT EXISTS streamer(\
-	// 								id int NOT NULL auto_increment primary key,\
-	// 								streamer_id VARCHAR(32) NOT NULL);");
-	// _stmt->execute("CREATE TABLE IF NOT EXISTS chatlog(\
-	// 								streamer_id VARCHAR(32) NOT NULL,\
-	// 								date TIMESTAMP DEFAULT NOW(),\
-	// 								user_id VARCHAR(32) NOT NULL,\
-	// 								content VARCHAR(256)\
-	// );");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'runner0608', '러너교', 'https://static-cdn.jtvnw.net/jtv_user_pictures/e5da145b-14f7-4555-a550-5d5c9a1d96cf-profile_image-50x50.png');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'cherrypach', '꽃핀', 'https://static-cdn.jtvnw.net/jtv_user_pictures/45059e9b-4b1e-4387-ba14-9a78477e6ca9-profile_image-50x50.png');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'dogswellfish', '개소주', 'https://static-cdn.jtvnw.net/jtv_user_pictures/b925a01c-4b7b-4f3c-ac61-3fc53cf3ba34-profile_image-70x70.png');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'lvndmark', 'LVNDMARK', 'https://static-cdn.jtvnw.net/jtv_user_pictures/8dcaf96d-68ee-4fc6-bfdc-fdfc564e134a-profile_image-70x70.png');");
 }
 /*
 	@brief connect to twitch server socket when construct client
