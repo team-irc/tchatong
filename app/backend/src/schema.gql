@@ -27,3 +27,8 @@ type Query {
   Streamer_all: [Streamer!]!
   Streamer_nick(nick: String!): Streamer!
 }
+
+type Mutation {
+  Streamer_new(image_url: String!, nick: String!, streamer_id: String!): Streamer!
+  Streamer_delete(streamer_id: String!): [Streamer!]!
+}

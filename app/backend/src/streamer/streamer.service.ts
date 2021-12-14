@@ -17,4 +17,15 @@ export class StreamerService {
   async findOneByNick(nick: string): Promise<Streamer> {
     return this.streamerRepository.findOne({ nick });
   }
+
+  async addNewStreamer(newStreamerInfo: Streamer): Promise<Streamer> {
+    return this.streamerRepository.save(newStreamerInfo);
+  }
+
+  async deleteStreamerById(streamer_id: string): Promise<Streamer[]> {
+    const targetToDelete: Streamer = await this.streamerRepository.findOne({
+      streamer_id,
+    });
+    return this.streamerRepository.remove([targetToDelete]);
+  }
 }
