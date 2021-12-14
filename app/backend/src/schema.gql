@@ -22,6 +22,8 @@ type Streamer {
 }
 
 type Query {
-  chatfire: [Chatfire!]!
-  streamer: [Streamer!]!
+  Chatfire_all: [Chatfire!]!
+  Chatfire_streamerNick(nick: String!): [Chatfire!]!
+  Streamer_all: [Streamer!]!
+  Streamer_nick(nick: String!): Streamer!
 }

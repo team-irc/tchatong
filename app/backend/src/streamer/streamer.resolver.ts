@@ -1,4 +1,4 @@
-import { Query, Resolver } from '@nestjs/graphql';
+import { Args, Query, Resolver } from '@nestjs/graphql';
 import { StreamerService } from './streamer.service';
 import { Streamer } from './streamer.entity';
 
@@ -7,7 +7,12 @@ export class StreamerResolver {
   constructor(private readonly streamerService: StreamerService) {}
 
   @Query((returns) => [Streamer])
-  async streamer(): Promise<Streamer[]> {
-    return this.streamerService.getStreamerList();
+  async Streamer_all(): Promise<Streamer[]> {
+    return this.streamerService.findAll();
+  }
+
+  @Query((returns) => Streamer)
+  async Streamer_nick(@Args('nick') nick: string): Promise<Streamer> {
+    return this.streamerService.findOneByNick(nick);
   }
 }

@@ -10,7 +10,11 @@ export class StreamerService {
     private streamerRepository: Repository<Streamer>,
   ) {}
 
-  async getStreamerList(): Promise<Streamer[]> {
+  async findAll(): Promise<Streamer[]> {
     return this.streamerRepository.find();
+  }
+
+  async findOneByNick(nick: string): Promise<Streamer> {
+    return this.streamerRepository.findOne({ nick });
   }
 }
