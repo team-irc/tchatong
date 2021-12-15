@@ -1,11 +1,14 @@
-.QuestionTitle {
-  list-style: none;
+.Answer {
+  border-left: 0.5rem solid var(--purple1);
+  margin-left: 5rem;
+  font-size: 1rem;
+  padding: 1rem;
 }
 
-.DisplayBlock {
-  display: block;
+.Title {
+  font-size: 1.5rem;
 }
 
-.DisplayNone {
-  display: none;
+.Icon {
+  transform: scale(2);
 }
