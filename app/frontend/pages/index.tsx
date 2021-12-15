@@ -4,7 +4,7 @@ import { Box, TextField } from "@material-ui/core";
 import { useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete from "@mui/material/Autocomplete";
-import type { streamer } from "./api/streamers";
+import type { Streamer } from "../interfaces/streamer";
 import styles from "../styles/Home.module.css";
 
 const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
@@ -16,7 +16,6 @@ const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
   };
 
   const searchBarKeyDown = (e: any) => {
-    console.log("keydown");
     if (e.code === "Enter" && e.target.value) {
       router.push(`/${e.target.value}`);
     }
@@ -37,15 +36,15 @@ const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
             options={data}
             inputValue={textToSearch}
             onInputChange={(_, value) => setTextToSearch(value)}
-            getOptionLabel={(data: streamer) => data.streamerName}
+            getOptionLabel={(data: Streamer) => data.nick}
             renderOption={(props, data) => (
               <Box {...props}>
                 <img
-                  src={data.avatarUrl}
-                  alt={`${data.streamerName}'s avatar`}
+                  src={data.image_url}
+                  alt={`${data.nick}'s avatar`}
                   className={styles.AutoCompleteAvatarImg}
                 />
-                {data.streamerName}
+                {data.nick}
                 <br />
               </Box>
             )}
@@ -76,10 +75,17 @@ const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
 };
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const res = await fetch("http://localhost/api/streamers", { method: "GET" });
-  const data: streamer[] = await res.json();
+  const res: Response = await fetch("http://backend:3000/graphql", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ query: "{ Streamer_all { nick, image_url } }" }),
+  });
+  const data: Streamer[] = (await res.json()).data.Streamer_all;
   if (!data) return { notFound: true };
-  return { props: { data: data } };
+  return { props: { data } };
 };
 
 export default Home;
