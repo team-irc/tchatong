@@ -3,9 +3,14 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { NextPage } from "next";
+import {
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+  NextPage,
+} from "next";
 import Header from "../../layout/header";
 import Faq from "../../components/pages/help/faq";
+import { Streamer } from "../../interfaces/streamer";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -40,7 +45,9 @@ function a11yProps(index: number) {
   };
 }
 
-const Help: NextPage = () => {
+const Help: NextPage = ({
+  data,
+}: InferGetServerSidePropsType<GetServerSideProps>) => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -48,7 +55,7 @@ const Help: NextPage = () => {
   };
 
   return (
-    <Header>
+    <Header autoCompleteData={data}>
       <Box
         sx={{
           flexGrow: 1,
@@ -85,6 +92,20 @@ const Help: NextPage = () => {
       </Box>
     </Header>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const res: Response = await fetch("http://backend:3000/graphql", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ query: "{ Streamer_all { nick, image_url } }" }),
+  });
+  const data: Streamer[] = (await res.json()).data.Streamer_all;
+  if (!data) return { notFound: true };
+  return { props: { data } };
 };
 
 export default Help;

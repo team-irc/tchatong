@@ -3,13 +3,15 @@ import Link from "next/link";
 import { Button, Box, TextField } from "@material-ui/core";
 import Autocomplete from "@mui/material/Autocomplete";
 import SearchIcon from "@mui/icons-material/Search";
-import type { streamer } from "../pages/api/streamers";
+import type { Streamer } from "../interfaces/streamer";
 import styles from "../styles/Header.module.css";
 import { useRouter, NextRouter } from "next/router";
 
-const Header: FC = ({ children }): JSX.Element => {
+const Header: FC<{ autoCompleteData: Streamer[] }> = ({
+  children,
+  autoCompleteData,
+}): JSX.Element => {
   const router: NextRouter = useRouter();
-  const [streamerList, setStreamerList] = useState<streamer[]>([]);
   const [textToSearch, setTextToSearch] = useState<string>("");
 
   const searchButtonOnClick = () => {
@@ -23,17 +25,6 @@ const Header: FC = ({ children }): JSX.Element => {
     }
   };
 
-  useEffect(() => {
-    try {
-      fetch("http://127.0.0.1/api/streamers", { method: "GET" })
-        .then((res) => res.json())
-        .then((res: streamer[]) => setStreamerList(res));
-      console.log(streamerList);
-    } catch (e) {
-      console.error(e);
-    }
-  }, []);
-
   return (
     <>
       <header className={styles.Header}>
@@ -44,18 +35,18 @@ const Header: FC = ({ children }): JSX.Element => {
           disablePortal
           freeSolo
           className={styles.SearchBar}
-          options={streamerList}
+          options={autoCompleteData}
           inputValue={textToSearch}
           onInputChange={(_, value) => setTextToSearch(value)}
-          getOptionLabel={(data: streamer) => data.streamerName}
+          getOptionLabel={(data: Streamer) => data.nick}
           renderOption={(props, data) => (
             <Box {...props}>
               <img
-                src={data.avatarUrl}
-                alt={`${data.streamerName}'s avatar`}
+                src={data.image_url}
+                alt={`${data.nick}'s avatar`}
                 className={styles.AutoCompleteAvatarImg}
               />
-              {data.streamerName}
+              {data.nick}
               <br />
             </Box>
           )}
