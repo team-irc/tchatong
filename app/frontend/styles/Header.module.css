@@ -20,7 +20,15 @@
 
 .SearchBar {
   width: 20%;
+  height: 80%;
   margin-left: auto;
+}
+
+.SearchButtonBox {
+  height: calc(80% + 3px);
+  display: flex;
+  align-items: center;
+  background-color: var(--purple1);
 }
 
 .AutoCompleteAvatarImg {

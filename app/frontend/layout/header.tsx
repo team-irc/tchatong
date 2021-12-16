@@ -61,14 +61,17 @@ const Header: FC<{ autoCompleteData: Streamer[] }> = ({
             );
           }}
         />
-        <SearchIcon
-          fontSize="large"
-          style={{
-            cursor: "pointer",
-            marginLeft: "0.2rem",
-          }}
-          onClick={searchButtonOnClick}
-        />
+        <Box className={styles.SearchButtonBox}>
+          <SearchIcon
+            fontSize="large"
+            style={{
+              cursor: "pointer",
+              color: "var(--background-white)",
+              marginLeft: "0.2rem",
+            }}
+            onClick={searchButtonOnClick}
+          />
+        </Box>
       </header>
       {children}
     </>

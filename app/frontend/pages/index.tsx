@@ -59,13 +59,16 @@ const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
               );
             }}
           />
-          <SearchIcon
-            fontSize="large"
-            style={{
-              cursor: "pointer",
-            }}
-            onClick={searchButtonOnClick}
-          />
+          <Box className={styles.SearchButtonBox}>
+            <SearchIcon
+              fontSize="large"
+              style={{
+                cursor: "pointer",
+                color: "var(--background-white)",
+              }}
+              onClick={searchButtonOnClick}
+            />
+          </Box>
         </Box>
       </main>
     </>
