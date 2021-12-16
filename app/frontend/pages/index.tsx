@@ -24,7 +24,7 @@ const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
   return (
     <>
       <main className={styles.Home}>
-        <Box className={styles.MainContent}>
+        <Box className={styles.MainContentLogo}>
           <h1 className={styles.MainLogo}>트채통</h1>
           <h2 className={styles.SubLogo}> | 트위치 채팅 통계 시스템</h2>
         </Box>

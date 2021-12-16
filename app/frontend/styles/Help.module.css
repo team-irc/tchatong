@@ -1,16 +1,14 @@
-.Answer {
-  border-left: 0.2rem solid var(--purple1);
-  margin-left: 5rem;
-  font-size: 1rem;
-  padding: 1rem;
+.TabBox {
+  flex-grow: 1;
+  display: flex;
+  height: calc(100vh - 4rem);
+  margin-top: 4rem;
 }
 
-.Title {
-  font-size: 1.5rem;
-}
-
-.Icon {
-  transform: scale(2);
+.Tabs {
+  color: rgba(137, 88, 216, 0.5);
+  display: flex;
+  width: 10rem;
 }
 
 /*
@@ -33,10 +31,16 @@
 }
 
 @media all and (max-width: 480px) {
-  .Answer {
-    margin-left: 4rem;
+  .TabBox {
+    flex-direction: column;
   }
-  .ListItem {
+  .Tabs {
+    width: 100%;
+  }
+  .Tab {
+    width: 50%;
+  }
+  .TabPannel {
     padding: 0;
   }
 }

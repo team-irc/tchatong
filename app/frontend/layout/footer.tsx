@@ -3,8 +3,11 @@ import Link from "next/link";
 import { Button } from "@material-ui/core";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { FC } from "react";
+import useWindowSize from "../components/hooks/useWindowSize";
 
 const Footer: FC = ({ children }): JSX.Element => {
+  const windowSize = useWindowSize();
+
   return (
     <>
       {children}
@@ -20,8 +23,8 @@ const Footer: FC = ({ children }): JSX.Element => {
           </Button>
         </Link>
         <div className={styles.FooterCopyRights}>
-          &copy; 2021 <a href="https://github.com/team-irc">team-irc</a> all
-          rights reserved.
+          &copy; 2021 <a href="https://github.com/team-irc">team-irc</a>
+          {windowSize.width > 480 && <> all rights reserved.</>}
         </div>
       </footer>
     </>
