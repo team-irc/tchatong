@@ -3,8 +3,15 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import { NextPage } from "next";
+import {
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+  NextPage,
+} from "next";
 import Header from "../../layout/header";
+import Faq from "../../components/pages/help/faq";
+import { Streamer } from "../../interfaces/streamer";
+import ContactUs from "../../components/pages/help/contactus";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -22,6 +29,7 @@ function TabPanel(props: TabPanelProps) {
       id={`vertical-tabpanel-${index}`}
       aria-labelledby={`vertical-tab-${index}`}
       {...other}
+      style={{ width: "100%" }}
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
@@ -39,7 +47,9 @@ function a11yProps(index: number) {
   };
 }
 
-const Help: NextPage = () => {
+const Help: NextPage = ({
+  data,
+}: InferGetServerSidePropsType<GetServerSideProps>) => {
   const [value, setValue] = React.useState(0);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -47,7 +57,7 @@ const Help: NextPage = () => {
   };
 
   return (
-    <Header>
+    <Header autoCompleteData={data}>
       <Box
         sx={{
           flexGrow: 1,
@@ -63,20 +73,41 @@ const Help: NextPage = () => {
           value={value}
           onChange={handleChange}
           aria-label="Vertical tabs example"
-          sx={{ borderRight: 1, borderColor: "divider", width: "10rem" }}
+          TabIndicatorProps={{ style: { background: "var(--purple1)" } }}
+          sx={{
+            borderRight: 1,
+            borderColor: "divider",
+            width: "10rem",
+            color: "rgba(137,88,216,0.5)",
+            "& .Mui-selected": { color: "#8958d8 !important" },
+          }}
         >
           <Tab label="FAQ" {...a11yProps(0)} />
           <Tab label="문의하기" {...a11yProps(1)} />
         </Tabs>
         <TabPanel value={value} index={0}>
-          Item One
+          <Faq />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Item Two
+          <ContactUs />
         </TabPanel>
       </Box>
     </Header>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const res: Response = await fetch("http://backend:3000/graphql", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ query: "{ Streamer_getAll { nick, image_url } }" }),
+  });
+  const data: Streamer[] = (await res.json()).data.Streamer_getAll;
+  if (!data) return { notFound: true };
+  return { props: { data } };
 };
 
 export default Help;
