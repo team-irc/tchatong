@@ -21,4 +21,12 @@ export class ChatfireResolver {
   async getOneByNick(@Args('nick') nick: string): Promise<Chatfire[]> {
     return this.chatfireService.findOneByNick(nick);
   }
+
+  @Query((returns) => Chatfire, {
+    name: 'Chatfire_getDayTopByNick',
+    description: 'get day top chatfire count by streamer nickname',
+  })
+  async getDayTopByNick(@Args('streamer_id') streamer_id: string): Promise<Chatfire> {
+    return this.chatfireService.findDayTop(streamer_id);
+  }
 }
