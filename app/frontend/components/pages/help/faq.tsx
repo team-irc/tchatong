@@ -23,7 +23,7 @@ const QuestionAndAnswer: FC<{ title: string; content: string }> = ({
 
   return (
     <>
-      <ListItem>
+      <ListItem className={styles.ListItem}>
         <ListItemButton
           sx={{ padding: "1rem !important" }}
           onClick={questionOnClickHandler}

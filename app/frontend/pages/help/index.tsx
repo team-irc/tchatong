@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState, SyntheticEvent, useEffect } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
@@ -12,6 +12,8 @@ import Header from "../../layout/header";
 import Faq from "../../components/pages/help/faq";
 import { Streamer } from "../../interfaces/streamer";
 import ContactUs from "../../components/pages/help/contactus";
+import styles from "../../styles/Help.module.css";
+import useWindowSize from "../../components/hooks/useWindowSize";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -32,7 +34,7 @@ function TabPanel(props: TabPanelProps) {
       style={{ width: "100%" }}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 3 }} className={styles.TabPannel}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -50,40 +52,39 @@ function a11yProps(index: number) {
 const Help: NextPage = ({
   data,
 }: InferGetServerSidePropsType<GetServerSideProps>) => {
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  const [tabsOrientation, setTabsOrientation] = useState<
+    "vertical" | "horizontal"
+  >("vertical");
+  const windowSize = useWindowSize();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (_: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
 
+  useEffect(() => {
+    if (tabsOrientation === "vertical" && windowSize.width <= 480) {
+      setTabsOrientation("horizontal");
+    } else if (tabsOrientation === "horizontal" && windowSize.width > 480) {
+      setTabsOrientation("vertical");
+    }
+  }, [windowSize]);
+
   return (
     <Header autoCompleteData={data}>
-      <Box
-        sx={{
-          flexGrow: 1,
-          bgcolor: "background.paper",
-          display: "flex",
-          height: "calc(100vh - 4rem)",
-          marginTop: "4rem",
-        }}
-      >
+      <Box className={styles.TabBox}>
         <Tabs
-          orientation="vertical"
+          orientation={tabsOrientation}
           variant="scrollable"
           value={value}
           onChange={handleChange}
           aria-label="Vertical tabs example"
           TabIndicatorProps={{ style: { background: "var(--purple1)" } }}
-          sx={{
-            borderRight: 1,
-            borderColor: "divider",
-            width: "10rem",
-            color: "rgba(137,88,216,0.5)",
-            "& .Mui-selected": { color: "#8958d8 !important" },
-          }}
+          className={styles.Tabs}
+          sx={{ "& .Mui-selected": { color: "#8958d8 !important" } }}
         >
-          <Tab label="FAQ" {...a11yProps(0)} />
-          <Tab label="문의하기" {...a11yProps(1)} />
+          <Tab label="FAQ" {...a11yProps(0)} className={styles.Tab} />
+          <Tab label="문의하기" {...a11yProps(1)} className={styles.Tab} />
         </Tabs>
         <TabPanel value={value} index={0}>
           <Faq />
