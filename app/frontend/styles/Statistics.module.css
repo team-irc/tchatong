@@ -21,6 +21,7 @@
   display: inline-flex;
   flex-direction: column;
   margin-top: 1rem;
+  margin-left: 1rem;
 }
 
 .StreamerNick {
@@ -36,7 +37,7 @@
 .StreamerLastStreaming {
   font-size: 1rem;
   color: var(--purple1);
-  opacity: .5;
+  opacity: 0.5;
 }
 
 .RecentlyUsedWord {
