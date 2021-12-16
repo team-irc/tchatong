@@ -152,9 +152,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({ query: "{ Streamer_all { nick, image_url } }" }),
+    body: JSON.stringify({ query: "{ Streamer_getAll { nick, image_url } }" }),
   });
-  const data: Streamer[] = (await res.json()).data.Streamer_all;
+  const data: Streamer[] = (await res.json()).data.Streamer_getAll;
   if (!data) return { notFound: true };
   return { props: { data } };
 };

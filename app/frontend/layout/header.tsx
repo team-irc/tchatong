@@ -65,7 +65,6 @@ const Header: FC<{ autoCompleteData: Streamer[] }> = ({
           fontSize="large"
           style={{
             cursor: "pointer",
-            transform: "scale(1.5)",
             marginLeft: "0.2rem",
           }}
           onClick={searchButtonOnClick}

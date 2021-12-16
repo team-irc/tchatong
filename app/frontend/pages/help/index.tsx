@@ -11,6 +11,7 @@ import {
 import Header from "../../layout/header";
 import Faq from "../../components/pages/help/faq";
 import { Streamer } from "../../interfaces/streamer";
+import ContactUs from "../../components/pages/help/contactus";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -88,7 +89,7 @@ const Help: NextPage = ({
           <Faq />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          Item Two
+          <ContactUs />
         </TabPanel>
       </Box>
     </Header>
@@ -102,9 +103,9 @@ export const getServerSideProps: GetServerSideProps = async () => {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({ query: "{ Streamer_all { nick, image_url } }" }),
+    body: JSON.stringify({ query: "{ Streamer_getAll { nick, image_url } }" }),
   });
-  const data: Streamer[] = (await res.json()).data.Streamer_all;
+  const data: Streamer[] = (await res.json()).data.Streamer_getAll;
   if (!data) return { notFound: true };
   return { props: { data } };
 };
