@@ -29,7 +29,7 @@ type Query {
   Chatfire_getOneByNick(nick: String!): [Chatfire!]!
 
   """get day top chatfire count by streamer nickname"""
-  Chatfire_getDayTopByNick(streamer_id: String!): Chatfire!
+  Chatfire_getDayTopByNick(nick: String!): Chatfire!
 
   """get all of Streamer"""
   Streamer_getAll: [Streamer!]!

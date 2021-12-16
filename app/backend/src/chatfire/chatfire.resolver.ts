@@ -26,7 +26,7 @@ export class ChatfireResolver {
     name: 'Chatfire_getDayTopByNick',
     description: 'get day top chatfire count by streamer nickname',
   })
-  async getDayTopByNick(@Args('streamer_id') streamer_id: string): Promise<Chatfire> {
-    return this.chatfireService.findDayTop(streamer_id);
+  async getDayTopByNick(@Args('nick') streamer_nick: string): Promise<Chatfire> {
+    return this.chatfireService.findDayTop(streamer_nick);
   }
 }
