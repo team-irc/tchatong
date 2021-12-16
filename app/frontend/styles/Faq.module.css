@@ -1,0 +1,14 @@
+.Answer {
+  border-left: 0.5rem solid var(--purple1);
+  margin-left: 5rem;
+  font-size: 1rem;
+  padding: 1rem;
+}
+
+.Title {
+  font-size: 1.5rem;
+}
+
+.Icon {
+  transform: scale(2);
+}

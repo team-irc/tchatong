@@ -1,4 +1,8 @@
-import { NextPage } from "next";
+import {
+  GetServerSideProps,
+  InferGetServerSidePropsType,
+  NextPage,
+} from "next";
 import { useRouter } from "next/router";
 import { CSSProperties, FC, useEffect, useRef } from "react";
 import { Chart, registerables } from "chart.js";
@@ -7,8 +11,9 @@ import styles from "../styles/Statistics.module.css";
 import Image from "next/image";
 import { Box } from "@material-ui/core";
 import { Card } from "@mui/material";
+import { Streamer } from "../interfaces/streamer";
 
-const data = [
+const data1 = [
   12, 29, 19, 18, 13, 12, 27, 7, 15, 1, 15, 8, 13, 4, 21, 24, 10, 25, 27, 12, 6,
   16, 25, 10,
 ];
@@ -54,7 +59,9 @@ const StatisticsCard: FC<{
   );
 };
 
-const Statistics: NextPage = (): JSX.Element => {
+const Statistics: NextPage = ({
+  data,
+}: InferGetServerSidePropsType<GetServerSideProps>): JSX.Element => {
   const router = useRouter();
   const chart = useRef<Chart<"line", number[], string>>();
   const { streamer_nick } = router.query;
@@ -72,7 +79,7 @@ const Statistics: NextPage = (): JSX.Element => {
           datasets: [
             {
               label: "시간당 평균 채팅 수",
-              data: data,
+              data: data1,
               fill: false,
               borderColor: "rgb(137, 88, 216)",
               tension: 0.1,
@@ -92,7 +99,7 @@ const Statistics: NextPage = (): JSX.Element => {
   }, []);
 
   return (
-    <Header>
+    <Header autoCompleteData={data}>
       <div className={styles.Frame}>
         <Box className={styles.StreamerInfo}>
           <div className={styles.StreamerImg}>
@@ -136,6 +143,20 @@ const Statistics: NextPage = (): JSX.Element => {
       </div>
     </Header>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const res: Response = await fetch("http://backend:3000/graphql", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+    },
+    body: JSON.stringify({ query: "{ Streamer_getAll { nick, image_url } }" }),
+  });
+  const data: Streamer[] = (await res.json()).data.Streamer_getAll;
+  if (!data) return { notFound: true };
+  return { props: { data } };
 };
 
 export default Statistics;
