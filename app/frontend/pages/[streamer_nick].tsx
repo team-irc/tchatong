@@ -46,6 +46,7 @@ const StatisticsCard: FC<{
     >
       <span
         style={{
+          width: "100%",
           padding: "1.2rem",
           background: "var(--purple1)",
           color: "var(--background-white)",
@@ -135,12 +136,26 @@ const Statistics: NextPage = ({
             body="나락"
           />
         </Box>
-        <Box>
-          <canvas id="chart" width="100%" height="30rem" />
+        <Box style={{ width: "100%" }}>
+          <Box style={{ width: "100%", height: "auto", maxHeight: "40rem" }}>
+            <canvas id="chart" className={styles.Canvas} />
+          </Box>
           <Box className={styles.CardList}>
-            <StatisticsCard head="분당 평균 채팅 화력" body="분당 15회" />
-            <StatisticsCard head="분당 최고 채팅 화력" body="분당 30회" />
-            <StatisticsCard head="분당 최저 채팅 화력" body="분당 0회" />
+            <StatisticsCard
+              head="분당 평균 채팅 화력"
+              body="분당 15회"
+              className={styles.CardItem}
+            />
+            <StatisticsCard
+              head="분당 최고 채팅 화력"
+              body="분당 30회"
+              className={styles.CardItem}
+            />
+            <StatisticsCard
+              head="분당 최저 채팅 화력"
+              body="분당 0회"
+              className={styles.CardItem}
+            />
           </Box>
         </Box>
       </div>

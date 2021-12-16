@@ -24,7 +24,7 @@ const Footer: FC = ({ children }): JSX.Element => {
         </Link>
         <div className={styles.FooterCopyRights}>
           &copy; 2021 <a href="https://github.com/team-irc">team-irc</a>
-          {windowSize.width > 480 && <>all rights reserved.</>}
+          {windowSize.width > 480 && <> all rights reserved.</>}
         </div>
       </footer>
     </>
