@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Chatfire } from './chatfire.entity';
 import { Streamer } from '../streamer/streamer.entity';
+import { HttpErrorByCode } from '@nestjs/common/utils/http-error-by-code.util';
+import { UserInputError } from 'apollo-server-express';
 
 @Injectable()
 export class ChatfireService {
@@ -47,9 +49,13 @@ export class ChatfireService {
     return (highest_chatfire);
   }
 
-  async findDayTop(streamer_id: string): Promise<Chatfire> {
+  async findDayTop(streamer_nick: string): Promise<Chatfire> {
     const a_day_ago = new Date(new Date().getTime() - (24 * 60 * 60 * 1000));
-    const chatfires = await this.getChatfiresAfterDate(streamer_id, a_day_ago);
+    const streamer = await this.streamerRepository.findOne({ nick: streamer_nick });
+    if (!streamer) {
+      throw new UserInputError('Streamer Nickname Not Found');
+    }
+    const chatfires = await this.getChatfiresAfterDate(streamer.streamer_id, a_day_ago);
     return (this.getHighestCountFromChatfires(chatfires));
   }
 }
