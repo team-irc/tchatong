@@ -22,13 +22,23 @@ type Streamer {
 }
 
 type Query {
-  Chatfire_all: [Chatfire!]!
-  Chatfire_streamerNick(nick: String!): [Chatfire!]!
-  Streamer_all: [Streamer!]!
-  Streamer_nick(nick: String!): Streamer!
+  """get all of Chatfire"""
+  Chatfire_getAll: [Chatfire!]!
+
+  """get one of Chatfire by streamer nickname"""
+  Chatfire_getOneByNick(nick: String!): [Chatfire!]!
+
+  """get all of Streamer"""
+  Streamer_getAll: [Streamer!]!
+
+  """get one of Streamer by streamer nickname"""
+  Streamer_getOneByNick(nick: String!): Streamer!
 }
 
 type Mutation {
-  Streamer_new(image_url: String!, nick: String!, streamer_id: String!): Streamer!
-  Streamer_delete(streamer_id: String!): [Streamer!]!
+  """add Streamer field"""
+  Streamer_createOne(streamer_id: String!, nick: String!, image_url: String!): Streamer!
+
+  """delete Streamer field"""
+  Streamer_deleteOne(streamer_id: String!): [Streamer!]!
 }
