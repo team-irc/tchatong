@@ -24,6 +24,7 @@ type Streamer {
 type Query {
   Chatfire_all: [Chatfire!]!
   Chatfire_streamerNick(nick: String!): [Chatfire!]!
+  Chatfire_dayTop(streamer_id: String!): Chatfire!
   Streamer_all: [Streamer!]!
   Streamer_nick(nick: String!): Streamer!
 }
