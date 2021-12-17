@@ -1,6 +1,6 @@
 import { Args, Query, Resolver, Mutation } from '@nestjs/graphql';
 import { StreamerService } from './streamer.service';
-import { Streamer } from './streamer.entity';
+import { Streamer } from '../entities/streamer.entity';
 import { CreateOneArgs } from './dto/create-one.args';
 
 @Resolver()

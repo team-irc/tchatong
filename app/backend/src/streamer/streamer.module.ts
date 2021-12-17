@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { StreamerResolver } from './streamer.resolver';
 import { StreamerService } from './streamer.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Streamer } from './streamer.entity';
+import { Streamer } from '../entities/streamer.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Streamer])],

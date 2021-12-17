@@ -1,6 +1,6 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { ChatfireService } from './chatfire.service';
-import { Chatfire } from './chatfire.entity';
+import { Chatfire } from '../entities/chatfire.entity';
 
 @Resolver()
 export class ChatfireResolver {
@@ -28,5 +28,13 @@ export class ChatfireResolver {
   })
   async getDayTopByNick(@Args('nick') streamer_nick: string): Promise<Chatfire> {
     return this.chatfireService.findDayTop(streamer_nick);
+  }
+
+  @Query((returns) => Chatfire, {
+    name: 'Chatfire_getEntireTopByNick',
+    description: 'get entire top chatfire count by stramer nickname',
+  })
+  async getEntireTopByNick(@Args('nick') streamer_nick: string): Promise<Chatfire> {
+    return this.chatfireService.findEntireTop(streamer_nick);
   }
 }

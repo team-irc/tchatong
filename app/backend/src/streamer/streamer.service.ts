@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Streamer } from './streamer.entity';
+import { Streamer } from '../entities/streamer.entity';
 import { Repository } from 'typeorm';
+import { UserInputError } from 'apollo-server-express';
 
 @Injectable()
 export class StreamerService {
@@ -15,7 +16,11 @@ export class StreamerService {
   }
 
   async findOneByNick(nick: string): Promise<Streamer> {
-    return this.streamerRepository.findOne({ nick });
+    const streamer = await this.streamerRepository.findOne({ nick: nick });
+    if (!streamer) {
+      throw new UserInputError('Streamer Nickname Not Found');
+    }
+    return streamer;
   }
 
   async addNewStreamer(newStreamerInfo: Streamer): Promise<Streamer> {
