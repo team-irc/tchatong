@@ -4,7 +4,7 @@ import {
   NextPage,
 } from "next";
 import { useRouter } from "next/router";
-import { CSSProperties, FC, useEffect, useMemo, useRef } from "react";
+import { CSSProperties, FC, useEffect, useRef } from "react";
 import { Chart, registerables } from "chart.js";
 import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
@@ -64,15 +64,10 @@ const Statistics: NextPage = ({
 }: InferGetServerSidePropsType<GetServerSideProps>): JSX.Element => {
   const router = useRouter();
   const chart = useRef<Chart<"line", number[], string>>();
-  const { streamer_nick } = router.query;
-  const image_url = useMemo(
-    () =>
-      (data as Streamer[]).filter(
-        (element) => element.nick === streamer_nick
-      )[0].image_url,
-    [streamer_nick]
-  );
 
+  /*
+   ** draw chart
+   */
   useEffect(() => {
     let ctx = (
       document.getElementById("chart") as HTMLCanvasElement
@@ -106,22 +101,22 @@ const Statistics: NextPage = ({
   }, []);
 
   return (
-    <Header autoCompleteData={data}>
+    <Header>
       <div className={styles.Frame}>
         <Box className={styles.StreamerInfo}>
           <img
-            src={image_url}
+            src={data.image_url}
             className={styles.StreamerImg}
             alt="streamer avatar image"
           />
           <span className={styles.StreamerInfoText}>
             <a
-              href={`https://www.twitch.tv/Funzinnu`}
+              href={`https://www.twitch.tv/${data.streamer_id}`}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.StreamerNick}
             >
-              {streamer_nick}
+              {data.nick}
             </a>
             <br />
             <span className={styles.StreamerFollowers}>팔로워: 30만명</span>
@@ -163,17 +158,18 @@ const Statistics: NextPage = ({
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const res: Response = await fetch("http://backend:3000/graphql", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify({ query: "{ Streamer_getAll { nick, image_url } }" }),
+    body: JSON.stringify({
+      query: `{ Streamer_getOneByNick(nick: "${params?.streamer_nick}") { image_url, streamer_id, nick } }`,
+    }),
   });
-  const data: Streamer[] = (await res.json()).data.Streamer_getAll;
-  if (!data) return { notFound: true };
+  const data: Streamer = (await res.json()).data.Streamer_getOneByNick;
   return { props: { data } };
 };
 

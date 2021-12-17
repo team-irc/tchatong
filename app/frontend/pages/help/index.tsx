@@ -71,7 +71,7 @@ const Help: NextPage = ({
   }, [windowSize]);
 
   return (
-    <Header autoCompleteData={data}>
+    <Header>
       <Box className={styles.TabBox}>
         <Tabs
           orientation={tabsOrientation}
