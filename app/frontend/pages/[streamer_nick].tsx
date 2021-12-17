@@ -106,7 +106,7 @@ const Statistics: NextPage = ({
   }, []);
 
   return (
-    <Header autoCompleteData={data}>
+    <Header>
       <div className={styles.Frame}>
         <Box className={styles.StreamerInfo}>
           <img

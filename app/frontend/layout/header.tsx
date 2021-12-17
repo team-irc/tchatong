@@ -7,11 +7,9 @@ import type { Streamer } from "../interfaces/streamer";
 import styles from "../styles/Header.module.css";
 import { useRouter, NextRouter } from "next/router";
 
-const Header: FC<{ autoCompleteData: Streamer[] }> = ({
-  children,
-  autoCompleteData,
-}): JSX.Element => {
+const Header: FC = ({ children }): JSX.Element => {
   const router: NextRouter = useRouter();
+  const [autoCompleteData, setAutoCompleteData] = useState<Streamer[]>([]);
   const [textToSearch, setTextToSearch] = useState<string>("");
 
   const searchButtonOnClick = () => {
@@ -24,6 +22,25 @@ const Header: FC<{ autoCompleteData: Streamer[] }> = ({
       router.push(`/${e.target.value}`);
     }
   };
+
+  const fetchAutoCompleteData = async (): Promise<Streamer[]> => {
+    const res: Response = await fetch("http://127.0.0.1:3000/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        query: "{ Streamer_getAll { nick, image_url } }",
+      }),
+    });
+    const data: Streamer[] = (await res.json()).data.Streamer_getAll;
+    return data;
+  };
+
+  useEffect(() => {
+    fetchAutoCompleteData().then((data) => setAutoCompleteData(data));
+  }, []);
 
   return (
     <>
