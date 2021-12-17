@@ -1,10 +1,11 @@
 import {
   GetServerSideProps,
+  GetStaticProps,
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
 import { useRouter } from "next/router";
-import { CSSProperties, FC, useEffect, useMemo, useRef } from "react";
+import { CSSProperties, FC, useEffect, useMemo, useRef, useState } from "react";
 import { Chart, registerables } from "chart.js";
 import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
@@ -65,14 +66,42 @@ const Statistics: NextPage = ({
   const router = useRouter();
   const chart = useRef<Chart<"line", number[], string>>();
   const { streamer_nick } = router.query;
-  const image_url = useMemo(
-    () =>
-      (data as Streamer[]).filter(
-        (element) => element.nick === streamer_nick
-      )[0].image_url,
-    [streamer_nick]
-  );
+  const [streamerInfo, setStreamerInfo] = useState<{
+    imageUrl: string;
+    streamerId: string;
+  }>({ imageUrl: "", streamerId: "" });
 
+  const getStreamerInfo = async (): Promise<Streamer> => {
+    const res: Response = await fetch("http://127.0.0.1:3000/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        query: `{ Streamer_getOneByNick(nick: "${streamer_nick}") { image_url, streamer_id } }`,
+      }),
+    });
+    const data: Streamer = (await res.json()).data.Streamer_getOneByNick;
+    return data;
+  };
+
+  /*
+   ** get streamer Info
+   */
+  useEffect(() => {
+    if (!streamer_nick) return;
+    getStreamerInfo().then((data) =>
+      setStreamerInfo({
+        imageUrl: data.image_url,
+        streamerId: data.streamer_id,
+      })
+    );
+  }, [streamer_nick]);
+
+  /*
+   ** draw chart
+   */
   useEffect(() => {
     let ctx = (
       document.getElementById("chart") as HTMLCanvasElement
@@ -110,13 +139,13 @@ const Statistics: NextPage = ({
       <div className={styles.Frame}>
         <Box className={styles.StreamerInfo}>
           <img
-            src={image_url}
+            src={streamerInfo.imageUrl}
             className={styles.StreamerImg}
             alt="streamer avatar image"
           />
           <span className={styles.StreamerInfoText}>
             <a
-              href={`https://www.twitch.tv/Funzinnu`}
+              href={`https://www.twitch.tv/${streamerInfo.streamerId}`}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.StreamerNick}
@@ -161,20 +190,6 @@ const Statistics: NextPage = ({
       </div>
     </Header>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const res: Response = await fetch("http://backend:3000/graphql", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({ query: "{ Streamer_getAll { nick, image_url } }" }),
-  });
-  const data: Streamer[] = (await res.json()).data.Streamer_getAll;
-  if (!data) return { notFound: true };
-  return { props: { data } };
 };
 
 export default Statistics;

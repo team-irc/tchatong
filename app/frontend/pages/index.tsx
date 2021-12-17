@@ -1,15 +1,15 @@
-import type { InferGetServerSidePropsType, GetServerSideProps } from "next";
 import { NextRouter, useRouter } from "next/router";
 import { Box, TextField } from "@material-ui/core";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete from "@mui/material/Autocomplete";
 import type { Streamer } from "../interfaces/streamer";
 import styles from "../styles/Home.module.css";
 
-const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
+const Home = () => {
   const router: NextRouter = useRouter();
   const [textToSearch, setTextToSearch] = useState<string>("");
+  const [autoCompleteData, setAutoCompleteData] = useState<Streamer[]>([]);
 
   const searchButtonOnClick = () => {
     router.push(`/${textToSearch}`);
@@ -20,6 +20,25 @@ const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
       router.push(`/${e.target.value}`);
     }
   };
+
+  const fetchAutoCompleteData = async (): Promise<Streamer[]> => {
+    const res: Response = await fetch("http://127.0.0.1:3000/graphql", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        query: "{ Streamer_getAll { nick, image_url } }",
+      }),
+    });
+    const data: Streamer[] = (await res.json()).data.Streamer_getAll;
+    return data;
+  };
+
+  useEffect(() => {
+    fetchAutoCompleteData().then((data) => setAutoCompleteData(data));
+  }, []);
 
   return (
     <>
@@ -33,7 +52,7 @@ const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
             disablePortal
             freeSolo
             sx={{ width: "100%" }}
-            options={data}
+            options={autoCompleteData}
             inputValue={textToSearch}
             onInputChange={(_, value) => setTextToSearch(value)}
             getOptionLabel={(data: Streamer) => data.nick}
@@ -73,20 +92,6 @@ const Home = ({ data }: InferGetServerSidePropsType<GetServerSideProps>) => {
       </main>
     </>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const res: Response = await fetch("http://backend:3000/graphql", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({ query: "{ Streamer_getAll { nick, image_url } }" }),
-  });
-  const data: Streamer[] = (await res.json()).data.Streamer_getAll;
-  if (!data) return { notFound: true };
-  return { props: { data } };
 };
 
 export default Home;
