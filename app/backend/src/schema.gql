@@ -31,6 +31,9 @@ type Query {
   """get day top chatfire count by streamer nickname"""
   Chatfire_getDayTopByNick(nick: String!): Chatfire!
 
+  """get entire top chatfire count by stramer nickname"""
+  Chatfire_getEntireTopByNick(nick: String!): Chatfire!
+
   """get all of Streamer"""
   Streamer_getAll: [Streamer!]!
 

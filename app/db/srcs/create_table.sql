@@ -21,3 +21,12 @@ CREATE TABLE IF NOT EXISTS chatfire(
   `count`         int,
   FOREIGN KEY (streamer_id) REFERENCES streamer(streamer_id) ON UPDATE CASCADE
 );
+
+CREATE TABLE IF NOT EXISTS legend(
+  `id`                int          NOT NULL auto_increment PRIMARY KEY,
+  `streamer_id`       VARCHAR(32),
+  `chatfire_id`       int          NOT NULL,
+  `last_update_date`  TIMESTAMP    NOT NULL,
+  FOREIGN KEY (streamer_id) REFERENCES streamer(streamer_id) ON UPDATE CASCADE,
+  FOREIGN KEY (chatfire_id) REFERENCES chatfire(id) ON UPDATE CASCADE
+);
