@@ -17,7 +17,6 @@ const Header: FC = ({ children }): JSX.Element => {
   };
 
   const searchBarKeyDown = (e: any) => {
-    console.log("keydown");
     if (e.code === "Enter" && e.target.value) {
       router.push(`/${e.target.value}`);
     }
