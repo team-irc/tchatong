@@ -12,6 +12,7 @@ import { Box } from "@material-ui/core";
 import { Card } from "@mui/material";
 import { Streamer } from "../interfaces/streamer";
 import { Chatfire } from "../interfaces/chat-fire";
+import { useRouter } from "next/router";
 
 interface StatisticsProps {
   data: {
@@ -54,6 +55,7 @@ const Statistics: NextPage<StatisticsProps> = ({
 }: InferGetServerSidePropsType<
   GetServerSideProps<StatisticsProps>
 >): JSX.Element => {
+  const router = useRouter();
   const chart = useRef<Chart<"line", number[], string>>();
 
   /*
@@ -82,7 +84,7 @@ const Statistics: NextPage<StatisticsProps> = ({
       });
     }
     return () => chart.current?.destroy();
-  }, []);
+  }, [router.query.streamer_nick]);
 
   return (
     <Header>
