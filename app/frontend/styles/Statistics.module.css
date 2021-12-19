@@ -49,6 +49,10 @@
   padding: 2rem;
 }
 
+.CardList > * {
+  width: 33%;
+}
+
 .Canvas {
   width: 100%;
   height: 100%;
@@ -95,6 +99,9 @@
   }
   .CardList {
     flex-direction: column;
+  }
+  .CardList > * {
+    width: auto;
   }
   .CardItem {
     margin: 10px;
