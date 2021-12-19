@@ -1,7 +1,6 @@
 import { useState, SyntheticEvent, useEffect } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import {
   GetServerSideProps,
@@ -34,8 +33,8 @@ function TabPanel(props: TabPanelProps) {
       style={{ width: "100%" }}
     >
       {value === index && (
-        <Box sx={{ p: 3 }} className={styles.TabPannel}>
-          <Typography>{children}</Typography>
+        <Box sx={{ height: "100%" }} className={styles.TabPannel}>
+          {children}
         </Box>
       )}
     </div>
