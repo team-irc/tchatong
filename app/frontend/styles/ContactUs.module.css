@@ -6,6 +6,10 @@
   padding: 3rem;
 }
 
+.Box > * {
+  margin: 0.5rem 0 0.5rem 0.5rem !important;
+}
+
 .Button {
   background-color: var(--purple1) !important;
 }

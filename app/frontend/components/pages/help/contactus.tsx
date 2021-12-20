@@ -63,7 +63,7 @@ const ContactUs: FC = () => {
           variant="outlined"
           label="본문"
           multiline
-          rows={20}
+          minRows={20}
           value={body}
           onChange={(e) => setBody(e.target.value)}
         />
@@ -85,7 +85,7 @@ const ContactUs: FC = () => {
           severity="success"
           sx={{ width: "100%" }}
         >
-          This is a success message!
+          문의를 보냈습니다.
         </MuiAlert>
       </Snackbar>
       <Snackbar
@@ -98,7 +98,7 @@ const ContactUs: FC = () => {
           severity="info"
           sx={{ width: "100%" }}
         >
-          This is a info message!
+          공란을 모두 채워주세요.
         </MuiAlert>
       </Snackbar>
       <Snackbar
@@ -111,7 +111,7 @@ const ContactUs: FC = () => {
           severity="error"
           sx={{ width: "100%" }}
         >
-          This is a err message!
+          죄송합니다. 나중에 다시 시도해 주세요.
         </MuiAlert>
       </Snackbar>
     </>

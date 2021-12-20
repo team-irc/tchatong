@@ -77,7 +77,6 @@ const Help: NextPage = ({
           variant="scrollable"
           value={value}
           onChange={handleChange}
-          aria-label="Vertical tabs example"
           TabIndicatorProps={{ style: { background: "var(--purple1)" } }}
           className={styles.Tabs}
           sx={{ "& .Mui-selected": { color: "#8958d8 !important" } }}
