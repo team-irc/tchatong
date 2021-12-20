@@ -1,14 +1,17 @@
-.TabBox {
-  flex-grow: 1;
+.Box {
   display: flex;
-  min-height: calc(100vh - 4rem);
-  margin-top: 4rem;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 3rem;
 }
 
-.Tabs {
-  color: rgba(137, 88, 216, 0.5);
-  display: flex;
-  width: 10rem;
+.Box > * {
+  margin: 0.5rem 0 0.5rem 0.5rem !important;
+}
+
+.Button {
+  background-color: var(--purple1) !important;
 }
 
 /*
@@ -31,16 +34,7 @@
 }
 
 @media all and (max-width: 480px) {
-  .TabBox {
-    flex-direction: column;
-  }
-  .Tabs {
-    width: 100%;
-  }
-  .Tab {
-    width: 50%;
-  }
-  .TabPannel {
+  .Box {
     padding: 0;
   }
 }
