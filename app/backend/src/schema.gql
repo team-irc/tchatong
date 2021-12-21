@@ -2,24 +2,25 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type Chatfire {
-  streamer_id: String!
-  date: DateTime!
-  count: Int!
-  id: Int!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type Streamer {
   id: Int!
   streamer_id: String!
   nick: String!
   image_url: String!
 }
+
+type Chatfire {
+  streamer_id: String!
+  date: DateTime!
+  count: Int!
+  id: Int!
+  streamer: Streamer!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type Query {
   """get all of Chatfire"""
@@ -31,8 +32,11 @@ type Query {
   """get day top chatfire count by streamer nickname"""
   Chatfire_getDayTopByNick(nick: String!): Chatfire!
 
-  """get entire top chatfire count by stramer nickname"""
+  """get entire top chatfire count by streamer nickname"""
   Chatfire_getEntireTopByNick(nick: String!): Chatfire!
+
+  """get current chatfire by streamer nickname"""
+  Chatfire_getCurrentByNick(nick: String!): Chatfire!
 
   """get all of Streamer"""
   Streamer_getAll: [Streamer!]!

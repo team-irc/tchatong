@@ -32,9 +32,17 @@ export class ChatfireResolver {
 
   @Query((returns) => Chatfire, {
     name: 'Chatfire_getEntireTopByNick',
-    description: 'get entire top chatfire count by stramer nickname',
+    description: 'get entire top chatfire count by streamer nickname',
   })
   async getEntireTopByNick(@Args('nick') streamer_nick: string): Promise<Chatfire> {
     return this.chatfireService.findEntireTop(streamer_nick);
+  }
+
+  @Query((returns) => Chatfire, {
+    name: 'Chatfire_getCurrentByNick',
+    description: 'get current chatfire by streamer nickname',
+  })
+  async getCurrentByNick(@Args('nick') streamer_nick: string): Promise<Chatfire> {
+    return this.chatfireService.getCurrent(streamer_nick);
   }
 }

@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Entity, Column, Timestamp, PrimaryColumn } from 'typeorm';
+import { Streamer } from './streamer.entity';
 
 @ObjectType()
 @Entity()
@@ -19,4 +20,7 @@ export class Chatfire {
   @PrimaryColumn('int')
   @Field((type) => Int)
   id: number;
+
+  @Field((type) => Streamer)
+  streamer: Streamer;
 }
