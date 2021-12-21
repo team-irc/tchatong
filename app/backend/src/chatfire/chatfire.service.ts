@@ -31,17 +31,17 @@ export class ChatfireService {
     return (await this.chatFireRepository.query(sql));
   }
 
-  private async initHighestChatfire(): Promise<Chatfire> {
-    const highest_chatfire = new Chatfire();
-    highest_chatfire.streamer_id = '';
-    highest_chatfire.id = 0;
-    highest_chatfire.date = new Date();
-    highest_chatfire.count = 0;
-    return (highest_chatfire);
+  private async initChatfire(): Promise<Chatfire> {
+    const chatfire = new Chatfire();
+    chatfire.streamer_id = '';
+    chatfire.id = 0;
+    chatfire.date = new Date();
+    chatfire.count = 0;
+    return (chatfire);
   }
 
   private async getHighestCountFromChatfires(chatfires: Chatfire[]): Promise<Chatfire> {
-    let highest_chatfire = await this.initHighestChatfire();
+    let highest_chatfire = await this.initChatfire();
     for (let chatfire of chatfires) {
       if (chatfire.count > highest_chatfire.count) {
         highest_chatfire = chatfire;
@@ -55,7 +55,9 @@ export class ChatfireService {
     const a_day_ago = new Date(new Date().getTime() - (24 * 60 * 60 * 1000));
     const streamer = await this.streamerService.findOneByNick(streamer_nick);
     const chatfires = await this.getChatfiresAfterDate(streamer.streamer_id, a_day_ago);
-    return (this.getHighestCountFromChatfires(chatfires));
+    const day_top = await this.getHighestCountFromChatfires(chatfires);
+    day_top.streamer = streamer;
+    return (day_top);
   }
 
   private async getLastEntireTop(streamer_id: string): Promise<Legend> {
@@ -87,6 +89,11 @@ export class ChatfireService {
     return (last_entire_top_chatfire);
   }
 
+  /*
+   @brief 가장 높았던 분당 채팅 화력수를 구해서 반환한다.
+          LastUpdateDate를 기준으로 새로 계산해서 저장한다.
+   @todo 오랫동안 조회하지 않았던 스트리머를 조회할때 너무 많은 chatfire를 불러와 계산하는 과정에서 문제가 생길 수 있다. (조치 필요)
+  */
   private async getEntireTop(streamer_id: string): Promise<Chatfire> {
     const last_entire_top = await this.getLastEntireTop(streamer_id);
     if (!last_entire_top) { // 첫 생성
@@ -106,6 +113,21 @@ export class ChatfireService {
 
   async findEntireTop(streamer_nick: string): Promise<Chatfire> {
     const streamer = await this.streamerService.findOneByNick(streamer_nick);
-    return (await this.getEntireTop(streamer.streamer_id));
+    const entire_top = await this.getEntireTop(streamer.streamer_id);
+    entire_top.streamer = streamer;
+    return (entire_top);
+  }
+
+  async getCurrent(streamer_nick: string): Promise<Chatfire> {
+    const streamer = await this.streamerService.findOneByNick(streamer_nick);
+    const date = new Date(new Date().getTime() - (60 * 1000));
+    date.setSeconds(0);
+    date.setMilliseconds(0);
+    let chatfire = await this.chatFireRepository.findOne({streamer_id: streamer.streamer_id, date: date});
+    if (!chatfire) {
+      chatfire = await this.initChatfire();
+    }
+    chatfire.streamer = streamer;
+    return (chatfire);
   }
 }
