@@ -19,12 +19,37 @@ const ContactUs: FC = () => {
   const [email, setEmail] = useState<string>("");
   const [body, setBody] = useState<string>("");
 
+  const createNewIssue = async () => {
+    const res = await fetch(`${window.origin}:3000/issue`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        issueType,
+        name,
+        email,
+        body,
+      }),
+    });
+    const data = await res.json();
+    if (data?.name === "HttpError") return Error("server error");
+    return data;
+  };
+
   const handleClick = (): void => {
     if (issueType === "" || name === "" || email === "" || body === "") {
       setOpenInfo(true);
       return;
     }
-    setOpenSuccess(true);
+    createNewIssue().then((res) => {
+      if (res?.message === "server error") setOpenError(true);
+      else {
+        setIssueType("");
+        setName("");
+        setEmail("");
+        setBody("");
+        setOpenSuccess(true);
+      }
+    });
   };
 
   return (
@@ -39,10 +64,10 @@ const ContactUs: FC = () => {
             label="문의 종류"
             onChange={(e) => setIssueType(e.target.value)}
           >
-            <MenuItem sx={{ width: "100%" }} value="addStreamer">
+            <MenuItem sx={{ width: "100%" }} value="➕ 스트리머 추가 문의">
               ➕ 스트리머 추가 문의
             </MenuItem>
-            <MenuItem sx={{ width: "100%" }} value="etc">
+            <MenuItem sx={{ width: "100%" }} value="🎸 기타 문의">
               🎸 기타 문의
             </MenuItem>
           </Select>
