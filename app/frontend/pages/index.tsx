@@ -22,16 +22,19 @@ const Home = () => {
   };
 
   const fetchAutoCompleteData = async (): Promise<Streamer[]> => {
-    const res: Response = await fetch("http://127.0.0.1:3000/graphql", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        query: "{ Streamer_getAll { nick, image_url } }",
-      }),
-    });
+    const res: Response = await fetch(
+      `http://${location.hostname}:3000/graphql`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          query: "{ Streamer_getAll { nick, image_url } }",
+        }),
+      }
+    );
     const data: Streamer[] = (await res.json()).data.Streamer_getAll;
     return data;
   };
