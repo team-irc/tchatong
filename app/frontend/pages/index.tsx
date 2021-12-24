@@ -22,7 +22,7 @@ const Home = () => {
   };
 
   const fetchAutoCompleteData = async (): Promise<Streamer[]> => {
-    const res: Response = await fetch("http://127.0.0.1:3000/graphql", {
+    const res: Response = await fetch(`${window.origin}:3000/graphql`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
