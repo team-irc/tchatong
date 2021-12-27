@@ -76,4 +76,32 @@ services:
     working_dir: /proxy
     entrypoint: >
       sh -c 'nginx -g "daemon off;"'
-# while true; do sleep 1; done;
+  grafana:
+    container_name: grafana
+    build:
+      context: ./app/grafana
+      dockerfile: Dockerfile
+    ports:
+      - 8000:3000
+    env_file:
+      - docker.env
+  influxdb:
+    platform: linux/x86_64
+    container_name: influxdb
+    image: influxdb:1.7-alpine
+    volumes:
+      - ./app/influxdb:/var/lib/influxdb
+    env_file:
+      - docker.env
+    ports:
+      - "8086:8086"
+  telegraf:
+    container_name: telegraf
+    build:
+      context: ./app/telegraf
+      dockerfile: Dockerfile
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    entrypoint: ["telegraf"]
+    env_file:
+      - docker.env
