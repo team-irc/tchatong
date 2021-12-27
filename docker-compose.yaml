@@ -8,8 +8,6 @@ services:
     working_dir: /frontend
     volumes:
       - ./app/frontend:/frontend
-    ports:
-      - "4000:4000"
     entrypoint: >
       sh -c "./entrypoint.sh"
   backend:
@@ -20,14 +18,13 @@ services:
     working_dir: /backend
     volumes:
       - ./app/backend:/backend
-    ports:
-      - "3000:3000"
     env_file:
       - docker.env
     entrypoint: >
       sh -c "./entrypoint.sh"
   crawler:
     container_name: crawler
+    restart: always
     build:
       context: ./app/crawler
       dockerfile: Dockerfile
@@ -45,8 +42,6 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./app/db/data:/var/lib/mysql
-    ports:
-      - 4406:3306
     working_dir: /
     env_file:
       - docker.env
@@ -66,6 +61,7 @@ services:
       sh -c "python3 -u main.py"
   proxy:
     container_name: proxy
+    restart: always
     build:
       context: ./app/proxy
       dockerfile: Dockerfile
@@ -81,8 +77,6 @@ services:
     build:
       context: ./app/grafana
       dockerfile: Dockerfile
-    ports:
-      - 8000:3000
     env_file:
       - docker.env
   influxdb:
@@ -93,8 +87,6 @@ services:
       - ./app/influxdb:/var/lib/influxdb
     env_file:
       - docker.env
-    ports:
-      - "8086:8086"
   telegraf:
     container_name: telegraf
     build:
