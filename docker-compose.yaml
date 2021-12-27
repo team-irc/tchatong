@@ -9,7 +9,7 @@ services:
     volumes:
       - ./app/frontend:/frontend
     ports:
-      - "80:80"
+      - "4000:4000"
     entrypoint: >
       sh -c "./entrypoint.sh"
   backend:
@@ -64,4 +64,16 @@ services:
       - docker.env
     entrypoint: >
       sh -c "python3 -u main.py"
+  proxy:
+    container_name: proxy
+    build:
+      context: ./app/proxy
+      dockerfile: Dockerfile
+    volumes:
+      - ./app/proxy:/proxy
+    ports:
+      - 80:80
+    working_dir: /proxy
+    entrypoint: >
+      sh -c 'nginx -g "daemon off;"'
 # while true; do sleep 1; done;
