@@ -105,12 +105,19 @@ void	IrcClient::join_streamer_channels()
 {
 	std::cout << "joining streamer channels" << std::endl;
 	sql::ResultSet  *res;
+	int							req_limit_count;
 
 	res = _stmt->executeQuery("SELECT streamer_id FROM streamer;");
+	req_limit_count = 0;
 	while (res->next())
 	{
+		if (req_limit_count > 15) {
+			sleep(10);
+			req_limit_count = 0;
+		}
 		// std::cout << "JOIN #" << res->getString("streamer_id") << std::endl;
 		send_to_server("JOIN #" + res->getString("streamer_id"));
+		req_limit_count++;
 	}
 }
 
