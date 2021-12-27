@@ -48,10 +48,30 @@ void		IrcClient::init_db()
 	_stmt->execute("USE twchat;");
 	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'zilioner', '침착맨', 'https://static-cdn.jtvnw.net/jtv_user_pictures/89e29e2e-f165-40e6-bc0c-d42205935216-profile_image-70x70.png');");
 	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'handongsuk', '한동숙', 'https://static-cdn.jtvnw.net/jtv_user_pictures/c5a2baa2-74ed-4b72-b047-8326572c9bfa-profile_image-70x70.png');");
-	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'runner0608', '러너교', 'https://static-cdn.jtvnw.net/jtv_user_pictures/e5da145b-14f7-4555-a550-5d5c9a1d96cf-profile_image-50x50.png');");
-	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'cherrypach', '꽃핀', 'https://static-cdn.jtvnw.net/jtv_user_pictures/45059e9b-4b1e-4387-ba14-9a78477e6ca9-profile_image-50x50.png');");
-	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'dogswellfish', '개소주', 'https://static-cdn.jtvnw.net/jtv_user_pictures/b925a01c-4b7b-4f3c-ac61-3fc53cf3ba34-profile_image-70x70.png');");
-	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'lvndmark', 'LVNDMARK', 'https://static-cdn.jtvnw.net/jtv_user_pictures/8dcaf96d-68ee-4fc6-bfdc-fdfc564e134a-profile_image-70x70.png');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'runner0608', '러너교', 'https://static-cdn.jtvnw.net/jtv_user_pictures/e5da145b-14f7-4555-a550-5d5c9a1d96cf-profile_image-70x70.png');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'cherrypach', '꽃핀', 'https://static-cdn.jtvnw.net/jtv_user_pictures/45059e9b-4b1e-4387-ba14-9a78477e6ca9-profile_image-70x70.png');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'pacific8815', '쌍베', '');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, '109ace', '철면수심', '');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'ronaronakr', '로나로나땅', '');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'woowakgood', '우왁굳', '');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'cotton__123', '주르르', '');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'gosegugosegu', '고세구', '');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'viichan6', '비챤', '');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'lilpaaaaaa', '릴파', '');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'jingburger', '징버거', '');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'vo_ine', '아이네', '');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'torona1', '슈카월드', '');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'aba4647', '랄로', 'https://static-cdn.jtvnw.net/jtv_user_pictures/e85f1e19-e793-4a07-bbc5-5135981dc4f8-profile_image-70x70.png');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'hanryang1125', '풍월량', 'https://static-cdn.jtvnw.net/jtv_user_pictures/hanryang1125-profile_image-58261d78af47d249-70x70.jpeg');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'saddummy', '서새봄냥', 'https://static-cdn.jtvnw.net/jtv_user_pictures/saddummy-profile_image-925b92caa01026ae-70x70.jpeg');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'naseongkim', '김나성', 'https://static-cdn.jtvnw.net/jtv_user_pictures/ea777be2-7415-4ef2-8512-20083e08e9db-profile_image-70x70.png');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'nokduro', '녹두로', 'https://static-cdn.jtvnw.net/jtv_user_pictures/9c692e90-6f4f-4585-a3f3-f8610dfbf237-profile_image-70x70.png');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'kanetv8', '케인', 'https://static-cdn.jtvnw.net/jtv_user_pictures/kanetv8-profile_image-9e346fec55dc4c49-70x70.jpeg');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'paka9999', '파카', 'https://static-cdn.jtvnw.net/jtv_user_pictures/98bb53c3-4e2f-47f3-9c4b-6c0484b383f6-profile_image-70x70.png');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'dopa24', '도파', 'https://static-cdn.jtvnw.net/jtv_user_pictures/4a35691a-b2af-40f8-af90-72cc31d295d6-profile_image-70x70.png');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'tmxk319', '괴물쥐', 'https://static-cdn.jtvnw.net/jtv_user_pictures/59b10cc7-772e-48a9-92df-066e9a35862b-profile_image-70x70.jpg');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'xkwhd', '피닉스박', 'https://static-cdn.jtvnw.net/jtv_user_pictures/00d773d6-0c5c-443a-947a-f3d765b95b4e-profile_image-70x70.jpg');");
+	_stmt->execute("INSERT IGNORE INTO streamer VALUES (default, 'lovelyyeon', '연두부', 'https://static-cdn.jtvnw.net/jtv_user_pictures/32077614-02cc-4a0e-b79e-3f2dc26d7ace-profile_image-70x70.png');");
 }
 /*
 	@brief connect to twitch server socket when construct client
