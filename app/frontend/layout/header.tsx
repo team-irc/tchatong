@@ -23,7 +23,7 @@ const Header: FC = ({ children }): JSX.Element => {
   };
 
   const fetchAutoCompleteData = async (): Promise<Streamer[]> => {
-    const res: Response = await fetch(`${window.origin}:3000/graphql`, {
+    const res: Response = await fetch(`${window.origin}/api/graphql`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

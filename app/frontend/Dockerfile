@@ -7,4 +7,4 @@ COPY ./package-lock.json /frontend_init/package-lock.json
 
 RUN npm ci
 
-EXPOSE 80
+EXPOSE 4000
