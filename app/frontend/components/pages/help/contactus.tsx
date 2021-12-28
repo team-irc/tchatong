@@ -25,7 +25,7 @@ const ContactUs: FC = () => {
   const [body, setBody] = useState<string>("");
 
   const createNewIssue = async () => {
-    const res = await fetch(`${window.origin}:3000/issue`, {
+    const res = await fetch(`${window.origin}/api/issue`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
