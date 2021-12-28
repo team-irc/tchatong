@@ -13,9 +13,9 @@ const emailRegex =
   /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 
 const ContactUs: FC = () => {
-  const [openSuccess, setOpenSuccess] = useState<boolean>(false);
-  const [openInfo, setOpenInfo] = useState<boolean>(false);
-  const [openError, setOpenError] = useState<boolean>(false);
+  const [openSuccess, setOpenSuccess] = useState<string>("");
+  const [openInfo, setOpenInfo] = useState<string>("");
+  const [openError, setOpenError] = useState<string>("");
 
   const [emailError, setEmailError] = useState<string>("");
 
@@ -42,21 +42,22 @@ const ContactUs: FC = () => {
 
   const handleClick = (): void => {
     if (issueType === "" || name === "" || email === "" || body === "") {
-      setOpenInfo(true);
+      setOpenInfo("본문을 채워주세요.");
       return;
     }
-    if (!emailError) {
-      setOpenError(true);
+    if (emailError) {
+      setOpenError("이메일 형식을 확인해주세요.");
       return;
     }
     createNewIssue().then((res) => {
-      if (res?.message === "server error") setOpenError(true);
+      if (res?.message === "server error")
+        setOpenError("잠시 후 다시 시도해주세요.");
       else {
         setIssueType("");
         setName("");
         setEmail("");
         setBody("");
-        setOpenSuccess(true);
+        setOpenSuccess("문의를 보냈습니다.");
       }
     });
   };
@@ -119,42 +120,42 @@ const ContactUs: FC = () => {
         </Button>
       </Box>
       <Snackbar
-        open={openSuccess}
+        open={!!openSuccess}
         autoHideDuration={6000}
-        onClose={() => setOpenSuccess(false)}
+        onClose={() => setOpenSuccess("")}
       >
         <MuiAlert
-          onClose={() => setOpenSuccess(false)}
+          onClose={() => setOpenSuccess("")}
           severity="success"
           sx={{ width: "100%" }}
         >
-          문의를 보냈습니다.
+          {openSuccess}
         </MuiAlert>
       </Snackbar>
       <Snackbar
-        open={openInfo}
+        open={!!openInfo}
         autoHideDuration={6000}
-        onClose={() => setOpenInfo(false)}
+        onClose={() => setOpenInfo("")}
       >
         <MuiAlert
-          onClose={() => setOpenInfo(false)}
+          onClose={() => setOpenInfo("")}
           severity="info"
           sx={{ width: "100%" }}
         >
-          공란을 모두 채워주세요.
+          {openInfo}
         </MuiAlert>
       </Snackbar>
       <Snackbar
-        open={openError}
+        open={!!openError}
         autoHideDuration={6000}
-        onClose={() => setOpenError(false)}
+        onClose={() => setOpenError("")}
       >
         <MuiAlert
-          onClose={() => setOpenError(false)}
+          onClose={() => setOpenError("")}
           severity="error"
           sx={{ width: "100%" }}
         >
-          죄송합니다. 나중에 다시 시도해 주세요.
+          {openError}
         </MuiAlert>
       </Snackbar>
     </>
