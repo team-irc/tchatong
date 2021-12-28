@@ -10,14 +10,30 @@ import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
 import { Box } from "@material-ui/core";
 import { Card } from "@mui/material";
-import { Streamer } from "../interfaces/streamer";
-import { Chatfire } from "../interfaces/chat-fire";
 import { useRouter } from "next/router";
 
 interface StatisticsProps {
   data: {
-    streamerInfo: Streamer;
-    chatfire: Chatfire[];
+    Streamer_getOneByNick: {
+      image_url: string;
+      streamer_id: string;
+      nick: string;
+    };
+    Chatfire_getOneByNick: [
+      {
+        count: number;
+        date: string;
+      }
+    ];
+    Chatfire_getDayTopByNick: {
+      count: number;
+    };
+    Chatfire_getCurrentByNick: {
+      count: number;
+    };
+    Chatfire_getEntireTopByNick: {
+      count: number;
+    };
   };
 }
 
@@ -51,7 +67,13 @@ const StatisticsCard: FC<{
 };
 
 const Statistics: NextPage<StatisticsProps> = ({
-  data: { streamerInfo, chatfire },
+  data: {
+    Streamer_getOneByNick,
+    Chatfire_getCurrentByNick,
+    Chatfire_getDayTopByNick,
+    Chatfire_getEntireTopByNick,
+    Chatfire_getOneByNick,
+  },
 }: InferGetServerSidePropsType<
   GetServerSideProps<StatisticsProps>
 >): JSX.Element => {
@@ -70,11 +92,13 @@ const Statistics: NextPage<StatisticsProps> = ({
       chart.current = new Chart(ctx, {
         type: "line",
         data: {
-          labels: chatfire.map((el) => new Date(el.date).toLocaleTimeString()),
+          labels: Chatfire_getOneByNick.map((el) =>
+            new Date(el.date).toLocaleTimeString()
+          ),
           datasets: [
             {
               label: "시간당 평균 채팅 수",
-              data: chatfire.map((el) => el.count),
+              data: Chatfire_getOneByNick.map((el) => el.count),
               fill: false,
               borderColor: "rgb(137, 88, 216)",
               tension: 0.1,
@@ -91,18 +115,18 @@ const Statistics: NextPage<StatisticsProps> = ({
       <div className={styles.Frame}>
         <Box className={styles.StreamerInfo}>
           <img
-            src={streamerInfo.image_url}
+            src={Streamer_getOneByNick.image_url}
             className={styles.StreamerImg}
             alt="streamer avatar image"
           />
           <span className={styles.StreamerInfoText}>
             <a
-              href={`https://www.twitch.tv/${streamerInfo.streamer_id}`}
+              href={`https://www.twitch.tv/${Streamer_getOneByNick.streamer_id}`}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.StreamerNick}
             >
-              {streamerInfo.nick}
+              {Streamer_getOneByNick.nick}
             </a>
             <br />
             <span className={styles.StreamerFollowers}>팔로워: 30만명</span>
@@ -123,18 +147,18 @@ const Statistics: NextPage<StatisticsProps> = ({
           </Box>
           <Box className={styles.CardList}>
             <StatisticsCard
-              head="분당 평균 채팅 화력"
-              body="분당 15회"
+              head="현재 채팅 화력"
+              body={`분당 ${Chatfire_getCurrentByNick.count}회`}
               className={styles.CardItem}
             />
             <StatisticsCard
-              head="분당 최고 채팅 화력"
-              body="분당 30회"
+              head="금일 최고 채팅 화력"
+              body={`분당 ${Chatfire_getDayTopByNick.count}회`}
               className={styles.CardItem}
             />
             <StatisticsCard
-              head="분당 최저 채팅 화력"
-              body="분당 0회"
+              head="역대 최고 채팅 화력"
+              body={`분당 ${Chatfire_getEntireTopByNick.count}회`}
               className={styles.CardItem}
             />
           </Box>
@@ -147,7 +171,7 @@ const Statistics: NextPage<StatisticsProps> = ({
 export const getServerSideProps: GetServerSideProps = async ({
   params,
 }): Promise<GetServerSidePropsResult<StatisticsProps>> => {
-  const getStreamerInfo = async (): Promise<Streamer> => {
+  const getData = async (): Promise<StatisticsProps> => {
     const res: Response = await fetch("http://backend:3000/graphql", {
       method: "POST",
       headers: {
@@ -155,28 +179,19 @@ export const getServerSideProps: GetServerSideProps = async ({
         Accept: "application/json",
       },
       body: JSON.stringify({
-        query: `{ Streamer_getOneByNick(nick: "${params?.streamer_nick}") { image_url, streamer_id, nick } }`,
+        query: `{
+          Streamer_getOneByNick(nick: "${params?.streamer_nick}") { image_url, streamer_id, nick }
+          Chatfire_getOneByNick(nick: "${params?.streamer_nick}") { count, date }
+          Chatfire_getDayTopByNick(nick: "${params?.streamer_nick}") { count }
+          Chatfire_getCurrentByNick(nick: "${params?.streamer_nick}") { count }
+          Chatfire_getEntireTopByNick(nick: "${params?.streamer_nick}") { count }
+        }`,
       }),
     });
-    return (await res.json()).data.Streamer_getOneByNick;
+    return await res.json();
   };
-  const getChatFire = async (): Promise<Chatfire[]> => {
-    const res: Response = await fetch("http://backend:3000/graphql", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        query: `{ Chatfire_getOneByNick(nick: "${params?.streamer_nick}") { count, date } }`,
-      }),
-    });
-    return (await res.json()).data.Chatfire_getOneByNick;
-  };
-
-  const streamerInfo: Streamer = await getStreamerInfo();
-  const chatfire: Chatfire[] = await getChatFire();
-  return { props: { data: { streamerInfo, chatfire } } };
+  const data = (await getData()).data;
+  return { props: { data } };
 };
 
 export default Statistics;
