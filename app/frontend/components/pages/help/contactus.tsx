@@ -5,14 +5,19 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import styles from "../../../styles/ContactUs.module.css";
-import { FC, useState } from "react";
+import { ChangeEvent, FC, useState } from "react";
 import { Snackbar, TextField } from "@material-ui/core";
 import MuiAlert from "@mui/material/Alert";
+
+const emailRegex =
+  /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
 
 const ContactUs: FC = () => {
   const [openSuccess, setOpenSuccess] = useState<boolean>(false);
   const [openInfo, setOpenInfo] = useState<boolean>(false);
   const [openError, setOpenError] = useState<boolean>(false);
+
+  const [emailError, setEmailError] = useState<string>("");
 
   const [issueType, setIssueType] = useState<string>("");
   const [name, setName] = useState<string>("");
@@ -40,6 +45,10 @@ const ContactUs: FC = () => {
       setOpenInfo(true);
       return;
     }
+    if (!emailError) {
+      setOpenError(true);
+      return;
+    }
     createNewIssue().then((res) => {
       if (res?.message === "server error") setOpenError(true);
       else {
@@ -50,6 +59,13 @@ const ContactUs: FC = () => {
         setOpenSuccess(true);
       }
     });
+  };
+
+  const emailOnChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
+    setEmail(e.target.value);
+    if (e.target.value !== "" && !emailRegex.test(e.target.value)) {
+      setEmailError("이메일 형식에 맞춰서 작성해주세요.");
+    } else setEmailError("");
   };
 
   return (
@@ -82,7 +98,9 @@ const ContactUs: FC = () => {
           variant="outlined"
           label="이메일 주소"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={emailOnChange}
+          error={!!emailError}
+          helperText={emailError}
         />
         <TextField
           variant="outlined"
