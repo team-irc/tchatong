@@ -34,6 +34,9 @@ interface StatisticsProps {
     Chatfire_getEntireTopByNick: {
       count: number;
     };
+    Topword_getTopwordByNick: {
+      top1: string;
+    };
   };
 }
 
@@ -73,6 +76,7 @@ const Statistics: NextPage<StatisticsProps> = ({
     Chatfire_getDayTopByNick,
     Chatfire_getEntireTopByNick,
     Chatfire_getDayAverageByNick,
+    Topword_getTopwordByNick,
   },
 }: InferGetServerSidePropsType<
   GetServerSideProps<StatisticsProps>
@@ -143,7 +147,11 @@ const Statistics: NextPage<StatisticsProps> = ({
           <StatisticsCard
             className={styles.RecentlyUsedWord}
             head="최근 가장 많이 쓰인 단어"
-            body="나락"
+            body={
+              Topword_getTopwordByNick.top1.length === 0
+                ? "없음"
+                : Topword_getTopwordByNick.top1
+            }
           />
         </Box>
         <Box style={{ width: "100%" }}>
@@ -190,6 +198,7 @@ export const getServerSideProps: GetServerSideProps = async ({
           Chatfire_getDayTopByNick(nick: "${params?.streamer_nick}") { count }
           Chatfire_getCurrentByNick(nick: "${params?.streamer_nick}") { count }
           Chatfire_getEntireTopByNick(nick: "${params?.streamer_nick}") { count }
+          Topword_getTopwordByNick(nick: "${params?.streamer_nick}") { top1 }
         }`,
       }),
     });
