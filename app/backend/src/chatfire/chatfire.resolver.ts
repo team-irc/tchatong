@@ -25,11 +25,43 @@ export class ChatfireResolver {
   }
 
   @Query((returns) => [ChatfireAverage], {
-    name: 'Chatfire_getDayAverageByNick',
-    description: 'get 24 hour average chatfire',
+    name: 'Chatfire_getAverageOfaMinuteIntervalsForOneDayByNick',
+    description: 'get Average of 1 minute intervals for a day',
   })
-  async getDayAverageByNick(@Args('nick') streamer_nick: string) {
-    return this.chatfireService.getDayAverageByNick(streamer_nick);
+  async getAverageOfaMinuteIntervalsByNick(@Args('nick') streamer_nick: string): Promise<ChatfireAverage[]> {
+    return this.chatfireService.getAverageOfIntervals(streamer_nick, 1);
+  }
+
+  @Query((returns) => [ChatfireAverage], {
+    name: 'Chatfire_getAverageOfFiveMinuteIntervalsForOneDayByNick',
+    description: 'get Average of 5 minute intervals for a day',
+  })
+  async getAverageOfFiveMinuteIntervalsByNick(@Args('nick') streamer_nick: string): Promise<ChatfireAverage[]> {
+    return this.chatfireService.getAverageOfIntervals(streamer_nick, 5);
+  }
+
+  @Query((returns) => [ChatfireAverage], {
+    name: 'Chatfire_getAverageOfTenMinuteIntervalsForOneDayByNick',
+    description: 'get Average of 10 minute intervals for a day',
+  })
+  async getAverageOfTenMinuteIntervalsByNick(@Args('nick') streamer_nick: string): Promise<ChatfireAverage[]> {
+    return this.chatfireService.getAverageOfIntervals(streamer_nick, 10);
+  }
+
+  @Query((returns) => [ChatfireAverage], {
+    name: 'Chatfire_getAverageOfOneHourIntervalsForOneDayByNick',
+    description: 'get Average of 1 hour intervals for a day',
+  })
+  async getAverageOfHalfHourIntervalsByNick(@Args('nick') streamer_nick: string): Promise<ChatfireAverage[]> {
+    return this.chatfireService.getAverageOfIntervals(streamer_nick, 30);
+  }
+
+  @Query((returns) => [ChatfireAverage], {
+    name: 'Chatfire_getAverageOfOneHourIntervalsForOneDayByNick',
+    description: 'get Average of 1 hour intervals for a day',
+  })
+  async getAverageOfOneHourIntervalsByNick(@Args('nick') streamer_nick: string): Promise<ChatfireAverage[]> {
+    return this.chatfireService.getAverageOfIntervals(streamer_nick, 60);
   }
 
   @Query((returns) => Chatfire, {
