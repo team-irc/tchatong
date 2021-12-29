@@ -1,6 +1,12 @@
 import { TextField } from "@material-ui/core";
 import router from "next/router";
-import { useState, useEffect, SyntheticEvent, ReactNode } from "react";
+import {
+  useState,
+  useEffect,
+  SyntheticEvent,
+  ReactNode,
+  KeyboardEventHandler,
+} from "react";
 import { Streamer } from "../../interfaces/streamer";
 import { AutocompleteRenderInputParams } from "@mui/material/Autocomplete/Autocomplete";
 
@@ -11,6 +17,7 @@ interface AutocompleteProps {
   inputValue: string;
   onInputChange: (_: SyntheticEvent, value: string) => any;
   getOptionLabel: (data: Streamer) => string;
+  onKeyPress: (e: any) => void;
   renderInput: (params: AutocompleteRenderInputParams) => ReactNode;
 }
 
@@ -43,7 +50,7 @@ const useAutoComplete = (
 
   const searchBarKeyDown = (e: any) => {
     if (e.code === "Enter" && e.target.value) {
-      router.push(`/${e.target.value}`);
+      router.push(`/${textToSearch}`);
     }
   };
 
@@ -58,15 +65,11 @@ const useAutoComplete = (
       options: autoCompleteData,
       inputValue: textToSearch,
       onInputChange: (_: SyntheticEvent, value: string) =>
-        setTextToSearch(value),
-      getOptionLabel: (data: Streamer) => data.nick,
-      renderInput: (params: any) => (
-        <TextField
-          label={"검색하기"}
-          {...params}
-          variant={"filled"}
-          onKeyDown={searchBarKeyDown}
-        />
+        setTextToSearch(value ? value : ""),
+      getOptionLabel: (data: Streamer) => data.nick ?? data,
+      onKeyPress: searchBarKeyDown,
+      renderInput: (params: AutocompleteRenderInputParams) => (
+        <TextField {...params} label={"검색하기"} variant={"filled"} />
       ),
     },
     searchButtonOnClick,
