@@ -5,6 +5,8 @@ from pymysql.cursors import Cursor
 import time
 import os
 import threading
+import datetime
+import konlpy
 
 DB_CONNECTION_RETRY_PERIOD: int = 10
 CHATFIRE_UPDATE_PERIOD: int = 30
@@ -60,7 +62,6 @@ def save_chatfire_from_chatlog(cursor: Cursor, res3: tuple):
 	db.commit()
 	# print("db commit success")
 
-
 def save_chatfire_from_last_date():
 	try:
 		# print('while in')
@@ -87,6 +88,54 @@ def save_chatfire_from_last_date():
 	except:
 		# print('[-] save_chatfire error')
 		exit(1)
+
+def save_topword_in_a_day(streamer_id, db, cursor):
+	a_day_ago: datetime.datetime
+
+	a_day_ago = datetime.datetime.now() - datetime.timedelta(days=1)
+	sql = f"SELECT content FROM chatlog WHERE (streamer_id = '{streamer_id}' AND date >= \'{a_day_ago}\');"
+	fetch_num = cursor.execute(sql)
+	if (fetch_num < 100 | fetch_num > 10000):
+		return
+	chatlogs_for_a_day = cursor.fetchall()
+	okt = konlpy.tag.Okt()
+	result = {}
+	for chatlog in chatlogs_for_a_day:
+		malist = okt.pos(chatlog['content'], norm=True, stem=True)
+		for mal in malist:
+			if mal[1] in ["Noun"]:
+				word = mal[0]
+				if word in result.keys():
+					result[word] += 1
+				else:
+					result[word] = 1
+			if mal[1] not in ["Josa", "Eomi", "Puntuation"]:
+				word = mal[0]
+				if word in result.keys():
+					result[word] += 1
+				else:
+					result[word] = 1
+	res = sorted(result.items(), key=lambda x: x[1])
+	if (len(res) > 10):
+		try:
+			sql = f"INSERT INTO topword VALUES (default, \'{streamer_id}\', \'{datetime.datetime.now()}\', \'{res[-1][0]}\', \'{res[-2][0]}\', \'{res[-3][0]}\', \'{res[-4][0]}\', \'{res[-5][0]}\', \'{res[-6][0]}\', \'{res[-7][0]}\', \'{res[-8][0]}\', \'{res[-9][0]}\', \'{res[-10][0]}\')"
+			cursor.execute(sql)
+			db.commit()
+		except:
+			return
+
+
+def refresh_topwards(db, cursor):
+	sql = "SELECT streamer_id FROM streamer;"
+	cursor.execute(sql)
+	streamers = cursor.fetchall()
+	for streamer in streamers:
+		save_topword_in_a_day(streamer['streamer_id'], db, cursor)
+
+def refresh_topwards_thread_func(db, cursor):
+	while True:
+		refresh_topwards(db, cursor)
+		time.sleep(3600)
 
 def connect_db():
 	global db
@@ -118,6 +167,9 @@ def	main():
 	# 1. 실시간 기록 (매 1분마다)
 	# 2. 프로그램이 꺼져있던 시간동안 기록하지 못했던것 기록 (켜질때 한번만)
 	# 	 - 중복 방지
+	# t1 = threading.Thread(target=refresh_topwards_thread_func, args=(db, cursor))
+	# t1.start()
+	refresh_topwards(db, cursor)
 	while (True):
 		save_chatfire_from_last_date()
 		time.sleep(CHATFIRE_UPDATE_PERIOD)
