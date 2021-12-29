@@ -19,10 +19,10 @@ interface StatisticsProps {
       streamer_id: string;
       nick: string;
     };
-    Chatfire_getOneByNick: [
+    Chatfire_getDayAverageByNick: [
       {
         count: number;
-        date: string;
+        time: string;
       }
     ];
     Chatfire_getDayTopByNick: {
@@ -72,7 +72,7 @@ const Statistics: NextPage<StatisticsProps> = ({
     Chatfire_getCurrentByNick,
     Chatfire_getDayTopByNick,
     Chatfire_getEntireTopByNick,
-    Chatfire_getOneByNick,
+    Chatfire_getDayAverageByNick,
   },
 }: InferGetServerSidePropsType<
   GetServerSideProps<StatisticsProps>
@@ -91,14 +91,19 @@ const Statistics: NextPage<StatisticsProps> = ({
     if (ctx !== null) {
       chart.current = new Chart(ctx, {
         type: "line",
+        options: {
+          elements: {
+            point: {
+              radius: 0,
+            },
+          },
+        },
         data: {
-          labels: Chatfire_getOneByNick.map((el) =>
-            new Date(el.date).toLocaleTimeString()
-          ),
+          labels: Chatfire_getDayAverageByNick.map((el) => el.time),
           datasets: [
             {
               label: "시간당 평균 채팅 수",
-              data: Chatfire_getOneByNick.map((el) => el.count),
+              data: Chatfire_getDayAverageByNick.map((el) => el.count),
               fill: false,
               borderColor: "rgb(137, 88, 216)",
               tension: 0.1,
@@ -181,7 +186,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       body: JSON.stringify({
         query: `{
           Streamer_getOneByNick(nick: "${params?.streamer_nick}") { image_url, streamer_id, nick }
-          Chatfire_getOneByNick(nick: "${params?.streamer_nick}") { count, date }
+          Chatfire_getDayAverageByNick(nick: "${params?.streamer_nick}") { count, time }
           Chatfire_getDayTopByNick(nick: "${params?.streamer_nick}") { count }
           Chatfire_getCurrentByNick(nick: "${params?.streamer_nick}") { count }
           Chatfire_getEntireTopByNick(nick: "${params?.streamer_nick}") { count }
