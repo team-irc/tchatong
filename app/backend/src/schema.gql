@@ -22,6 +22,22 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Topword {
+  id: Int!
+  streamer_id: String!
+  date: DateTime!
+  top1: String!
+  top2: String!
+  top3: String!
+  top4: String!
+  top5: String!
+  top6: String!
+  top7: String!
+  top8: String!
+  top9: String!
+  top10: String!
+}
+
 type Query {
   """get all of Chatfire"""
   Chatfire_getAll: [Chatfire!]!
@@ -43,6 +59,9 @@ type Query {
 
   """get one of Streamer by streamer nickname"""
   Streamer_getOneByNick(nick: String!): Streamer!
+
+  """get Top 10 words by streamer nick"""
+  Topword_getTopwordByNick(nick: String!): Topword!
 }
 
 type Mutation {

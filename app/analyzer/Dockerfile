@@ -22,8 +22,21 @@ RUN python3 -m pip install --upgrade pip
 
 RUN python3 -m pip install konlpy
 
+# Fix when import konlpy 
+# module 'tweepy' has no attribute 'StreamListener' error
+
+RUN python3 -m pip install tweepy==3.10.0
+
 # Install MySQL Client
 
 RUN python3 -m pip install PyMySQL
 
 RUN python3 -m pip install pandas
+
+# Install Locale
+
+RUN apt-get update && apt-get install -y locales
+
+RUN locale-gen ko_KR.UTF-8
+
+ENV LC_ALL ko_KR.UTF-8
