@@ -38,36 +38,70 @@ type Topword {
   top10: String!
 }
 
+type ChatfireAverage {
+  time: String!
+  count: Int!
+}
+
 type Query {
-  """get all of Chatfire"""
+  """
+  get all of Chatfire
+  """
   Chatfire_getAll: [Chatfire!]!
 
-  """get one of Chatfire by streamer nickname"""
+  """
+  get one of Chatfire by streamer nickname
+  """
   Chatfire_getOneByNick(nick: String!): [Chatfire!]!
 
-  """get day top chatfire count by streamer nickname"""
+  """
+  get 24 hour average chatfire
+  """
+  Chatfire_getDayAverageByNick(nick: String!): [ChatfireAverage!]!
+
+  """
+  get day top chatfire count by streamer nickname
+  """
   Chatfire_getDayTopByNick(nick: String!): Chatfire!
 
-  """get entire top chatfire count by streamer nickname"""
+  """
+  get entire top chatfire count by streamer nickname
+  """
   Chatfire_getEntireTopByNick(nick: String!): Chatfire!
 
-  """get current chatfire by streamer nickname"""
+  """
+  get current chatfire by streamer nickname
+  """
   Chatfire_getCurrentByNick(nick: String!): Chatfire!
 
-  """get all of Streamer"""
+  """
+  get all of Streamer
+  """
   Streamer_getAll: [Streamer!]!
 
-  """get one of Streamer by streamer nickname"""
+  """
+  get one of Streamer by streamer nickname
+  """
   Streamer_getOneByNick(nick: String!): Streamer!
 
-  """get Top 10 words by streamer nick"""
+  """
+  get Top 10 words by streamer nick
+  """
   Topword_getTopwordByNick(nick: String!): Topword!
 }
 
 type Mutation {
-  """add Streamer field"""
-  Streamer_createOne(streamer_id: String!, nick: String!, image_url: String!): Streamer!
+  """
+  add Streamer field
+  """
+  Streamer_createOne(
+    streamer_id: String!
+    nick: String!
+    image_url: String!
+  ): Streamer!
 
-  """delete Streamer field"""
+  """
+  delete Streamer field
+  """
   Streamer_deleteOne(streamer_id: String!): [Streamer!]!
 }
