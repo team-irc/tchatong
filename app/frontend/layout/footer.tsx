@@ -1,6 +1,6 @@
 import styles from "../styles/Footer.module.css";
 import Link from "next/link";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import SupportAgentIcon from "@mui/icons-material/SupportAgent";
 import { FC } from "react";
 import useWindowSize from "../components/hooks/useWindowSize";

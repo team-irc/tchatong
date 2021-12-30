@@ -1,11 +1,10 @@
-import { TextField } from "@material-ui/core";
+import { TextField } from "@mui/material";
 import router from "next/router";
 import {
   useState,
   useEffect,
   SyntheticEvent,
   ReactNode,
-  KeyboardEventHandler,
 } from "react";
 import { Streamer } from "../../interfaces/streamer";
 import { AutocompleteRenderInputParams } from "@mui/material/Autocomplete/Autocomplete";

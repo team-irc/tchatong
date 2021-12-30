@@ -1,4 +1,4 @@
-import { Box } from "@material-ui/core";
+import { Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete from "@mui/material/Autocomplete";
 import styles from "../styles/Home.module.css";
@@ -19,7 +19,7 @@ const Home = () => {
             sx={{ width: "100%" }}
             {...autoCompleteProps}
             renderOption={(props, data) => (
-              <Box {...props}>
+              <li {...props}>
                 <img
                   src={data.image_url}
                   alt={`${data.nick}'s avatar`}
@@ -27,7 +27,7 @@ const Home = () => {
                 />
                 {data.nick}
                 <br />
-              </Box>
+              </li>
             )}
           />
           <Box className={styles.SearchButtonBox}>

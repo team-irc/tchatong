@@ -8,8 +8,7 @@ import { CSSProperties, FC, useEffect, useRef } from "react";
 import { Chart, registerables } from "chart.js";
 import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
-import { Box } from "@material-ui/core";
-import { Card } from "@mui/material";
+import { Box, Card } from "@mui/material";
 import { useRouter } from "next/router";
 
 interface StatisticsProps {
@@ -19,7 +18,7 @@ interface StatisticsProps {
       streamer_id: string;
       nick: string;
     };
-    Chatfire_getDayAverageByNick: [
+    Chatfire_getAverageOfOneHourIntervalsForOneDayByNick: [
       {
         count: number;
         time: string;
@@ -75,7 +74,7 @@ const Statistics: NextPage<StatisticsProps> = ({
     Chatfire_getCurrentByNick,
     Chatfire_getDayTopByNick,
     Chatfire_getEntireTopByNick,
-    Chatfire_getDayAverageByNick,
+    Chatfire_getAverageOfOneHourIntervalsForOneDayByNick,
     Topword_getTopwordByNick,
   },
 }: InferGetServerSidePropsType<
@@ -103,11 +102,11 @@ const Statistics: NextPage<StatisticsProps> = ({
           },
         },
         data: {
-          labels: Chatfire_getDayAverageByNick.map((el) => el.time),
+          labels: Chatfire_getAverageOfOneHourIntervalsForOneDayByNick.map((el) => el.time),
           datasets: [
             {
               label: "시간당 평균 채팅 수",
-              data: Chatfire_getDayAverageByNick.map((el) => el.count),
+              data: Chatfire_getAverageOfOneHourIntervalsForOneDayByNick.map((el) => el.count),
               fill: false,
               borderColor: "rgb(137, 88, 216)",
               tension: 0.1,
@@ -194,7 +193,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       body: JSON.stringify({
         query: `{
           Streamer_getOneByNick(nick: "${params?.streamer_nick}") { image_url, streamer_id, nick }
-          Chatfire_getDayAverageByNick(nick: "${params?.streamer_nick}") { count, time }
+          Chatfire_getAverageOfOneHourIntervalsForOneDayByNick(nick: "${params?.streamer_nick}") { count, time }
           Chatfire_getDayTopByNick(nick: "${params?.streamer_nick}") { count }
           Chatfire_getCurrentByNick(nick: "${params?.streamer_nick}") { count }
           Chatfire_getEntireTopByNick(nick: "${params?.streamer_nick}") { count }
