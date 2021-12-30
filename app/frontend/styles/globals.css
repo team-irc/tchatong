@@ -28,15 +28,3 @@ a {
 * {
   box-sizing: border-box;
 }
-
-/* Mui textField outline color when focused */
-
-.Mui-focused .MuiOutlinedInput-notchedOutline {
-  border-color: var(--purple1) !important;
-}
-
-/* Mui textField label color when focused */
-
-.Mui-focused {
-  color: var(--purple1) !important;
-}

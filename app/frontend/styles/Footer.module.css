@@ -6,10 +6,7 @@
 }
 
 .FooterButtonToServiceCenter {
-  color: var(--background-white) !important;
-  position: absolute !important;
   right: 0;
-  height: 5rem !important;
 }
 
 .FooterCopyRights {

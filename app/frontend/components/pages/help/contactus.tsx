@@ -111,11 +111,7 @@ const ContactUs: FC = () => {
           value={body}
           onChange={(e) => setBody(e.target.value)}
         />
-        <Button
-          variant="contained"
-          className={styles.Button}
-          onClick={handleClick}
-        >
+        <Button variant="contained" onClick={handleClick}>
           문의하기
         </Button>
       </Box>
