@@ -25,9 +25,6 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: service down
-        run: docker-compose down
-
       - name: update config files
         run: cp /home/ubuntu/twitch-chat-analyzer-config/docker.env /home/ubuntu/actions-runner/_work/twitch-chat-analyzer/twitch-chat-analyzer;
 
@@ -37,5 +34,8 @@ jobs:
       - name: update config files3
         run: cp -r /home/ubuntu/twitch-chat-analyzer-config/ssl /home/ubuntu/actions-runner/_work/twitch-chat-analyzer/twitch-chat-analyzer/proxy/srcs;
 
+      - name: service down
+        run: docker-compose down
+      
       - name: service start
         run: docker-compose up
