@@ -25,8 +25,13 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: compose down
+      - name: service down
         run: docker-compose down
 
-      - name: compose up
+      - name: update config files
+        run: cp /home/ubuntu/twitch-chat-analyzer-config/docker.env /home/ubuntu/actions-runner/_work/twitch-chat-analyzer/twitch-chat-analyzer;
+        run: cp /home/ubuntu/twitch-chat-analyzer-config/init.sql /home/ubuntu/actions-runner/_work/twitch-chat-analyzer/twitch-chat-analyzer/app/db/srcs;
+        run: cp -r /home/ubuntu/twitch-chat-analyzer-config/ssl /home/ubuntu/actions-runner/_work/twitch-chat-analyzer/twitch-chat-analyzer/proxy/srcs;
+
+      - name: service start
         run: docker-compose up
