@@ -1,4 +1,5 @@
 import {
+  Box,
   List,
   ListItem,
   ListItemButton,
@@ -9,7 +10,6 @@ import HelpIcon from "@mui/icons-material/Help";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { FC, useState } from "react";
-import { Box } from "@material-ui/core";
 import styles from "../../../styles/Faq.module.css";
 
 const QuestionAndAnswer: FC<{ title: string; content: string }> = ({

@@ -1,6 +1,6 @@
 import { FC } from "react";
 import Link from "next/link";
-import { Button, Box, TextField } from "@material-ui/core";
+import { Button, Box } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import SearchIcon from "@mui/icons-material/Search";
 import styles from "../styles/Header.module.css";
@@ -19,7 +19,7 @@ const Header: FC = ({ children }): JSX.Element => {
           className={styles.SearchBar}
           {...autoCompleteProps}
           renderOption={(props, data) => (
-            <Box {...props}>
+            <li {...props}>
               <img
                 src={data.image_url}
                 alt={`${data.nick}'s avatar`}
@@ -27,7 +27,7 @@ const Header: FC = ({ children }): JSX.Element => {
               />
               {data.nick}
               <br />
-            </Box>
+            </li>
           )}
         />
         <Box className={styles.SearchButtonBox}>

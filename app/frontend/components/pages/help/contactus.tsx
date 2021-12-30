@@ -6,7 +6,7 @@ import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import styles from "../../../styles/ContactUs.module.css";
 import { ChangeEvent, FC, useState } from "react";
-import { Snackbar, TextField } from "@material-ui/core";
+import { Snackbar, TextField } from "@mui/material";
 import MuiAlert from "@mui/material/Alert";
 
 const emailRegex =
