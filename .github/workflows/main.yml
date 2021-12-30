@@ -30,7 +30,11 @@ jobs:
 
       - name: update config files
         run: cp /home/ubuntu/twitch-chat-analyzer-config/docker.env /home/ubuntu/actions-runner/_work/twitch-chat-analyzer/twitch-chat-analyzer;
+
+      - name: update config files2
         run: cp /home/ubuntu/twitch-chat-analyzer-config/init.sql /home/ubuntu/actions-runner/_work/twitch-chat-analyzer/twitch-chat-analyzer/app/db/srcs;
+
+      - name: update config files3
         run: cp -r /home/ubuntu/twitch-chat-analyzer-config/ssl /home/ubuntu/actions-runner/_work/twitch-chat-analyzer/twitch-chat-analyzer/proxy/srcs;
 
       - name: service start
