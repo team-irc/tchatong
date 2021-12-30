@@ -10,14 +10,6 @@
   align-items: center;
 }
 
-.Logo {
-  color: var(--purple1) !important;
-  object-fit: fill !important;
-  height: 4rem !important;
-  font-size: 2rem !important;
-  margin-left: 1rem !important;
-}
-
 .SearchBar {
   width: 20%;
   height: 80%;

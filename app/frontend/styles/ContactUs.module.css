@@ -10,10 +10,6 @@
   margin: 0.5rem 0 0.5rem 0.5rem !important;
 }
 
-.Button {
-  background-color: var(--purple1) !important;
-}
-
 /*
 * ------------------------------------------
 *  Responsive Grid Media Queries - 1280, 1024, 768, 480

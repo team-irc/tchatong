@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete from "@mui/material/Autocomplete";
@@ -20,9 +21,11 @@ const Home = () => {
             {...autoCompleteProps}
             renderOption={(props, data) => (
               <li {...props}>
-                <img
+                <Image
                   src={data.image_url}
                   alt={`${data.nick}'s avatar`}
+                  width={50}
+                  height={50}
                   className={styles.AutoCompleteAvatarImg}
                 />
                 {data.nick}

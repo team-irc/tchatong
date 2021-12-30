@@ -67,7 +67,7 @@ const Help: NextPage = ({
     } else if (tabsOrientation === "horizontal" && windowSize.width > 480) {
       setTabsOrientation("vertical");
     }
-  }, [windowSize]);
+  }, [windowSize, tabsOrientation]);
 
   return (
     <Header>
@@ -77,9 +77,7 @@ const Help: NextPage = ({
           variant="scrollable"
           value={value}
           onChange={handleChange}
-          TabIndicatorProps={{ style: { background: "var(--purple1)" } }}
           className={styles.Tabs}
-          sx={{ "& .Mui-selected": { color: "#8958d8 !important" } }}
         >
           <Tab label="FAQ" {...a11yProps(0)} className={styles.Tab} />
           <Tab label="문의하기" {...a11yProps(1)} className={styles.Tab} />

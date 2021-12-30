@@ -4,6 +4,7 @@ import {
   InferGetServerSidePropsType,
   NextPage,
 } from "next";
+import Image from "next/image";
 import { CSSProperties, FC, useEffect, useRef } from "react";
 import { Chart, registerables } from "chart.js";
 import Header from "../layout/header";
@@ -102,11 +103,15 @@ const Statistics: NextPage<StatisticsProps> = ({
           },
         },
         data: {
-          labels: Chatfire_getAverageOfOneHourIntervalsForOneDayByNick.map((el) => el.time),
+          labels: Chatfire_getAverageOfOneHourIntervalsForOneDayByNick.map(
+            (el) => el.time
+          ),
           datasets: [
             {
               label: "시간당 평균 채팅 수",
-              data: Chatfire_getAverageOfOneHourIntervalsForOneDayByNick.map((el) => el.count),
+              data: Chatfire_getAverageOfOneHourIntervalsForOneDayByNick.map(
+                (el) => el.count
+              ),
               fill: false,
               borderColor: "rgb(137, 88, 216)",
               tension: 0.1,
@@ -116,14 +121,19 @@ const Statistics: NextPage<StatisticsProps> = ({
       });
     }
     return () => chart.current?.destroy();
-  }, [router.query.streamer_nick]);
+  }, [
+    router.query.streamer_nick,
+    Chatfire_getAverageOfOneHourIntervalsForOneDayByNick,
+  ]);
 
   return (
     <Header>
       <div className={styles.Frame}>
         <Box className={styles.StreamerInfo}>
-          <img
+          <Image
             src={Streamer_getOneByNick.image_url}
+            width={133}
+            height={133}
             className={styles.StreamerImg}
             alt="streamer avatar image"
           />
