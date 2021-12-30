@@ -50,8 +50,17 @@ type Query {
   """get one of Chatfire by streamer nickname"""
   Chatfire_getOneByNick(nick: String!): [Chatfire!]!
 
-  """get 24 hour average chatfire"""
-  Chatfire_getDayAverageByNick(nick: String!): [ChatfireAverage!]!
+  """get Average of 1 minute intervals for a day"""
+  Chatfire_getAverageOfaMinuteIntervalsForOneDayByNick(nick: String!): [ChatfireAverage!]!
+
+  """get Average of 5 minute intervals for a day"""
+  Chatfire_getAverageOfFiveMinuteIntervalsForOneDayByNick(nick: String!): [ChatfireAverage!]!
+
+  """get Average of 10 minute intervals for a day"""
+  Chatfire_getAverageOfTenMinuteIntervalsForOneDayByNick(nick: String!): [ChatfireAverage!]!
+
+  """get Average of 1 hour intervals for a day"""
+  Chatfire_getAverageOfOneHourIntervalsForOneDayByNick(nick: String!): [ChatfireAverage!]!
 
   """get day top chatfire count by streamer nickname"""
   Chatfire_getDayTopByNick(nick: String!): Chatfire!

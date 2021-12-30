@@ -31,54 +31,91 @@ export class ChatfireService {
     return this.chatFireRepository.find({ streamer_id: streamer.streamer_id });
   }
 
-  async getDayAverageByNick(nick: string): Promise<ChatfireAverage[]> {
-    const calculateAverage = (obj: Object): ChatfireAverage[] => {
-      const objKeys = Object.keys(obj);
-      const sortedByOneHour = {};
-      const result: ChatfireAverage[] = [];
-      /*
-        sortedByOneHour 객체에 시간별로 값을 분류함
-        sortedByOneHour = {
-          28:0: [1, 2, 3, 4],   // 28일 0시(UTC)의 채팅 화력이 배열에 들어감
-          28:1: [2, 3, 4, 5]    // 28일 1시(UTC)의 채팅 화력이 배열에 들어감
-        }
-      */
-      for (let key of objKeys) {
-        const time = new Date(key);
-        const sortedKey = `${String(time.getDate())}:${String(
-          time.getHours(),
-        )}`;
-        if (!(sortedKey in sortedByOneHour)) sortedByOneHour[sortedKey] = [];
-        sortedByOneHour[sortedKey].push(obj[key]);
-      }
-      console.log(sortedByOneHour);
-      /*
-        sortedByOneHour 객체에 있는 배열로 평균을 계산함
-        result = [{
-          time: 28일 0시,
-          count: 5      -> [1, 2, 3, 4]의 평균
-        }, {
-          time: 28일 1시,
-          count: 6.5    -> [2, 3, 4, 5]의 평균
-        }]
-      */
-      const sortedByOneHourKeys = Object.keys(sortedByOneHour);
-      for (let key of sortedByOneHourKeys) {
-        result.push({
-          count: Math.ceil(
-            sortedByOneHour[key].reduce((a: number, b: number) => a + b) /
-              sortedByOneHour[key].length,
-          ),
-          time: `${key.split(':')[0]}일 ${key.split(':')[1]}시`,
-        });
-      }
-      console.log(result);
-      return result;
-    };
+  private createChatfireDateKey(time: Date, interval: number) {
+    if (interval == 60) {
+      return `${String(time.getDate())}:${String(time.getHours())}`;
+    } else if (interval == 1) {
+      return `${String(time.getDate())}:${String(time.getHours())}:${String(time.getMinutes())}`;
+    } else {
+      const min = Math.round(Math.floor(time.getMinutes() / interval) * interval);
+      return `${String(time.getDate())}:${String(time.getHours())}:${String(min)}`;
+    }
+  }
+
+  /*
+    sortedByOneHour 객체에 시간별로 값을 분류함
+    sortedByOneHour = {
+      28:0: [1, 2, 3, 4],   // 28일 0시(UTC)의 채팅 화력이 배열에 들어감
+      28:1: [2, 3, 4, 5]    // 28일 1시(UTC)의 채팅 화력이 배열에 들어감
+      
+      20:0:00 [12, 32, 48 ,28, 55]
+      20:0:05 [...]
+    }
+  */
+  private createChatfireDateIntervalDict(obj: Object, interval: number): Object {
+    const rem = 60 % interval;
+    const sortedByInterval = {};
+    const objKeys = Object.keys(obj);
+
+    if (rem != 0) {
+      throw new ErrorEvent("createChatfireDateIntervalDict 에서 interval은 60으로 나누어 떨어지는 정수가 되어야 합니다.");
+    }
+    for (let key of objKeys) {
+      const time = new Date(key);
+      const sortedKey = this.createChatfireDateKey(time, interval);
+      if (!(sortedKey in sortedByInterval)) sortedByInterval[sortedKey] = [];
+      sortedByInterval[sortedKey].push(obj[key]);
+    }
+    return sortedByInterval;
+  }
+
+  private convertDateToKoreanString(date: string) {
+    const splited_date = date.split(':');
+    if (splited_date.length == 2) {
+      return `${splited_date[0]}일 ${splited_date[1]}시`
+    } else if (splited_date.length == 3) {
+      return `${splited_date[0]}일 ${splited_date[1]}시 ${splited_date[2]}분`;
+    }
+  }
+
+  /*
+    sortedByOneHour 객체에 있는 배열로 평균을 계산함
+    result = [{
+      time: 28일 0시,
+      count: 5      -> [1, 2, 3, 4]의 평균
+    }, {
+      time: 28일 1시,
+      count: 6.5    -> [2, 3, 4, 5]의 평균
+    }]
+  */
+  private calcAverageInCountList(sortedByInterval: Object): ChatfireAverage[] {
+    const result: ChatfireAverage[] = [];
+    const sortedByIntervalKeys = Object.keys(sortedByInterval);
+  
+    for (let key of sortedByIntervalKeys) {
+      result.push({
+        count: Math.ceil(
+          sortedByInterval[key].reduce((a: number, b: number) => a + b) /
+            sortedByInterval[key].length,
+        ),
+        time: this.convertDateToKoreanString(key),
+      });
+    }
+    return (result);
+  }
+
+  private calculateAverage(obj: Object, interval: number): ChatfireAverage[] {
+    const sortedByInterval = this.createChatfireDateIntervalDict(obj, interval);
+    const result = this.calcAverageInCountList(sortedByInterval);
+    
+    return result;
+  };
+
+  async getAverageOfIntervals(nick: string, interval: number): Promise<ChatfireAverage[]> {
     const streamer = await this.streamerService.findOneByNick(nick);
-    const recentData: Chatfire[] = await this.chatFireRepository.query(
-      `SELECT * FROM chatfire WHERE streamer_id='${streamer.streamer_id}' AND date > now() - INTERVAL 1 DAY;`,
-    );
+
+    const sql = `SELECT * FROM chatfire WHERE streamer_id='${streamer.streamer_id}' AND date > now() - INTERVAL 1 DAY;`;
+    const recentData: Chatfire[] = await this.chatFireRepository.query(sql);
     const currentTime = new Date();
     currentTime.setSeconds(0);
     currentTime.setMilliseconds(0);
@@ -90,7 +127,8 @@ export class ChatfireService {
       a_day_ago = new Date(a_day_ago.getTime() + 60 * 1000);
     }
     for (let el of recentData) obj[el.date.toISOString()] = el.count;
-    return calculateAverage(obj);
+
+    return this.calculateAverage(obj, interval);
   }
 
   private async getChatfiresAfterDate(
@@ -215,12 +253,12 @@ export class ChatfireService {
 
   async getCurrent(streamer_nick: string): Promise<Chatfire> {
     const streamer = await this.streamerService.findOneByNick(streamer_nick);
-    const date = new Date(new Date().getTime() - 60 * 1000);
-    date.setSeconds(0);
-    date.setMilliseconds(0);
+    const a_minute_ago = new Date(new Date().getTime() - 60 * 1000);
+    a_minute_ago.setSeconds(0);
+    a_minute_ago.setMilliseconds(0);
     let chatfire = await this.chatFireRepository.findOne({
       streamer_id: streamer.streamer_id,
-      date: date,
+      date: a_minute_ago,
     });
     if (!chatfire) {
       chatfire = await this.initChatfire();

@@ -1,45 +1,13 @@
-import { FC, useEffect, useState } from "react";
+import { FC } from "react";
 import Link from "next/link";
 import { Button, Box, TextField } from "@material-ui/core";
 import Autocomplete from "@mui/material/Autocomplete";
 import SearchIcon from "@mui/icons-material/Search";
-import type { Streamer } from "../interfaces/streamer";
 import styles from "../styles/Header.module.css";
-import { useRouter, NextRouter } from "next/router";
+import useAutoComplete from "../components/hooks/useAutoComplete";
 
 const Header: FC = ({ children }): JSX.Element => {
-  const router: NextRouter = useRouter();
-  const [autoCompleteData, setAutoCompleteData] = useState<Streamer[]>([]);
-  const [textToSearch, setTextToSearch] = useState<string>("");
-
-  const searchButtonOnClick = () => {
-    router.push(`/${textToSearch}`);
-  };
-
-  const searchBarKeyDown = (e: any) => {
-    if (e.code === "Enter" && e.target.value) {
-      router.push(`/${e.target.value}`);
-    }
-  };
-
-  const fetchAutoCompleteData = async (): Promise<Streamer[]> => {
-    const res: Response = await fetch(`${window.origin}/api/graphql`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        query: "{ Streamer_getAll { nick, image_url } }",
-      }),
-    });
-    const data: Streamer[] = (await res.json()).data.Streamer_getAll;
-    return data;
-  };
-
-  useEffect(() => {
-    fetchAutoCompleteData().then((data) => setAutoCompleteData(data));
-  }, []);
+  const [autoCompleteProps, searchButtonOnClick] = useAutoComplete();
 
   return (
     <>
@@ -48,13 +16,8 @@ const Header: FC = ({ children }): JSX.Element => {
           <Button className={styles.Logo}>트채통</Button>
         </Link>
         <Autocomplete
-          disablePortal
-          freeSolo
           className={styles.SearchBar}
-          options={autoCompleteData}
-          inputValue={textToSearch}
-          onInputChange={(_, value) => setTextToSearch(value)}
-          getOptionLabel={(data: Streamer) => data.nick}
+          {...autoCompleteProps}
           renderOption={(props, data) => (
             <Box {...props}>
               <img
@@ -66,16 +29,6 @@ const Header: FC = ({ children }): JSX.Element => {
               <br />
             </Box>
           )}
-          renderInput={(params) => {
-            return (
-              <TextField
-                label={"검색하기"}
-                {...params}
-                variant={"filled"}
-                onKeyDown={searchBarKeyDown}
-              />
-            );
-          }}
         />
         <Box className={styles.SearchButtonBox}>
           <SearchIcon
