@@ -9,6 +9,7 @@ RUN mkdir /www
 RUN chown -R www:www /var/lib/nginx
 RUN chown -R www:www /www
 
+ADD srcs/ssl /etc/nginx/ssl
 ADD srcs/nginx.conf /etc/nginx/nginx.conf
 
 EXPOSE 80
