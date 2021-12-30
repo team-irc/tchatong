@@ -67,7 +67,7 @@ const Help: NextPage = ({
     } else if (tabsOrientation === "horizontal" && windowSize.width > 480) {
       setTabsOrientation("vertical");
     }
-  }, [windowSize]);
+  }, [windowSize, tabsOrientation]);
 
   return (
     <Header>
