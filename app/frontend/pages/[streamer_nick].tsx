@@ -5,12 +5,15 @@ import {
   NextPage,
 } from "next";
 import Image from "next/image";
-import { CSSProperties, FC, useEffect, useRef } from "react";
+import { CSSProperties, FC, useEffect, useRef, useState } from "react";
 import { Chart, registerables } from "chart.js";
 import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
-import { Box, Card } from "@mui/material";
+import { Box, Card, MenuItem, Select } from "@mui/material";
 import { useRouter } from "next/router";
+
+type CandleType = 1 | 5 | 10 | 60;
+type ChartType = "line" | "bar";
 
 interface StatisticsProps {
   data: {
@@ -71,18 +74,20 @@ const StatisticsCard: FC<{
 
 const Statistics: NextPage<StatisticsProps> = ({
   data: {
-    Streamer_getOneByNick,
-    Chatfire_getCurrentByNick,
-    Chatfire_getDayTopByNick,
-    Chatfire_getEntireTopByNick,
-    Chatfire_getAverageOfOneHourIntervalsForOneDayByNick,
-    Topword_getTopwordByNick,
+    Streamer_getOneByNick: streamerInfo,
+    Chatfire_getCurrentByNick: currentChatFire,
+    Chatfire_getDayTopByNick: dayTopChatFire,
+    Chatfire_getEntireTopByNick: entireTopChatFire,
+    Chatfire_getAverageOfOneHourIntervalsForOneDayByNick: oneHourCandle,
+    Topword_getTopwordByNick: mostUsedWord,
   },
 }: InferGetServerSidePropsType<
   GetServerSideProps<StatisticsProps>
 >): JSX.Element => {
   const router = useRouter();
   const chart = useRef<Chart<"line", number[], string>>();
+  const [candleType, setCandleType] = useState<CandleType>(60);
+  const [chartType, setChartType] = useState<ChartType>("line");
 
   /*
    ** draw chart
@@ -103,15 +108,11 @@ const Statistics: NextPage<StatisticsProps> = ({
           },
         },
         data: {
-          labels: Chatfire_getAverageOfOneHourIntervalsForOneDayByNick.map(
-            (el) => el.time
-          ),
+          labels: oneHourCandle.map((el) => el.time),
           datasets: [
             {
               label: "시간당 평균 채팅 수",
-              data: Chatfire_getAverageOfOneHourIntervalsForOneDayByNick.map(
-                (el) => el.count
-              ),
+              data: oneHourCandle.map((el) => el.count),
               fill: false,
               borderColor: "rgb(137, 88, 216)",
               tension: 0.1,
@@ -121,17 +122,14 @@ const Statistics: NextPage<StatisticsProps> = ({
       });
     }
     return () => chart.current?.destroy();
-  }, [
-    router.query.streamer_nick,
-    Chatfire_getAverageOfOneHourIntervalsForOneDayByNick,
-  ]);
+  }, [router.query.streamer_nick, oneHourCandle]);
 
   return (
     <Header>
       <div className={styles.Frame}>
         <Box className={styles.StreamerInfo}>
           <Image
-            src={Streamer_getOneByNick.image_url}
+            src={streamerInfo.image_url}
             width={133}
             height={133}
             className={styles.StreamerImg}
@@ -139,12 +137,12 @@ const Statistics: NextPage<StatisticsProps> = ({
           />
           <span className={styles.StreamerInfoText}>
             <a
-              href={`https://www.twitch.tv/${Streamer_getOneByNick.streamer_id}`}
+              href={`https://www.twitch.tv/${streamerInfo.streamer_id}`}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.StreamerNick}
             >
-              {Streamer_getOneByNick.nick}
+              {streamerInfo.nick}
             </a>
             <br />
             <span className={styles.StreamerFollowers}>팔로워: 30만명</span>
@@ -156,31 +154,43 @@ const Statistics: NextPage<StatisticsProps> = ({
           <StatisticsCard
             className={styles.RecentlyUsedWord}
             head="최근 가장 많이 쓰인 단어"
-            body={
-              Topword_getTopwordByNick.top1.length === 0
-                ? "없음"
-                : Topword_getTopwordByNick.top1
-            }
+            body={mostUsedWord.top1.length === 0 ? "없음" : mostUsedWord.top1}
           />
         </Box>
         <Box style={{ width: "100%" }}>
+          <Select
+            value={candleType}
+            onChange={(e) => setCandleType(e.target.value as CandleType)}
+          >
+            <MenuItem value={1}>1분</MenuItem>
+            <MenuItem value={5}>5분</MenuItem>
+            <MenuItem value={10}>10분</MenuItem>
+            <MenuItem value={60}>1시간</MenuItem>
+          </Select>
+          <Select
+            value={chartType}
+            onChange={(e) => setChartType(e.target.value as ChartType)}
+          >
+            <MenuItem value={"line"}>꺾은선 그래프</MenuItem>
+            <MenuItem value={"bar"}>막대 그래프</MenuItem>
+          </Select>
           <Box style={{ width: "100%", height: "auto", maxHeight: "40rem" }}>
             <canvas id="chart" className={styles.Canvas} />
           </Box>
           <Box className={styles.CardList}>
             <StatisticsCard
               head="현재 채팅 화력"
-              body={`분당 ${Chatfire_getCurrentByNick.count}회`}
+              body={`분당 ${currentChatFire.count}회`}
               className={styles.CardItem}
             />
             <StatisticsCard
               head="금일 최고 채팅 화력"
-              body={`분당 ${Chatfire_getDayTopByNick.count}회`}
+              body={`분당 ${dayTopChatFire.count}회`}
               className={styles.CardItem}
             />
             <StatisticsCard
               head="역대 최고 채팅 화력"
-              body={`분당 ${Chatfire_getEntireTopByNick.count}회`}
+              body={`분당 ${entireTopChatFire.count}회`}
               className={styles.CardItem}
             />
           </Box>
