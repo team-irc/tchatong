@@ -19,6 +19,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={theme}>
       <Head>
+        <title>트채통 | 트위치 채팅 통계 시스템</title>
         <Metadata />
       </Head>
       <Footer>
