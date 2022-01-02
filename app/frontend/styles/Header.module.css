@@ -1,21 +1,13 @@
 .Header {
   position: fixed;
   top: 0;
-  width: 100vw;
+  width: 100%;
   height: 4rem;
   background-color: var(--background-white);
   border-bottom: 1px solid var(--gray);
   z-index: 100;
   display: flex;
   align-items: center;
-}
-
-.Logo {
-  color: var(--purple1) !important;
-  object-fit: fill !important;
-  height: 4rem !important;
-  font-size: 2rem !important;
-  margin-left: 1rem !important;
 }
 
 .SearchBar {

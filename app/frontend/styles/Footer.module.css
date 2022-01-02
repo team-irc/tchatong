@@ -1,15 +1,12 @@
 .Footer {
-  width: 100vw;
+  width: 100%;
   height: 5rem;
   background-color: var(--black);
   position: relative;
 }
 
 .FooterButtonToServiceCenter {
-  color: var(--background-white) !important;
-  position: absolute !important;
   right: 0;
-  height: 5rem !important;
 }
 
 .FooterCopyRights {
