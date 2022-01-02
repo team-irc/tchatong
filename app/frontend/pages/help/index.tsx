@@ -1,21 +1,16 @@
-import { useState, SyntheticEvent, useEffect } from "react";
+import { useState, SyntheticEvent, useEffect, ReactNode } from "react";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
-import {
-  GetServerSideProps,
-  InferGetServerSidePropsType,
-  NextPage,
-} from "next";
+import { NextPage } from "next";
 import Header from "../../layout/header";
 import Faq from "../../components/pages/help/faq";
-import { Streamer } from "../../interfaces/streamer";
 import ContactUs from "../../components/pages/help/contactus";
 import styles from "../../styles/Help.module.css";
 import useWindowSize from "../../components/hooks/useWindowSize";
 
 interface TabPanelProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
   index: number;
   value: number;
 }
@@ -48,9 +43,7 @@ function a11yProps(index: number) {
   };
 }
 
-const Help: NextPage = ({
-  data,
-}: InferGetServerSidePropsType<GetServerSideProps>) => {
+const Help: NextPage = () => {
   const [value, setValue] = useState(0);
   const [tabsOrientation, setTabsOrientation] = useState<
     "vertical" | "horizontal"
@@ -91,20 +84,6 @@ const Help: NextPage = ({
       </Box>
     </Header>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const res: Response = await fetch("http://backend:3000/graphql", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify({ query: "{ Streamer_getAll { nick, image_url } }" }),
-  });
-  const data: Streamer[] = (await res.json()).data.Streamer_getAll;
-  if (!data) return { notFound: true };
-  return { props: { data } };
 };
 
 export default Help;
