@@ -3,7 +3,6 @@ import { FC } from "react";
 const Metadata: FC = (): JSX.Element => {
   return (
     <>
-      <title>트채통 | 트위치 채팅 통계 시스템</title>
       <meta charSet="utf-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <meta
