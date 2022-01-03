@@ -6,7 +6,7 @@ import { Entity, Column, Timestamp, PrimaryColumn } from 'typeorm';
 export class Legend {
   @Column('varchar', { length: 32 })
   @Field()
-  streamer_id: string;
+  streamer_login: string;
 
   @Column('timestamp')
   @Field((type) => Date)

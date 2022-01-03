@@ -5,12 +5,13 @@
 type Streamer {
   id: Int!
   streamer_id: String!
+  streamer_login: String!
   nick: String!
   image_url: String!
 }
 
 type Chatfire {
-  streamer_id: String!
+  streamer_login: String!
   date: DateTime!
   count: Int!
   id: Int!
@@ -29,7 +30,7 @@ type ChatfireAverage {
 
 type Topword {
   id: Int!
-  streamer_id: String!
+  streamer_login: String!
   date: DateTime!
   top1: String!
   top2: String!
@@ -83,8 +84,8 @@ type Query {
 
 type Mutation {
   """add Streamer field"""
-  Streamer_createOne(streamer_id: String!, nick: String!, image_url: String!): Streamer!
+  Streamer_createOne(streamer_login: String!): Streamer!
 
   """delete Streamer field"""
-  Streamer_deleteOne(streamer_id: String!): [Streamer!]!
+  Streamer_deleteOne(streamer_login: String!): [Streamer!]!
 }

@@ -28,17 +28,25 @@ export class ChatfireService {
 
   async findOneByNick(nick: string): Promise<Chatfire[]> {
     const streamer = await this.streamerService.findOneByNick(nick);
-    return this.chatFireRepository.find({ streamer_id: streamer.streamer_id });
+    return this.chatFireRepository.find({
+      streamer_login: streamer.streamer_login,
+    });
   }
 
   private createChatfireDateKey(time: Date, interval: number) {
     if (interval == 60) {
       return `${String(time.getDate())}:${String(time.getHours())}`;
     } else if (interval == 1) {
-      return `${String(time.getDate())}:${String(time.getHours())}:${String(time.getMinutes())}`;
+      return `${String(time.getDate())}:${String(time.getHours())}:${String(
+        time.getMinutes(),
+      )}`;
     } else {
-      const min = Math.round(Math.floor(time.getMinutes() / interval) * interval);
-      return `${String(time.getDate())}:${String(time.getHours())}:${String(min)}`;
+      const min = Math.round(
+        Math.floor(time.getMinutes() / interval) * interval,
+      );
+      return `${String(time.getDate())}:${String(time.getHours())}:${String(
+        min,
+      )}`;
     }
   }
 
@@ -52,13 +60,18 @@ export class ChatfireService {
       20:0:05 [...]
     }
   */
-  private createChatfireDateIntervalDict(obj: Object, interval: number): Object {
+  private createChatfireDateIntervalDict(
+    obj: Object,
+    interval: number,
+  ): Object {
     const rem = 60 % interval;
     const sortedByInterval = {};
     const objKeys = Object.keys(obj);
 
     if (rem != 0) {
-      throw new ErrorEvent("createChatfireDateIntervalDict 에서 interval은 60으로 나누어 떨어지는 정수가 되어야 합니다.");
+      throw new ErrorEvent(
+        'createChatfireDateIntervalDict 에서 interval은 60으로 나누어 떨어지는 정수가 되어야 합니다.',
+      );
     }
     for (let key of objKeys) {
       const time = new Date(key);
@@ -72,7 +85,7 @@ export class ChatfireService {
   private convertDateToKoreanString(date: string) {
     const splited_date = date.split(':');
     if (splited_date.length == 2) {
-      return `${splited_date[0]}일 ${splited_date[1]}시`
+      return `${splited_date[0]}일 ${splited_date[1]}시`;
     } else if (splited_date.length == 3) {
       return `${splited_date[0]}일 ${splited_date[1]}시 ${splited_date[2]}분`;
     }
@@ -91,7 +104,7 @@ export class ChatfireService {
   private calcAverageInCountList(sortedByInterval: Object): ChatfireAverage[] {
     const result: ChatfireAverage[] = [];
     const sortedByIntervalKeys = Object.keys(sortedByInterval);
-  
+
     for (let key of sortedByIntervalKeys) {
       result.push({
         count: Math.ceil(
@@ -101,20 +114,23 @@ export class ChatfireService {
         time: this.convertDateToKoreanString(key),
       });
     }
-    return (result);
+    return result;
   }
 
   private calculateAverage(obj: Object, interval: number): ChatfireAverage[] {
     const sortedByInterval = this.createChatfireDateIntervalDict(obj, interval);
     const result = this.calcAverageInCountList(sortedByInterval);
-    
-    return result;
-  };
 
-  async getAverageOfIntervals(nick: string, interval: number): Promise<ChatfireAverage[]> {
+    return result;
+  }
+
+  async getAverageOfIntervals(
+    nick: string,
+    interval: number,
+  ): Promise<ChatfireAverage[]> {
     const streamer = await this.streamerService.findOneByNick(nick);
 
-    const sql = `SELECT * FROM chatfire WHERE streamer_id='${streamer.streamer_id}' AND date > now() - INTERVAL 1 DAY;`;
+    const sql = `SELECT * FROM chatfire WHERE streamer_login='${streamer.streamer_login}' AND date > now() - INTERVAL 1 DAY;`;
     const recentData: Chatfire[] = await this.chatFireRepository.query(sql);
     const currentTime = new Date();
     currentTime.setSeconds(0);
@@ -132,16 +148,16 @@ export class ChatfireService {
   }
 
   private async getChatfiresAfterDate(
-    streamer_id: string,
+    streamer_login: string,
     date: Date,
   ): Promise<Chatfire[]> {
-    const sql = `SELECT * FROM chatfire WHERE (streamer_id = '${streamer_id}' AND date >= '${date}');`;
+    const sql = `SELECT * FROM chatfire WHERE (streamer_login = '${streamer_login}' AND date >= '${date}');`;
     return await this.chatFireRepository.query(sql);
   }
 
   private async initChatfire(): Promise<Chatfire> {
     const chatfire = new Chatfire();
-    chatfire.streamer_id = '';
+    chatfire.streamer_login = '';
     chatfire.id = 0;
     chatfire.date = new Date();
     chatfire.count = 0;
@@ -165,7 +181,7 @@ export class ChatfireService {
     const a_day_ago = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
     const streamer = await this.streamerService.findOneByNick(streamer_nick);
     const chatfires = await this.getChatfiresAfterDate(
-      streamer.streamer_id,
+      streamer.streamer_login,
       a_day_ago,
     );
     const day_top = await this.getHighestCountFromChatfires(chatfires);
@@ -173,25 +189,25 @@ export class ChatfireService {
     return day_top;
   }
 
-  private async getLastEntireTop(streamer_id: string): Promise<Legend> {
-    return this.legendRepository.findOne({ streamer_id: streamer_id });
+  private async getLastEntireTop(streamer_login: string): Promise<Legend> {
+    return this.legendRepository.findOne({ streamer_login: streamer_login });
   }
 
   private async saveEntireTopOfStreamer(entire_top: Chatfire) {
     const legend = this.legendRepository.findOne({
-      streamer_id: entire_top.streamer_id,
+      streamer_login: entire_top.streamer_login,
     });
     if (!legend) {
       this.legendRepository.save({
-        streamer_id: entire_top.streamer_id,
+        streamer_login: entire_top.streamer_login,
         chatfire_id: entire_top.id,
         last_update_date: new Date(),
       });
     } else {
       this.legendRepository.update(
-        { streamer_id: entire_top.streamer_id },
+        { streamer_login: entire_top.streamer_login },
         {
-          streamer_id: entire_top.streamer_id,
+          streamer_login: entire_top.streamer_login,
           chatfire_id: entire_top.id,
           last_update_date: new Date(),
         },
@@ -218,12 +234,12 @@ export class ChatfireService {
           LastUpdateDate를 기준으로 새로 계산해서 저장한다.
    @todo 오랫동안 조회하지 않았던 스트리머를 조회할때 너무 많은 chatfire를 불러와 계산하는 과정에서 문제가 생길 수 있다. (조치 필요)
   */
-  private async getEntireTop(streamer_id: string): Promise<Chatfire> {
-    const last_entire_top = await this.getLastEntireTop(streamer_id);
+  private async getEntireTop(streamer_login: string): Promise<Chatfire> {
+    const last_entire_top = await this.getLastEntireTop(streamer_login);
     if (!last_entire_top) {
       // 첫 생성
       const chatfires = await this.chatFireRepository.find({
-        streamer_id: streamer_id,
+        streamer_login: streamer_login,
       });
       const entire_top = await this.getHighestCountFromChatfires(chatfires);
       this.saveEntireTopOfStreamer(entire_top);
@@ -234,7 +250,7 @@ export class ChatfireService {
         last_entire_top.chatfire_id,
       );
       const chatfires = await this.getChatfiresAfterDate(
-        streamer_id,
+        streamer_login,
         last_entire_top.last_update_date,
       );
       chatfires.push(last_entire_top_chatfire);
@@ -246,7 +262,7 @@ export class ChatfireService {
 
   async findEntireTop(streamer_nick: string): Promise<Chatfire> {
     const streamer = await this.streamerService.findOneByNick(streamer_nick);
-    const entire_top = await this.getEntireTop(streamer.streamer_id);
+    const entire_top = await this.getEntireTop(streamer.streamer_login);
     entire_top.streamer = streamer;
     return entire_top;
   }
@@ -257,7 +273,7 @@ export class ChatfireService {
     a_minute_ago.setSeconds(0);
     a_minute_ago.setMilliseconds(0);
     let chatfire = await this.chatFireRepository.findOne({
-      streamer_id: streamer.streamer_id,
+      streamer_login: streamer.streamer_login,
       date: a_minute_ago,
     });
     if (!chatfire) {
