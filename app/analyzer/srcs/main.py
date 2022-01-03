@@ -49,7 +49,7 @@ def save_chatfire_from_chatlog(cursor: Cursor, res3: tuple):
 
 	df = pd.DataFrame(res3)
 	chatlog = df.set_index('date', drop=True) # Change date column to index for resample
-	chatfire = chatlog.groupby('streamer_id').resample('1T').count().content.reset_index(level=['streamer_id', 'date']).rename(columns = {'content': 'count'})
+	chatfire = chatlog.groupby('streamer_login').resample('1T').count().content.reset_index(level=['streamer_login', 'date']).rename(columns = {'content': 'count'})
 
 	sql = f"INSERT INTO chatfire VALUES(default, %s, %s, %s);"
 
@@ -77,11 +77,11 @@ def save_chatfire_from_last_date():
 		print('[-] save_chatfire error')
 		exit(1)
 
-def save_topword_in_a_day(streamer_id, db, cursor):
+def save_topword_in_a_day(streamer_login, db, cursor):
 	a_day_ago: datetime.datetime
 
 	a_day_ago = datetime.datetime.now() - datetime.timedelta(days=1)
-	sql = f"SELECT content FROM chatlog WHERE (streamer_id = '{streamer_id}' AND date >= \'{a_day_ago}\');"
+	sql = f"SELECT content FROM chatlog WHERE (streamer_login = '{streamer_login}' AND date >= \'{a_day_ago}\');"
 	fetch_num = cursor.execute(sql)
 	if (fetch_num < TOPWORD_FETCH_MIN | fetch_num > TOPWORD_FETCH_MAX):
 		return
@@ -106,7 +106,7 @@ def save_topword_in_a_day(streamer_id, db, cursor):
 	res = sorted(result.items(), key=lambda x: x[1])
 	if (len(res) > 10):
 		try:
-			sql = f"INSERT INTO topword VALUES (default, \'{streamer_id}\', \'{datetime.datetime.now()}\', \'{res[-1][0]}\', \'{res[-2][0]}\', \'{res[-3][0]}\', \'{res[-4][0]}\', \'{res[-5][0]}\', \'{res[-6][0]}\', \'{res[-7][0]}\', \'{res[-8][0]}\', \'{res[-9][0]}\', \'{res[-10][0]}\')"
+			sql = f"INSERT INTO topword VALUES (default, \'{streamer_login}\', \'{datetime.datetime.now()}\', \'{res[-1][0]}\', \'{res[-2][0]}\', \'{res[-3][0]}\', \'{res[-4][0]}\', \'{res[-5][0]}\', \'{res[-6][0]}\', \'{res[-7][0]}\', \'{res[-8][0]}\', \'{res[-9][0]}\', \'{res[-10][0]}\')"
 			cursor.execute(sql)
 			db.commit()
 		except:
@@ -115,11 +115,11 @@ def save_topword_in_a_day(streamer_id, db, cursor):
 
 def refresh_topwords(db, cursor):
 	print('refresh topwords')
-	sql = "SELECT streamer_id FROM streamer;"
+	sql = "SELECT streamer_login FROM streamer;"
 	cursor.execute(sql)
 	streamers = cursor.fetchall()
 	for streamer in streamers:
-		save_topword_in_a_day(streamer['streamer_id'], db, cursor)
+		save_topword_in_a_day(streamer['streamer_login'], db, cursor)
 
 def refresh_topwords_thread_func(db, cursor):
 	while True:
@@ -147,7 +147,7 @@ def connect_db():
 
 
 # 1분당 채팅수 기록
-# chatfire ('streamer_id', 'date', 'count')
+# chatfire ('streamer_login', 'date', 'count')
 # ---------
 # 1. 실시간 기록 (매 1분마다)
 # 2. 프로그램이 꺼져있던 시간동안 기록하지 못했던것 기록 (켜질때 한번만)

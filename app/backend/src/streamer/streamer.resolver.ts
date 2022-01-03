@@ -30,6 +30,9 @@ export class StreamerResolver {
   async createOne(@Args() streamerInfo: CreateOneArgs) {
     return this.streamerService.addNewStreamer({
       id: 0,
+      streamer_id: '',
+      nick: '',
+      image_url: '',
       ...streamerInfo,
     });
   }
@@ -38,7 +41,7 @@ export class StreamerResolver {
     name: 'Streamer_deleteOne',
     description: 'delete Streamer field',
   })
-  async deleteOne(@Args('streamer_id') streamer_id: string) {
-    return this.streamerService.deleteStreamerById(streamer_id);
+  async deleteOne(@Args('streamer_login') streamer_login: string) {
+    return this.streamerService.deleteStreamerById(streamer_login);
   }
 }

@@ -27,7 +27,7 @@ interface StatisticsProps {
   data: {
     streamerInfo: {
       image_url: string;
-      streamer_id: string;
+      streamer_login: string;
       nick: string;
     };
     dayTopChatFire: { count: number };
@@ -127,7 +127,7 @@ const Statistics: NextPage<StatisticsProps> = ({
           />
           <span className={styles.StreamerInfoText}>
             <a
-              href={`https://www.twitch.tv/${data.streamerInfo.streamer_id}`}
+              href={`https://www.twitch.tv/${data.streamerInfo.streamer_login}`}
               target="_blank"
               rel="noopener noreferrer"
               className={styles.StreamerNick}
@@ -214,7 +214,7 @@ export const getServerSideProps: GetServerSideProps = async ({
       },
       body: JSON.stringify({
         query: `{
-          Streamer_getOneByNick(nick: "${params?.streamer_nick}") { image_url, streamer_id, nick }
+          Streamer_getOneByNick(nick: "${params?.streamer_nick}") { image_url, streamer_login, nick }
           Chatfire_getDayTopByNick(nick: "${params?.streamer_nick}") { count }
           Chatfire_getCurrentByNick(nick: "${params?.streamer_nick}") { count }
           Chatfire_getEntireTopByNick(nick: "${params?.streamer_nick}") { count }

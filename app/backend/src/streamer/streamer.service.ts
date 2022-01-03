@@ -27,9 +27,9 @@ export class StreamerService {
     return this.streamerRepository.save(newStreamerInfo);
   }
 
-  async deleteStreamerById(streamer_id: string): Promise<Streamer[]> {
+  async deleteStreamerById(streamer_login: string): Promise<Streamer[]> {
     const targetToDelete: Streamer = await this.streamerRepository.findOne({
-      streamer_id,
+      streamer_login,
     });
     return this.streamerRepository.remove([targetToDelete]);
   }
