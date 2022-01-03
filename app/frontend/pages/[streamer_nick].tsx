@@ -11,6 +11,7 @@ import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
 import { Box, Card, MenuItem, Select } from "@mui/material";
 import { useRouter } from "next/router";
+import MostUsedTable from "../components/MostUsedTable";
 
 type CandleType =
   | "oneMinuteCandle"
@@ -33,7 +34,7 @@ interface StatisticsProps {
     dayTopChatFire: { count: number };
     currentChatFire: { count: number };
     entireTopChatFire: { count: number };
-    mostUsedWord: { top1: string };
+    mostUsedWord: string[];
     oneMinuteCandle: ChartData[];
     fiveMinuteCandle: ChartData[];
     tenMinuteCandle: ChartData[];
@@ -145,13 +146,14 @@ const Statistics: NextPage<StatisticsProps> = ({
             className={styles.RecentlyUsedWord}
             head="최근 가장 많이 쓰인 단어"
             body={
-              data.mostUsedWord.top1.length === 0
-                ? "없음"
-                : data.mostUsedWord.top1
+              data.mostUsedWord[0].length === 0 ? "없음" : data.mostUsedWord[0]
             }
           />
         </Box>
         <Box style={{ width: "100%" }}>
+          <Box style={{ width: "100%", padding: "2rem" }}>
+            <MostUsedTable rows={data.mostUsedWord} />
+          </Box>
           <Box
             style={{
               width: "100%",
@@ -218,7 +220,18 @@ export const getServerSideProps: GetServerSideProps = async ({
           Chatfire_getDayTopByNick(nick: "${params?.streamer_nick}") { count }
           Chatfire_getCurrentByNick(nick: "${params?.streamer_nick}") { count }
           Chatfire_getEntireTopByNick(nick: "${params?.streamer_nick}") { count }
-          Topword_getTopwordByNick(nick: "${params?.streamer_nick}") { top1 }
+          Topword_getTopwordByNick(nick: "${params?.streamer_nick}") {
+            top1,
+            top2,
+            top3,
+            top4,
+            top5,
+            top6,
+            top7,
+            top8,
+            top9,
+            top10
+          }
           Chatfire_getAverageOfaMinuteIntervalsForOneDayByNick(nick: "${params?.streamer_nick}") { count, time }
           Chatfire_getAverageOfFiveMinuteIntervalsForOneDayByNick(nick: "${params?.streamer_nick}") { count, time }
           Chatfire_getAverageOfTenMinuteIntervalsForOneDayByNick(nick: "${params?.streamer_nick}") { count, time }
@@ -236,7 +249,18 @@ export const getServerSideProps: GetServerSideProps = async ({
         dayTopChatFire: data.Chatfire_getDayTopByNick,
         currentChatFire: data.Chatfire_getCurrentByNick,
         entireTopChatFire: data.Chatfire_getEntireTopByNick,
-        mostUsedWord: data.Topword_getTopwordByNick,
+        mostUsedWord: [
+          data.Topword_getTopwordByNick.top1,
+          data.Topword_getTopwordByNick.top2,
+          data.Topword_getTopwordByNick.top3,
+          data.Topword_getTopwordByNick.top4,
+          data.Topword_getTopwordByNick.top5,
+          data.Topword_getTopwordByNick.top6,
+          data.Topword_getTopwordByNick.top7,
+          data.Topword_getTopwordByNick.top8,
+          data.Topword_getTopwordByNick.top9,
+          data.Topword_getTopwordByNick.top10,
+        ],
         oneMinuteCandle:
           data.Chatfire_getAverageOfaMinuteIntervalsForOneDayByNick,
         fiveMinuteCandle:

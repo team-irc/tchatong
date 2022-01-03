@@ -6,7 +6,11 @@ import styles from "../styles/Home.module.css";
 import useAutoComplete from "../components/hooks/useAutoComplete";
 
 const Home = () => {
-  const [autoCompleteProps, searchButtonOnClick] = useAutoComplete();
+  const [autoCompleteProps, searchButtonOnClick] = useAutoComplete(
+    [],
+    "",
+    "medium"
+  );
 
   return (
     <>
