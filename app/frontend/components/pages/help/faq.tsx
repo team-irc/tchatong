@@ -51,11 +51,7 @@ const Faq: FC = (): JSX.Element => {
     <List>
       <QuestionAndAnswer
         title="제가 좋아하는 스트리머가 없어요"
-        content="가나다라마바사...가나다라마바사....가나다라마바사..."
-      />
-      <QuestionAndAnswer
-        title="아무 질문"
-        content="가나다라마바사...가나다라마바사....가나다라마바사..."
+        content="문의로 스트리머 아이디를 남겨주시면 검토 후에 리스트에 추가하도록 하겠습니다."
       />
     </List>
   );

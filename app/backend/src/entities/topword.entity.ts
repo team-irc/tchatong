@@ -6,7 +6,7 @@ import { Entity, Column, PrimaryColumn } from 'typeorm';
 export class Topword {
   constructor() {
     this.id = 0;
-    this.streamer_id = '';
+    this.streamer_login = '';
     this.date = new Date();
     this.top1 = '';
     this.top2 = '';
@@ -26,7 +26,7 @@ export class Topword {
 
   @Column('varchar', { length: 32 })
   @Field((type) => String)
-  streamer_id: string;
+  streamer_login: string;
 
   @Column('timestamp')
   @Field((type) => Date)

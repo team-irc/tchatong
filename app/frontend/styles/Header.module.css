@@ -12,13 +12,13 @@
 
 .SearchBar {
   width: 20%;
-  height: 80%;
   margin-left: auto;
 }
 
 .SearchButtonBox {
-  height: calc(80% + 3px);
   display: flex;
+  height: 48px;
+  margin-right: 1rem;
   align-items: center;
   background-color: var(--purple1);
 }

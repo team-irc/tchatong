@@ -1,4 +1,3 @@
-import Box from "@mui/material/Box";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -103,8 +102,8 @@ const ContactUs: FC = () => {
 
   return (
     <>
-      <Box className={styles.Box}>
-        <FormControl fullWidth>
+      <FormControl fullWidth className={styles.Box}>
+        <FormControl>
           <InputLabel id="demo-simple-select-label">문의 종류</InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -156,7 +155,7 @@ const ContactUs: FC = () => {
         <Button variant="contained" onClick={handleClick}>
           문의하기
         </Button>
-      </Box>
+      </FormControl>
       <Snackbar
         open={!!openSuccess}
         autoHideDuration={6000}

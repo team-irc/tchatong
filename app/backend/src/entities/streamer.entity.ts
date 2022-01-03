@@ -14,6 +14,10 @@ export class Streamer {
 
   @Column('varchar', { length: 32 })
   @Field()
+  streamer_login: string;
+
+  @Column('varchar', { length: 32 })
+  @Field()
   nick: string;
 
   @Column('varchar', { length: 256 })

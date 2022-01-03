@@ -7,7 +7,7 @@ import { Streamer } from './streamer.entity';
 export class Chatfire {
   @Column('varchar', { length: 32 })
   @Field()
-  streamer_id: string;
+  streamer_login: string;
 
   @Column('timestamp')
   @Field((type) => Date)

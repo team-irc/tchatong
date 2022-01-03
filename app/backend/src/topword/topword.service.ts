@@ -20,7 +20,7 @@ export class TopwordService {
 
   async findTopword(nick: string): Promise<Topword> {
     const streamer = await this.streamerService.findOneByNick(nick);
-    const sql = `select * from topword where (streamer_id = '${streamer.streamer_id}') ORDER BY id DESC LIMIT 1;`;
+    const sql = `select * from topword where (streamer_login = '${streamer.streamer_login}') ORDER BY id DESC LIMIT 1;`;
     const topword = await this.topwordRepository.query(sql);
     if (topword.length == 0) {
       return new Topword();

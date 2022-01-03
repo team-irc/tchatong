@@ -1,11 +1,6 @@
 import { TextField } from "@mui/material";
 import router from "next/router";
-import {
-  useState,
-  useEffect,
-  SyntheticEvent,
-  ReactNode,
-} from "react";
+import { useState, useEffect, SyntheticEvent, ReactNode } from "react";
 import { Streamer } from "../../interfaces/streamer";
 import { AutocompleteRenderInputParams } from "@mui/material/Autocomplete/Autocomplete";
 
@@ -22,7 +17,8 @@ interface AutocompleteProps {
 
 const useAutoComplete = (
   initAutoCompleteData: Streamer[] = [],
-  initTextToSearch: string = ""
+  initTextToSearch: string = "",
+  size: "small" | "medium"
 ): [AutocompleteProps, () => void] => {
   const [autoCompleteData, setAutoCompleteData] =
     useState<Streamer[]>(initAutoCompleteData);
@@ -68,7 +64,12 @@ const useAutoComplete = (
       getOptionLabel: (data: Streamer) => data.nick ?? data,
       onKeyPress: searchBarKeyDown,
       renderInput: (params: AutocompleteRenderInputParams) => (
-        <TextField {...params} label={"검색하기"} variant={"filled"} />
+        <TextField
+          {...params}
+          label={"검색하기"}
+          variant={"filled"}
+          size={size}
+        />
       ),
     },
     searchButtonOnClick,

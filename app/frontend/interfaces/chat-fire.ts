@@ -1,6 +1,6 @@
 export interface Chatfire {
   id: number;
-  streamer_id: string;
+  streamer_login: string;
   date: string;
   count: number;
 }
