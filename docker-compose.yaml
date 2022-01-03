@@ -97,3 +97,11 @@ services:
     entrypoint: ["telegraf"]
     env_file:
       - docker.env
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    ports:
+      - "8080:80"
+    restart: always
+    env_file:
+      - docker.env
