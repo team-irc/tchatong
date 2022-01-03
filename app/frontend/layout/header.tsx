@@ -19,7 +19,6 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           objectFit: "fill",
-          height: "4rem",
           fontSize: "2rem",
           marginLeft: "1rem",
         },
@@ -29,7 +28,11 @@ const theme = createTheme({
 });
 
 const Header: FC = ({ children }): JSX.Element => {
-  const [autoCompleteProps, searchButtonOnClick] = useAutoComplete();
+  const [autoCompleteProps, searchButtonOnClick] = useAutoComplete(
+    [],
+    "",
+    "small"
+  );
 
   return (
     <>
