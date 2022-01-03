@@ -3,7 +3,7 @@
   flex-direction: column;
   justify-content: space-between;
   height: 100%;
-  padding: 3rem;
+  padding: 0 3rem;
 }
 
 .Box > * {
