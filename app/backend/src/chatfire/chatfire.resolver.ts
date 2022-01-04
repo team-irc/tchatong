@@ -1,7 +1,6 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { ChatfireService } from './chatfire.service';
 import { Chatfire } from '../entities/chatfire.entity';
-import { Any } from 'typeorm';
 import { ChatfireAverage } from 'src/entities/chatfire-average.entity';
 
 @Resolver()
@@ -28,7 +27,9 @@ export class ChatfireResolver {
     name: 'Chatfire_getAverageOfaMinuteIntervalsForOneDayByNick',
     description: 'get Average of 1 minute intervals for a day',
   })
-  async getAverageOfaMinuteIntervalsByNick(@Args('nick') streamer_nick: string): Promise<ChatfireAverage[]> {
+  async getAverageOfaMinuteIntervalsByNick(
+    @Args('nick') streamer_nick: string,
+  ): Promise<ChatfireAverage[]> {
     return this.chatfireService.getAverageOfIntervals(streamer_nick, 1);
   }
 
@@ -36,7 +37,9 @@ export class ChatfireResolver {
     name: 'Chatfire_getAverageOfFiveMinuteIntervalsForOneDayByNick',
     description: 'get Average of 5 minute intervals for a day',
   })
-  async getAverageOfFiveMinuteIntervalsByNick(@Args('nick') streamer_nick: string): Promise<ChatfireAverage[]> {
+  async getAverageOfFiveMinuteIntervalsByNick(
+    @Args('nick') streamer_nick: string,
+  ): Promise<ChatfireAverage[]> {
     return this.chatfireService.getAverageOfIntervals(streamer_nick, 5);
   }
 
@@ -44,7 +47,9 @@ export class ChatfireResolver {
     name: 'Chatfire_getAverageOfTenMinuteIntervalsForOneDayByNick',
     description: 'get Average of 10 minute intervals for a day',
   })
-  async getAverageOfTenMinuteIntervalsByNick(@Args('nick') streamer_nick: string): Promise<ChatfireAverage[]> {
+  async getAverageOfTenMinuteIntervalsByNick(
+    @Args('nick') streamer_nick: string,
+  ): Promise<ChatfireAverage[]> {
     return this.chatfireService.getAverageOfIntervals(streamer_nick, 10);
   }
 
@@ -52,7 +57,9 @@ export class ChatfireResolver {
     name: 'Chatfire_getAverageOfOneHourIntervalsForOneDayByNick',
     description: 'get Average of 1 hour intervals for a day',
   })
-  async getAverageOfHalfHourIntervalsByNick(@Args('nick') streamer_nick: string): Promise<ChatfireAverage[]> {
+  async getAverageOfHalfHourIntervalsByNick(
+    @Args('nick') streamer_nick: string,
+  ): Promise<ChatfireAverage[]> {
     return this.chatfireService.getAverageOfIntervals(streamer_nick, 30);
   }
 
@@ -60,7 +67,9 @@ export class ChatfireResolver {
     name: 'Chatfire_getAverageOfOneHourIntervalsForOneDayByNick',
     description: 'get Average of 1 hour intervals for a day',
   })
-  async getAverageOfOneHourIntervalsByNick(@Args('nick') streamer_nick: string): Promise<ChatfireAverage[]> {
+  async getAverageOfOneHourIntervalsByNick(
+    @Args('nick') streamer_nick: string,
+  ): Promise<ChatfireAverage[]> {
     return this.chatfireService.getAverageOfIntervals(streamer_nick, 60);
   }
 
