@@ -18,6 +18,8 @@ services:
     working_dir: /backend
     volumes:
       - ./app/backend:/backend
+    environment:
+      - TZ=Asia/Seoul
     env_file:
       - docker.env
     entrypoint: >
