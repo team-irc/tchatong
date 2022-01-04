@@ -196,13 +196,13 @@ export class ChatfireService {
       streamer_login: entire_top.streamer_login,
     });
     if (!legend) {
-      this.legendRepository.save({
+      await this.legendRepository.save({
         streamer_login: entire_top.streamer_login,
         chatfire_id: entire_top.id,
         last_update_date: new Date(),
       });
     } else {
-      this.legendRepository.update(
+      await this.legendRepository.update(
         { streamer_login: entire_top.streamer_login },
         {
           streamer_login: entire_top.streamer_login,
@@ -240,7 +240,7 @@ export class ChatfireService {
         streamer_login: streamer_login,
       });
       const entire_top = await this.getHighestCountFromChatfires(chatfires);
-      this.saveEntireTopOfStreamer(entire_top);
+      await this.saveEntireTopOfStreamer(entire_top);
       return entire_top;
     } else {
       // 업데이트
@@ -253,7 +253,7 @@ export class ChatfireService {
       );
       chatfires.push(last_entire_top_chatfire);
       const entire_top = await this.getHighestCountFromChatfires(chatfires);
-      this.saveEntireTopOfStreamer(entire_top);
+      await this.saveEntireTopOfStreamer(entire_top);
       return entire_top;
     }
   }
