@@ -8,6 +8,8 @@ type Streamer {
   streamer_login: String!
   nick: String!
   image_url: String!
+  onAir: Boolean!
+  views: Float!
 }
 
 type Chatfire {
@@ -78,14 +80,14 @@ type Query {
   """get one of Streamer by streamer nickname"""
   Streamer_getOneByNick(nick: String!): Streamer!
 
+  """get streamers infomation to insert database"""
+  Streamer_getUpdateInfo(nick: String!): Streamer!
+
   """get Top 10 words by streamer nick"""
   Topword_getTopwordByNick(nick: String!): Topword!
 }
 
 type Mutation {
-  """add Streamer field"""
-  Streamer_createOne(streamer_login: String!): Streamer!
-
   """delete Streamer field"""
   Streamer_deleteOne(streamer_login: String!): [Streamer!]!
 }

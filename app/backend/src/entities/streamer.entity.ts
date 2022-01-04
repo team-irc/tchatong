@@ -23,4 +23,13 @@ export class Streamer {
   @Column('varchar', { length: 256 })
   @Field()
   image_url: string;
+
+  @Field()
+  onAir: boolean;
+
+  @Field()
+  views: number;
+
+  @Field()
+  followers: number;
 }
