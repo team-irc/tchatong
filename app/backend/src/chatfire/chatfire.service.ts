@@ -119,9 +119,7 @@ export class ChatfireService {
 
   private calculateAverage(obj: Object, interval: number): ChatfireAverage[] {
     const sortedByInterval = this.createChatfireDateIntervalDict(obj, interval);
-    const result = this.calcAverageInCountList(sortedByInterval);
-
-    return result;
+    return this.calcAverageInCountList(sortedByInterval);
   }
 
   async getAverageOfIntervals(
