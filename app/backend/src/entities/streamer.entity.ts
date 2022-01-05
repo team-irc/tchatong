@@ -28,7 +28,7 @@ export class Streamer {
   onAir: boolean;
 
   @Field()
-  views: number;
+  viewers: number;
 
   @Field()
   followers: number;

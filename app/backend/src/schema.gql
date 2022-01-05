@@ -9,7 +9,8 @@ type Streamer {
   nick: String!
   image_url: String!
   onAir: Boolean!
-  views: Float!
+  viewers: Float!
+  followers: Float!
 }
 
 type Chatfire {
@@ -28,6 +29,13 @@ scalar DateTime
 type ChatfireAverage {
   time: String!
   count: Int!
+}
+
+type StreamerInsertInfoDto {
+  streamer_id: String!
+  streamer_login: String!
+  nick: String!
+  image_url: String!
 }
 
 type Topword {
@@ -80,8 +88,8 @@ type Query {
   """get one of Streamer by streamer nickname"""
   Streamer_getOneByNick(nick: String!): Streamer!
 
-  """get streamers infomation to insert database"""
-  Streamer_getUpdateInfo(nick: String!): Streamer!
+  """get streamers infomation to insert database by streamer login id"""
+  Streamer_getInsertInfoByLoginId(streamer_login: String!): StreamerInsertInfoDto!
 
   """get Top 10 words by streamer nick"""
   Topword_getTopwordByNick(nick: String!): Topword!

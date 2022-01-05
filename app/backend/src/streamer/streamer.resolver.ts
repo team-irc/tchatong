@@ -1,7 +1,7 @@
 import { Args, Query, Resolver, Mutation } from '@nestjs/graphql';
 import { StreamerService } from './streamer.service';
 import { Streamer } from '../entities/streamer.entity';
-import { CreateOneArgs } from './dto/create-one.args';
+import { StreamerInsertInfoDto } from './dto/insert-info.dto';
 
 @Resolver()
 export class StreamerResolver {
@@ -22,19 +22,13 @@ export class StreamerResolver {
   async getOneByNick(@Args('nick') nick: string): Promise<Streamer> {
     return this.streamerService.findOneByNick(nick);
   }
-
-  @Mutation((returns) => Streamer, {
-    name: 'Streamer_createOne',
-    description: 'add Streamer field',
+  
+  @Query((returns) => StreamerInsertInfoDto, {
+    name: 'Streamer_getInsertInfoByLoginId',
+    description: 'get streamers infomation to insert database by streamer login id',
   })
-  async createOne(@Args() streamerInfo: CreateOneArgs) {
-    return this.streamerService.addNewStreamer({
-      id: 0,
-      streamer_id: '',
-      nick: '',
-      image_url: '',
-      ...streamerInfo,
-    });
+  async getInsertInfoByLoginId(@Args('streamer_login') streamer_login: string): Promise<StreamerInsertInfoDto> {
+    return await this.streamerService.getInsertInfoByLoginId(streamer_login);
   }
 
   @Mutation((returns) => [Streamer], {
