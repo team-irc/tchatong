@@ -179,13 +179,6 @@ void	IrcClient::recv_from_server()
 			line_buffer = line_buffer + line;
 		}
 	}
-
-	while (std::getline(iss, line))
-	{
-		if (line.find("\r") != std::string::npos)
-			line = line.substr(0, line.size() - 1);
-		parse_chat(line);
-	}
 }
 
 std::string		parse_id(const std::string &msg)
@@ -252,12 +245,19 @@ bool		is_ping_check(const std::string &msg)
 /*
 	@brief parse message to nick, content
 */
-void	IrcClient::parse_chat(const std::string &msg)
+void	IrcClient::parse_chat(const std::string &msg, bool log)
 {
+	static int function_counter = 0;
 	std::string sql;
 	std::string	cmd;
 	t_chat	chat;
 
+	if (log)
+	{
+		std::cout << " Insert " << function_counter << " queries." << std::endl;
+		function_counter = 0;
+		return ;
+	}
 	try
 	{
 		cmd = parse_command(msg);
@@ -271,6 +271,7 @@ void	IrcClient::parse_chat(const std::string &msg)
 			sql = "INSERT INTO chatlog VALUES('" + chat.channel + "', default, '" + chat.id + "', '" + chat.content;
 			sql += "');";
 			_stmt->execute(sql.c_str());
+			++function_counter;
 		}
 		else if (is_ping_check(msg))
 			send_to_server("PONG");

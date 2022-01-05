@@ -2,6 +2,7 @@
 #include "IrcSocket.hpp"
 #include "utils.hpp"
 
+#define LOGGING_INTERVAL 60
 IrcClient		*g_client; // 입력용 thread와 공유할 변수
 
 void	announce()
@@ -27,6 +28,35 @@ void	input_thread()
 	}
 }
 
+void	log_current_time()
+{
+	std::time_t t = std::time(0);   // get time now
+	std::tm* now = std::localtime(&t);
+	std::cout << '[' << (now->tm_year + 1900) << '-' 
+				<< (now->tm_mon + 1) << '-'
+				<< now->tm_mday << ' '
+				<< now->tm_hour << ':'
+				<< now->tm_min << ':'
+				<< now->tm_sec << ']';
+}
+
+void	log_parse_chat_counter()
+{
+	g_client->parse_chat("", true);
+}
+
+void	logging_thread()
+{
+	std::string		log;
+
+	while (true)
+	{
+		log_current_time();
+		log_parse_chat_counter();
+		sleep(LOGGING_INTERVAL);
+	}
+}
+
 int		main()
 {
 	try
@@ -36,7 +66,9 @@ int		main()
 		g_client->join_streamer_channels();
 		// announce();
 		std::thread	thread(input_thread);
+		std::thread thread2(logging_thread);
 		thread.detach();
+		thread2.detach();
 		while (true)
 		{
 			try 
