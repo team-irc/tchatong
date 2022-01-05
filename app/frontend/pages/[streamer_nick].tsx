@@ -6,12 +6,31 @@ import {
 } from "next";
 import Image from "next/image";
 import { CSSProperties, FC, useEffect, useRef, useState } from "react";
-import { Chart, registerables } from "chart.js";
 import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
 import { Box, Card, MenuItem, Select } from "@mui/material";
 import { useRouter } from "next/router";
 import MostUsedTable from "../components/MostUsedTable";
+import dynamic from "next/dynamic";
+
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+
+let option = {
+  options: {
+    chart: {
+      id: "basic-bar",
+    },
+    xaxis: {
+      categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
+    },
+  },
+  series: [
+    {
+      name: "series-1",
+      data: [30, 40, 45, 50, 49, 60, 70, 91],
+    },
+  ],
+};
 
 type CandleType =
   | "oneMinuteCandle"
@@ -77,43 +96,8 @@ const Statistics: NextPage<StatisticsProps> = ({
   GetServerSideProps<StatisticsProps>
 >): JSX.Element => {
   const router = useRouter();
-  const chart = useRef<Chart<ChartType, number[], string>>();
   const [candleType, setCandleType] = useState<CandleType>("oneHourCandle");
   const [chartType, setChartType] = useState<ChartType>("line");
-
-  /*
-   ** draw chart
-   */
-  useEffect(() => {
-    let ctx = (
-      document.getElementById("chart") as HTMLCanvasElement
-    ).getContext("2d");
-    Chart.register(...registerables);
-    if (ctx !== null) {
-      chart.current = new Chart(ctx, {
-        type: chartType,
-        options: {
-          elements: { point: { radius: 0 } },
-          scales: { y: { beginAtZero: true } },
-        },
-        data: {
-          labels: data[candleType].map((el) => el.time),
-          datasets: [
-            {
-              label: "시간당 평균 채팅 수",
-              data: data[candleType].map((el) => el.count),
-              fill: false,
-              borderColor: "rgb(137, 88, 216)",
-              backgroundColor: "rgb(137, 88, 216)",
-              tension: 0.1,
-              minBarLength: 2,
-            },
-          ],
-        },
-      });
-    }
-    return () => chart.current?.destroy();
-  }, [router.query.streamer_nick, data.oneHourCandle, chartType, candleType]);
 
   return (
     <Header>
@@ -178,9 +162,12 @@ const Statistics: NextPage<StatisticsProps> = ({
               <MenuItem value={"bar"}>막대 그래프</MenuItem>
             </Select>
           </Box>
-          <Box style={{ width: "100%", height: "auto", maxHeight: "40rem" }}>
-            <canvas id="chart" className={styles.Canvas} />
-          </Box>
+          <Chart
+            options={option.options}
+            series={option.series}
+            type="bar"
+            width="500"
+          />
           <Box className={styles.CardList}>
             <StatisticsCard
               head="현재 채팅 화력"
