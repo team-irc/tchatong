@@ -5,13 +5,16 @@ import {
   NextPage,
 } from "next";
 import Image from "next/image";
-import { CSSProperties, FC, useEffect, useRef, useState } from "react";
-import { Chart, registerables } from "chart.js";
+import { CSSProperties, FC, useCallback, useEffect, useState } from "react";
 import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
 import { Box, Card, MenuItem, Select } from "@mui/material";
 import { useRouter } from "next/router";
 import MostUsedTable from "../components/MostUsedTable";
+import dynamic from "next/dynamic";
+import useChart from "../components/hooks/useChart";
+import useBrushChart from "../components/hooks/useBrushChart";
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 type CandleType =
   | "oneMinuteCandle"
@@ -76,44 +79,29 @@ const Statistics: NextPage<StatisticsProps> = ({
 }: InferGetServerSidePropsType<
   GetServerSideProps<StatisticsProps>
 >): JSX.Element => {
-  const router = useRouter();
-  const chart = useRef<Chart<ChartType, number[], string>>();
-  const [candleType, setCandleType] = useState<CandleType>("oneHourCandle");
-  const [chartType, setChartType] = useState<ChartType>("line");
+  const [candleType, setCandleType] = useState<CandleType>("fiveMinuteCandle");
 
-  /*
-   ** draw chart
-   */
+  const chatfireToSeries = (chatfire: ChartData[]) => {
+    return [
+      {
+        name: "평균 채팅 화력",
+        data: chatfire.map((el) => {
+          const localTime = new Date(el.time).getTime() + 9 * 60 * 60 * 1000;
+          return [new Date(localTime).toISOString(), el.count];
+        }),
+      },
+    ];
+  };
+
+  const series = chatfireToSeries(data[candleType]);
+  const [lineChartOption, setChartSeries] = useChart(series);
+  const [brushChartOption, setBrushChartSeries] = useBrushChart(series);
+
   useEffect(() => {
-    let ctx = (
-      document.getElementById("chart") as HTMLCanvasElement
-    ).getContext("2d");
-    Chart.register(...registerables);
-    if (ctx !== null) {
-      chart.current = new Chart(ctx, {
-        type: chartType,
-        options: {
-          elements: { point: { radius: 0 } },
-          scales: { y: { beginAtZero: true } },
-        },
-        data: {
-          labels: data[candleType].map((el) => el.time),
-          datasets: [
-            {
-              label: "시간당 평균 채팅 수",
-              data: data[candleType].map((el) => el.count),
-              fill: false,
-              borderColor: "rgb(137, 88, 216)",
-              backgroundColor: "rgb(137, 88, 216)",
-              tension: 0.1,
-              minBarLength: 2,
-            },
-          ],
-        },
-      });
-    }
-    return () => chart.current?.destroy();
-  }, [router.query.streamer_nick, data.oneHourCandle, chartType, candleType]);
+    const series = chatfireToSeries(data[candleType]);
+    setChartSeries(series);
+    setBrushChartSeries(series);
+  }, [candleType, data, setChartSeries, setBrushChartSeries]);
 
   return (
     <Header>
@@ -170,17 +158,9 @@ const Statistics: NextPage<StatisticsProps> = ({
               <MenuItem value={"tenMinuteCandle"}>10분</MenuItem>
               <MenuItem value={"oneHourCandle"}>1시간</MenuItem>
             </Select>
-            <Select
-              value={chartType}
-              onChange={(e) => setChartType(e.target.value as ChartType)}
-            >
-              <MenuItem value={"line"}>꺾은선 그래프</MenuItem>
-              <MenuItem value={"bar"}>막대 그래프</MenuItem>
-            </Select>
           </Box>
-          <Box style={{ width: "100%", height: "auto", maxHeight: "40rem" }}>
-            <canvas id="chart" className={styles.Canvas} />
-          </Box>
+          <Chart {...lineChartOption} />
+          <Chart {...brushChartOption} />
           <Box className={styles.CardList}>
             <StatisticsCard
               head="현재 채팅 화력"
