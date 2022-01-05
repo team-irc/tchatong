@@ -225,6 +225,20 @@ std::string		parse_content(const std::string &msg)
 	return (ret);
 }
 
+std::string		parse_command(const std::string &msg)
+{
+	size_t		idx;
+	size_t		idx_end;
+
+	idx = msg.find_first_of(' ', 0);
+	if (idx == std::string::npos)
+		throw (IrcError("Invalid message recv (Can't split): " + msg));
+	idx_end = msg.find_first_of(' ', idx + 1);
+	if (idx_end == std::string::npos)
+		idx_end = msg.length();
+	return (msg.substr(idx + 1, idx_end - (idx + 1)));
+}
+
 bool		is_ping_check(const std::string &msg)
 {
 	size_t	idx;
@@ -241,21 +255,26 @@ bool		is_ping_check(const std::string &msg)
 void	IrcClient::parse_chat(const std::string &msg)
 {
 	std::string sql;
+	std::string	cmd;
 	t_chat	chat;
 
 	try
 	{
-		if (is_ping_check(msg))
+		cmd = parse_command(msg);
+		if (cmd == "PRIVMSG")
 		{
-			send_to_server("PONG");
-			return ;
+			chat.id = parse_id(msg);
+			chat.channel = parse_channel(msg);
+			chat.content = parse_content(msg);
+			if (chat.content.length() > 256)
+				chat.content = chat.content.substr(0, 255);
+			sql = "INSERT INTO chatlog VALUES('" + chat.channel + "', default, '" + chat.id + "', '" + chat.content;
+			sql += "');";
+			_stmt->execute(sql.c_str());
 		}
-		chat.id = parse_id(msg);
-		chat.channel = parse_channel(msg);
-		chat.content = parse_content(msg);
-		sql = "INSERT INTO chatlog VALUES('" + chat.channel + "', default, '" + chat.id + "', '" + chat.content;
-		sql += "');";
-		_stmt->execute(sql.c_str());
+		else if (is_ping_check(msg))
+			send_to_server("PONG");
+		return ;
 	}
 	catch (IrcError const &e)
 	{
