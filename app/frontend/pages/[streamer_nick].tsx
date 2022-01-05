@@ -5,32 +5,42 @@ import {
   NextPage,
 } from "next";
 import Image from "next/image";
-import { CSSProperties, FC, useEffect, useRef, useState } from "react";
+import { CSSProperties, FC, useState } from "react";
 import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
 import { Box, Card, MenuItem, Select } from "@mui/material";
 import { useRouter } from "next/router";
 import MostUsedTable from "../components/MostUsedTable";
 import dynamic from "next/dynamic";
-
+import useLineChart from "../components/hooks/useLineChart";
+import useBrushChart from "../components/hooks/useBrushChart";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-let option = {
-  options: {
-    chart: {
-      id: "basic-bar",
-    },
-    xaxis: {
-      categories: [1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999],
-    },
+function generateDayWiseTimeSeries(baseval: number, count: any, yrange: any) {
+  let i = 0;
+  let series = [];
+  while (i < count) {
+    let x = baseval;
+    let y =
+      Math.floor(Math.random() * (yrange.max - yrange.min + i)) +
+      yrange.min * i;
+
+    series.push([x, y]);
+    baseval += 86400000;
+    i++;
+  }
+  console.log(JSON.stringify(series));
+  return series;
+}
+
+let series = [
+  {
+    data: generateDayWiseTimeSeries(new Date("11 Feb 2017").getTime(), 185, {
+      min: 30,
+      max: 90,
+    }),
   },
-  series: [
-    {
-      name: "series-1",
-      data: [30, 40, 45, 50, 49, 60, 70, 91],
-    },
-  ],
-};
+];
 
 type CandleType =
   | "oneMinuteCandle"
@@ -98,6 +108,8 @@ const Statistics: NextPage<StatisticsProps> = ({
   const router = useRouter();
   const [candleType, setCandleType] = useState<CandleType>("oneHourCandle");
   const [chartType, setChartType] = useState<ChartType>("line");
+  const lineChartOption = useLineChart(series);
+  const brushChartOption = useBrushChart(series);
 
   return (
     <Header>
@@ -162,12 +174,8 @@ const Statistics: NextPage<StatisticsProps> = ({
               <MenuItem value={"bar"}>막대 그래프</MenuItem>
             </Select>
           </Box>
-          <Chart
-            options={option.options}
-            series={option.series}
-            type="bar"
-            width="500"
-          />
+          <Chart {...lineChartOption} />
+          <Chart {...brushChartOption} />
           <Box className={styles.CardList}>
             <StatisticsCard
               head="현재 채팅 화력"
