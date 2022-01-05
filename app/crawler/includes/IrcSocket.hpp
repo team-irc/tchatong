@@ -1,6 +1,7 @@
 #pragma once
 
 #include "IrcError.hpp"
+#include "SocketDisconnectError.hpp"
 #include <sys/socket.h> // socket 함수 정의
 #include <netinet/in.h> // sockaddr_in 구조체 정의
 #include <arpa/inet.h> // inet_addr 함수 정의
@@ -23,6 +24,7 @@ public:
 	IrcSocket();
 	virtual ~IrcSocket();
 	
+	int						create_socket();
 	void					set_twitch_irc_server_addr(struct sockaddr_in &twitch_server_addr);
 	void					connect_to_twitch_irc_server();
 	void					send_msg(const char *msg);

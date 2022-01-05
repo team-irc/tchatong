@@ -5,12 +5,20 @@
 */
 IrcSocket::IrcSocket() 
 {
-	_fd = socket(AF_INET, SOCK_STREAM, 0);
-	if (_fd <= 0)
-		throw (IrcError("socket create error"));	
+	_fd = create_socket();
 }
 
 IrcSocket::~IrcSocket() {}
+
+int			IrcSocket::create_socket()
+{
+	int		ret;
+
+	ret = socket(AF_INET, SOCK_STREAM, 0);
+	if (ret <= 0)
+		throw (IrcError("socket create error"));
+	return (ret);
+}
 
 /*
 	@brief 트위치 irc서버 주소 설정
@@ -57,6 +65,9 @@ void		IrcSocket::send_msg(const char *msg)
 
 /*
 	@brief 트위치 서버에서 메세지 수신
+	@detail recv return 0 : 연결 끊김 (재연결 해야함)
+							 return > 0 : 수신된 바이트 수
+							 return -1 : 오류 발생
 */
 std::string		IrcSocket::recv_msg()
 {
@@ -69,7 +80,7 @@ std::string		IrcSocket::recv_msg()
 	if (size > 0)
 		return std::string(buffer);
 	else if (size == 0)
-		throw (IrcError("recv return 0"));
+		throw (SocketDisconnectError("recv return 0"));
 	else // (size < 0)
 		throw (IrcError("recv error: " + std::to_string(size)));
 }

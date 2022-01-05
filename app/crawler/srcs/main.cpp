@@ -39,12 +39,26 @@ int		main()
 		thread.detach();
 		while (true)
 		{
-			g_client->recv_from_server();
+			try 
+			{
+				g_client->recv_from_server();
+			} 
+			catch (SocketDisconnectError const &e)
+			{
+				std::cout << "socket connection closed. (recv return 0)" << std::endl;
+				std::cout << "try socket reconnect. after 30seconds " << std::endl;
+				sleep(30);
+				delete g_client;
+				g_client = new IrcClient();
+				g_client->login_twitch();
+				g_client->join_streamer_channels();
+			}
 		}
 	}
 	catch (IrcError const &e)
 	{
 		std::cerr << e.what() << std::endl;
 	}
+	delete g_client;
 	return 0;
 }

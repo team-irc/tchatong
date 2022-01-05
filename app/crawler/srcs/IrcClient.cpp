@@ -236,7 +236,6 @@ void	IrcClient::parse_chat(const std::string &msg)
 		chat.content = parse_content(msg);
 		sql = "INSERT INTO chatlog VALUES('" + chat.channel + "', default, '" + chat.id + "', '" + chat.content;
 		sql += "');";
-		// std::cout << "sql: " << sql << std::endl;
 		_stmt->execute(sql.c_str());
 	}
 	catch (IrcError const &e)
