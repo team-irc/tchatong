@@ -1,5 +1,5 @@
 import { ApexOptions } from "apexcharts";
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 
 type ChartType =
   | "line"
@@ -19,12 +19,15 @@ type ChartType =
   | "rangeBar"
   | "treemap";
 
-interface UseBrushChartReturn<T> {
-  options: ApexOptions;
-  series: T[];
-  type: ChartType;
-  height: string;
-}
+type UseBrushChartReturn<T> = [
+  {
+    options: ApexOptions;
+    series: T[];
+    type: ChartType;
+    height: string;
+  },
+  Dispatch<SetStateAction<T[]>>
+];
 
 const optionBrush: ApexOptions = {
   chart: {
@@ -36,8 +39,8 @@ const optionBrush: ApexOptions = {
     selection: {
       enabled: true,
       xaxis: {
-        min: new Date("19 Jun 2017").getTime(),
-        max: new Date("14 Aug 2017").getTime(),
+        min: new Date().getTime() + 3 * 60 * 60 * 1000, // 6시간 전까지 셀렉트함
+        max: new Date().getTime() + 9 * 60 * 60 * 1000, // 현재 시간부터
       },
     },
   },
@@ -75,12 +78,15 @@ const useBrushChart = <T extends Object>(
   const options = useRef<ApexOptions>(optionBrush);
   const [series, setSeries] = useState<T[]>(initSeries);
 
-  return {
-    options: options.current,
-    series,
-    type: "area",
-    height: "130",
-  };
+  return [
+    {
+      options: options.current,
+      series,
+      type: "area",
+      height: "130",
+    },
+    setSeries,
+  ];
 };
 
 export default useBrushChart;

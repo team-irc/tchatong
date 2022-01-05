@@ -1,5 +1,5 @@
 import type { ApexOptions } from "apexcharts";
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 
 type ChartType =
   | "line"
@@ -19,12 +19,15 @@ type ChartType =
   | "rangeBar"
   | "treemap";
 
-interface UseLineChartReturn<T> {
-  options: ApexOptions;
-  series: T[];
-  type: ChartType;
-  height: string;
-}
+type UseLineChartReturn<T> = [
+  {
+    options: ApexOptions;
+    series: T[];
+    type: ChartType;
+    height: string;
+  },
+  Dispatch<SetStateAction<T[]>>
+];
 
 const chartOption: ApexOptions = {
   chart: {
@@ -40,6 +43,12 @@ const chartOption: ApexOptions = {
   stroke: {
     width: 3,
   },
+  tooltip: {
+    x: {
+      format: "M월 d일 HH시 mm분",
+    },
+  },
+  legend: { show: true },
   dataLabels: {
     enabled: false,
   },
@@ -63,18 +72,19 @@ const chartOption: ApexOptions = {
  ** ]
  */
 
-const useLineChart = <T extends object>(
-  initSeries: T[]
-): UseLineChartReturn<T> => {
+const useChart = <T extends object>(initSeries: T[]): UseLineChartReturn<T> => {
   const options = useRef<ApexOptions>(chartOption);
-  const [series] = useState<T[]>(initSeries);
+  const [series, setSeries] = useState<T[]>(initSeries);
 
-  return {
-    options: options.current,
-    series,
-    type: "line",
-    height: "230",
-  };
+  return [
+    {
+      options: options.current,
+      series,
+      type: "line",
+      height: "230",
+    },
+    setSeries,
+  ];
 };
 
-export default useLineChart;
+export default useChart;

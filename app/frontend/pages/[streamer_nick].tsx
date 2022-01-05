@@ -5,42 +5,16 @@ import {
   NextPage,
 } from "next";
 import Image from "next/image";
-import { CSSProperties, FC, useState } from "react";
+import { CSSProperties, FC, useCallback, useEffect, useState } from "react";
 import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
 import { Box, Card, MenuItem, Select } from "@mui/material";
 import { useRouter } from "next/router";
 import MostUsedTable from "../components/MostUsedTable";
 import dynamic from "next/dynamic";
-import useLineChart from "../components/hooks/useLineChart";
+import useChart from "../components/hooks/useChart";
 import useBrushChart from "../components/hooks/useBrushChart";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-
-function generateDayWiseTimeSeries(baseval: number, count: any, yrange: any) {
-  let i = 0;
-  let series = [];
-  while (i < count) {
-    let x = baseval;
-    let y =
-      Math.floor(Math.random() * (yrange.max - yrange.min + i)) +
-      yrange.min * i;
-
-    series.push([x, y]);
-    baseval += 86400000;
-    i++;
-  }
-  console.log(JSON.stringify(series));
-  return series;
-}
-
-let series = [
-  {
-    data: generateDayWiseTimeSeries(new Date("11 Feb 2017").getTime(), 185, {
-      min: 30,
-      max: 90,
-    }),
-  },
-];
 
 type CandleType =
   | "oneMinuteCandle"
@@ -105,11 +79,29 @@ const Statistics: NextPage<StatisticsProps> = ({
 }: InferGetServerSidePropsType<
   GetServerSideProps<StatisticsProps>
 >): JSX.Element => {
-  const router = useRouter();
-  const [candleType, setCandleType] = useState<CandleType>("oneHourCandle");
-  const [chartType, setChartType] = useState<ChartType>("line");
-  const lineChartOption = useLineChart(series);
-  const brushChartOption = useBrushChart(series);
+  const [candleType, setCandleType] = useState<CandleType>("fiveMinuteCandle");
+
+  const chatfireToSeries = (chatfire: ChartData[]) => {
+    return [
+      {
+        name: "평균 채팅 화력",
+        data: chatfire.map((el) => {
+          const localTime = new Date(el.time).getTime() + 9 * 60 * 60 * 1000;
+          return [new Date(localTime).toISOString(), el.count];
+        }),
+      },
+    ];
+  };
+
+  const series = chatfireToSeries(data[candleType]);
+  const [lineChartOption, setChartSeries] = useChart(series);
+  const [brushChartOption, setBrushChartSeries] = useBrushChart(series);
+
+  useEffect(() => {
+    const series = chatfireToSeries(data[candleType]);
+    setChartSeries(series);
+    setBrushChartSeries(series);
+  }, [candleType, data, setChartSeries, setBrushChartSeries]);
 
   return (
     <Header>
@@ -165,13 +157,6 @@ const Statistics: NextPage<StatisticsProps> = ({
               <MenuItem value={"fiveMinuteCandle"}>5분</MenuItem>
               <MenuItem value={"tenMinuteCandle"}>10분</MenuItem>
               <MenuItem value={"oneHourCandle"}>1시간</MenuItem>
-            </Select>
-            <Select
-              value={chartType}
-              onChange={(e) => setChartType(e.target.value as ChartType)}
-            >
-              <MenuItem value={"line"}>꺾은선 그래프</MenuItem>
-              <MenuItem value={"bar"}>막대 그래프</MenuItem>
             </Select>
           </Box>
           <Chart {...lineChartOption} />
