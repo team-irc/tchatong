@@ -152,14 +152,33 @@ void	IrcClient::send_to_server(const std::string &msg)
 
 /*
 	@brief 서버로 부터 메세지를 받아와서 출력한다.
-	@todo	코드 이해가 필요한 부분
+	@detail 메세지가 끝나지 않은 경우 계속 이어붙여 나가서 파싱한다.
 */
 void	IrcClient::recv_from_server()
 {
 	std::string buffer = _socket->recv_msg();
+	static std::string line_buffer = "";
 	std::string line;
 	std::istringstream iss(buffer);
 	std::string	sql;
+
+	while (std::getline(iss, line)) // LF 제거
+	{
+		if (line.find("\r") != std::string::npos) // CR제거, 개행문자를 찾은경우 데이터가 끝까지 온 것
+		{
+			line = line.substr(0, line.size() - 1);
+			if (line_buffer.length() != 0)
+			{
+				line_buffer = line_buffer + line;
+				parse_chat(line_buffer);
+				line_buffer = "";
+			}
+			else
+				parse_chat(line);
+		} else { // 개행문자를 못찾은경우, 다음 데이터를 기다린다.
+			line_buffer = line_buffer + line;
+		}
+	}
 
 	while (std::getline(iss, line))
 	{
