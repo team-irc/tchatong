@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS streamer(
 CREATE TABLE IF NOT EXISTS chatlog(
   `streamer_login`      VARCHAR(32),
   `date`                TIMESTAMP    DEFAULT NOW(),
-  `user_id`             VARCHAR(32)  NOT NULL,
   `content`             VARCHAR(256),
   FOREIGN KEY (streamer_login) REFERENCES streamer(streamer_login) ON UPDATE CASCADE
 );
