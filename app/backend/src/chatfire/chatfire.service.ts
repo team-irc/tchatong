@@ -34,30 +34,22 @@ export class ChatfireService {
   }
 
   private createChatfireDateKey(time: Date, interval: number) {
-    if (interval == 60) {
-      return `${String(time.getDate())}:${String(time.getHours())}`;
-    } else if (interval == 1) {
-      return `${String(time.getDate())}:${String(time.getHours())}:${String(
-        time.getMinutes(),
-      )}`;
+    if (interval == 1) {
+      return time.toISOString();
     } else {
       const min = Math.round(
         Math.floor(time.getMinutes() / interval) * interval,
       );
-      return `${String(time.getDate())}:${String(time.getHours())}:${String(
-        min,
-      )}`;
+      time.setMinutes(min);
+      return time.toISOString();
     }
   }
 
   /*
     sortedByOneHour 객체에 시간별로 값을 분류함
     sortedByOneHour = {
-      28:0: [1, 2, 3, 4],   // 28일 0시(UTC)의 채팅 화력이 배열에 들어감
-      28:1: [2, 3, 4, 5]    // 28일 1시(UTC)의 채팅 화력이 배열에 들어감
-      
-      20:0:00 [12, 32, 48 ,28, 55]
-      20:0:05 [...]
+      28:0:00 [1, 2, 3, 4],   // 28일 0시(UTC)의 채팅 화력이 배열에 들어감
+      28:1:00 [2, 3, 4, 5]    // 28일 1시(UTC)의 채팅 화력이 배열에 들어감
     }
   */
   private createChatfireDateIntervalDict(
@@ -111,7 +103,7 @@ export class ChatfireService {
           sortedByInterval[key].reduce((a: number, b: number) => a + b) /
             sortedByInterval[key].length,
         ),
-        time: this.convertDateToKoreanString(key),
+        time: key,
       });
     }
     return result;
@@ -119,9 +111,7 @@ export class ChatfireService {
 
   private calculateAverage(obj: Object, interval: number): ChatfireAverage[] {
     const sortedByInterval = this.createChatfireDateIntervalDict(obj, interval);
-    const result = this.calcAverageInCountList(sortedByInterval);
-
-    return result;
+    return this.calcAverageInCountList(sortedByInterval);
   }
 
   async getAverageOfIntervals(
@@ -198,13 +188,13 @@ export class ChatfireService {
       streamer_login: entire_top.streamer_login,
     });
     if (!legend) {
-      this.legendRepository.save({
+      await this.legendRepository.save({
         streamer_login: entire_top.streamer_login,
         chatfire_id: entire_top.id,
         last_update_date: new Date(),
       });
     } else {
-      this.legendRepository.update(
+      await this.legendRepository.update(
         { streamer_login: entire_top.streamer_login },
         {
           streamer_login: entire_top.streamer_login,
@@ -242,7 +232,7 @@ export class ChatfireService {
         streamer_login: streamer_login,
       });
       const entire_top = await this.getHighestCountFromChatfires(chatfires);
-      this.saveEntireTopOfStreamer(entire_top);
+      await this.saveEntireTopOfStreamer(entire_top);
       return entire_top;
     } else {
       // 업데이트
@@ -255,7 +245,7 @@ export class ChatfireService {
       );
       chatfires.push(last_entire_top_chatfire);
       const entire_top = await this.getHighestCountFromChatfires(chatfires);
-      this.saveEntireTopOfStreamer(entire_top);
+      await this.saveEntireTopOfStreamer(entire_top);
       return entire_top;
     }
   }

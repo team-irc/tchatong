@@ -33,20 +33,24 @@
   color: var(--purple1);
 }
 
-.StreamerLastStreaming {
+.StreamerCurrentViewers {
   font-size: 1rem;
   color: var(--purple1);
   opacity: 0.5;
 }
 
-.RecentlyUsedWord {
-  margin: auto 0 auto auto;
+.TableBox {
+  width: 100%;
+  padding: 2rem 0 2rem 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .CardList {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
-  padding: 2rem;
+  padding: 0 0 0 2rem;
 }
 
 .CardList > * {
@@ -57,6 +61,32 @@
   width: 100%;
   height: 100%;
   max-height: 40rem;
+}
+
+.Wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+}
+.NeonWrapper {
+  box-shadow:
+    0 0 0.1vw  0.4vw #d3d3d3,
+    0 0 0.4vw  0.6vw #BDBDBD,
+    0 0 0.5vw  0.4vw #7D7D7D,
+    inset 0 0 0.5vw  0.4vw #7D7D7D,
+    inset 0 0 0.4vw  0.2vw #BDBDBD,
+    inset 0 0 0.5vw  0.2vw #d3d3d3;
+  border-radius: 1.5rem;
+}
+.NeonText {
+  font-family:neon;
+  font-size: 4rem;
+  color: #e8e8e8;
+  padding: 0.1em 3.5rem 0 3.5rem;
+  text-shadow:
+    .1vw 0vw .25vw #d3d3d3, .2vw 0vw .25vw #d3d3d3, .4vw 0vw .25vw #d3d3d3,
+    .1vw 0vw  .5vw #7D7D7D, .2vw 0vw .6vw #7D7D7D, .4vw 0vw .6vw #7D7D7D;
 }
 
 /*
@@ -99,11 +129,17 @@
   }
   .CardList {
     flex-direction: column;
+    align-items: center;
+    padding: 0;
   }
   .CardList > * {
     width: auto;
   }
   .CardItem {
     margin: 10px;
+  }
+  .TableBox {
+    display: flex;
+    flex-direction: column;
   }
 }
