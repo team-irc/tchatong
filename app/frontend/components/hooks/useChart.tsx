@@ -1,5 +1,5 @@
 import type { ApexOptions } from "apexcharts";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 type ChartType =
   | "line"
@@ -21,12 +21,14 @@ type ChartType =
 
 type UseLineChartReturn<T> = [
   {
+    key: any;
     options: ApexOptions;
     series: T[];
     type: ChartType;
     height: string;
   },
-  Dispatch<SetStateAction<T[]>>
+  Dispatch<SetStateAction<T[]>>,
+  (newType: "line" | "bar") => void
 ];
 
 const chartOption: ApexOptions = {
@@ -39,7 +41,7 @@ const chartOption: ApexOptions = {
       autoScaleYaxis: true,
     },
   },
-  colors: ["#546E7A"],
+  colors: ["#8958d8"],
   stroke: {
     width: 3,
   },
@@ -61,6 +63,9 @@ const chartOption: ApexOptions = {
   xaxis: {
     type: "datetime",
   },
+  yaxis: {
+    forceNiceScale: true,
+  },
 };
 
 /*
@@ -73,17 +78,22 @@ const chartOption: ApexOptions = {
  */
 
 const useChart = <T extends object>(initSeries: T[]): UseLineChartReturn<T> => {
-  const options = useRef<ApexOptions>(chartOption);
+  const [options] = useState<ApexOptions>(chartOption);
   const [series, setSeries] = useState<T[]>(initSeries);
+  const [type, setType] = useState<"line" | "bar">("line");
 
   return [
     {
-      options: options.current,
+      key: type,
+      options: options,
       series,
-      type: "line",
+      type,
       height: "230",
     },
     setSeries,
+    (newType) => {
+      setType(newType);
+    },
   ];
 };
 
