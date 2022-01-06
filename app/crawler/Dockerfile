@@ -13,4 +13,6 @@ RUN apt-get install -y libboost-all-dev
 
 RUN apt-get install -y libmysqlclient-dev
 
+COPY ./ /crawler
+
 WORKDIR /crawler

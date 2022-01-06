@@ -152,20 +152,32 @@ void	IrcClient::send_to_server(const std::string &msg)
 
 /*
 	@brief 서버로 부터 메세지를 받아와서 출력한다.
-	@todo	코드 이해가 필요한 부분
+	@detail 메세지가 끝나지 않은 경우 계속 이어붙여 나가서 파싱한다.
 */
 void	IrcClient::recv_from_server()
 {
 	std::string buffer = _socket->recv_msg();
+	static std::string line_buffer = "";
 	std::string line;
 	std::istringstream iss(buffer);
 	std::string	sql;
 
-	while (std::getline(iss, line))
+	while (std::getline(iss, line)) // LF 제거
 	{
-		if (line.find("\r") != std::string::npos)
+		if (line.find("\r") != std::string::npos) // CR제거, 개행문자를 찾은경우 데이터가 끝까지 온 것
+		{
 			line = line.substr(0, line.size() - 1);
-		parse_chat(line);
+			if (line_buffer.length() != 0)
+			{
+				line_buffer = line_buffer + line;
+				parse_chat(line_buffer);
+				line_buffer = "";
+			}
+			else
+				parse_chat(line);
+		} else { // 개행문자를 못찾은경우, 다음 데이터를 기다린다.
+			line_buffer = line_buffer + line;
+		}
 	}
 }
 
@@ -206,6 +218,20 @@ std::string		parse_content(const std::string &msg)
 	return (ret);
 }
 
+std::string		parse_command(const std::string &msg)
+{
+	size_t		idx;
+	size_t		idx_end;
+
+	idx = msg.find_first_of(' ', 0);
+	if (idx == std::string::npos)
+		throw (IrcError("Invalid message recv (Can't split): " + msg));
+	idx_end = msg.find_first_of(' ', idx + 1);
+	if (idx_end == std::string::npos)
+		idx_end = msg.length();
+	return (msg.substr(idx + 1, idx_end - (idx + 1)));
+}
+
 bool		is_ping_check(const std::string &msg)
 {
 	size_t	idx;
@@ -219,25 +245,37 @@ bool		is_ping_check(const std::string &msg)
 /*
 	@brief parse message to nick, content
 */
-void	IrcClient::parse_chat(const std::string &msg)
+void	IrcClient::parse_chat(const std::string &msg, bool log)
 {
+	static int function_counter = 0;
 	std::string sql;
+	std::string	cmd;
 	t_chat	chat;
 
+	if (log)
+	{
+		std::cout << " Insert " << function_counter << " queries." << std::endl;
+		function_counter = 0;
+		return ;
+	}
 	try
 	{
-		if (is_ping_check(msg))
+		cmd = parse_command(msg);
+		if (cmd == "PRIVMSG")
 		{
-			send_to_server("PONG");
-			return ;
+			chat.id = parse_id(msg);
+			chat.channel = parse_channel(msg);
+			chat.content = parse_content(msg);
+			if (chat.content.length() > 256)
+				chat.content = chat.content.substr(0, 255);
+			sql = "INSERT INTO chatlog VALUES('" + chat.channel + "', default, '" + chat.id + "', '" + chat.content;
+			sql += "');";
+			_stmt->execute(sql.c_str());
+			++function_counter;
 		}
-		chat.id = parse_id(msg);
-		chat.channel = parse_channel(msg);
-		chat.content = parse_content(msg);
-		sql = "INSERT INTO chatlog VALUES('" + chat.channel + "', default, '" + chat.id + "', '" + chat.content;
-		sql += "');";
-		// std::cout << "sql: " << sql << std::endl;
-		_stmt->execute(sql.c_str());
+		else if (is_ping_check(msg))
+			send_to_server("PONG");
+		return ;
 	}
 	catch (IrcError const &e)
 	{

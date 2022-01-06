@@ -17,6 +17,7 @@
 #include "mysql_connection.h" // Connection
 #include "mysql_error.h" 
 #include "cppconn/statement.h" // Statement
+#include <ctime>
 
 #define RETRY_DB_CONNECTION_PERIOD 10
 
@@ -42,7 +43,7 @@ public:
 	
 	void					send_to_server(const std::string &msg);
 	void					recv_from_server();
-	void					parse_chat(const std::string &msg);
+	void					parse_chat(const std::string &msg, bool log = false);
 	void					login_twitch();
 	void					join_streamer_channels();
 
