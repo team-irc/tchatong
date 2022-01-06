@@ -42,7 +42,7 @@ const MostUsedTable: FC<MostUsedTableProps> = ({ rows }) => {
     return <></>;
   return (
     <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+      <Table aria-label="customized table">
         <TableHead>
           <StyledTableRow>
             <StyledTableCell>순위</StyledTableCell>
