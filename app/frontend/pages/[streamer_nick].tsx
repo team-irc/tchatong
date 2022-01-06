@@ -20,6 +20,56 @@ function numberWithCommas(num: number): string {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
+const onAirWrapper = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  marginLeft: "auto",
+};
+
+const offAirNeonWrapper = {
+  boxShadow: `
+    0 0 0.1vw  0.4vw #d3d3d3,
+    0 0 0.4vw  0.6vw #BDBDBD,
+    0 0 0.5vw  0.4vw #7D7D7D,
+    inset 0 0 0.5vw  0.4vw #7D7D7D,
+    inset 0 0 0.4vw  0.2vw #BDBDBD,
+    inset 0 0 0.5vw  0.2vw #d3d3d3`,
+  borderRadius: "1.5rem",
+};
+
+const offAirNeonText = {
+  fontSize: "4rem",
+  color: "#e8e8e8",
+  padding: "0rem 3.5rem 0 3.5rem",
+  textShadow: `
+    .1vw 0vw .25vw #d3d3d3, .2vw 0vw .25vw #d3d3d3, .4vw 0vw .25vw #d3d3d3,
+    .1vw 0vw  .5vw #7D7D7D, .2vw 0vw .6vw #7D7D7D, .4vw 0vw .6vw #7D7D7D`,
+};
+
+const onAirNeonWrapper = {
+  boxShadow: `
+    0 0 0.1vw  0.4vw #c48dff,
+    0 0 0.4vw  0.6vw #a672f6,
+    0 0   4vw  0.4vw #8958d8,
+    inset 0 0 1.5vw  0.4vw #8958d8,
+    inset 0 0 0.4vw  0.2vw #a672f6,
+    inset 0 0 0.5vw  0.2vw #c48dff`,
+  borderRadius: "1.5rem",
+};
+
+const onAirNeonText = {
+  fontSize: "4rem",
+  color: "#e8e8e8",
+  padding: "0rem 3.5rem 0 3.5rem",
+  textShadow: `
+    .1vw 0vw .25vw #c48dff, .2vw 0vw .25vw #c48dff, .4vw 0vw .25vw #c48dff,
+    .1vw 0vw   0vw #a672f6, .2vw 0vw   0vw #a672f6, .4vw 0vw   0vw #a672f6,
+    .1vw 0vw  .1vw #a672f6, .2vw 0vw  .1vw #a672f6, .4vw 0vw  .1vw #a672f6,
+    .1vw 0vw   2vw #a672f6, .2vw 0vw   2vw #a672f6, .4vw 0vw   2vw #a672f6,
+    .1vw 0vw   1vw #8958d8, .2vw 0vw   1vw #8958d8, .4vw 0vw   5vw #8958d8`,
+};
+
 type CandleType =
   | "oneMinuteCandle"
   | "fiveMinuteCandle"
@@ -62,7 +112,12 @@ const StatisticsCard: FC<{
     <Card
       className={className}
       style={Object.assign(
-        { display: "flex", flexDirection: "column", alignItems: "center" },
+        {
+          width: "100%",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        },
         style
       )}
     >
@@ -93,7 +148,7 @@ const Statistics: NextPage<StatisticsProps> = ({
   const chatfireToSeries = (chatfire: ChartData[]) => {
     return [
       {
-        name: "평균 채팅 화력",
+        name: "평균 채팅 화력🔥",
         data: chatfire.map((el) => {
           const localTime = new Date(el.time).getTime() + 9 * 60 * 60 * 1000;
           return [new Date(localTime).toISOString(), el.count];
@@ -147,18 +202,21 @@ const Statistics: NextPage<StatisticsProps> = ({
               현재 시청자 수: {numberWithCommas(data.streamerInfo.viewers)}명
             </span>
           </span>
-          <StatisticsCard
-            className={styles.RecentlyUsedWord}
-            head="최근 가장 많이 쓰인 단어"
-            body={
-              data.mostUsedWord[0].length === 0 ? "없음" : data.mostUsedWord[0]
-            }
-          />
+          <div style={onAirWrapper}>
+            <div
+              style={
+                data.streamerInfo.onAir ? onAirNeonWrapper : offAirNeonWrapper
+              }
+            >
+              <div
+                style={data.streamerInfo.onAir ? onAirNeonText : offAirNeonText}
+              >
+                ON AIR
+              </div>
+            </div>
+          </div>
         </Box>
         <Box style={{ width: "100%" }}>
-          <Box style={{ width: "100%", padding: "2rem" }}>
-            <MostUsedTable rows={data.mostUsedWord} />
-          </Box>
           <Box
             style={{
               width: "100%",
@@ -185,22 +243,25 @@ const Statistics: NextPage<StatisticsProps> = ({
           </Box>
           <Chart {...lineChartOption} />
           <Chart {...brushChartOption} />
-          <Box className={styles.CardList}>
-            <StatisticsCard
-              head="현재 채팅 화력"
-              body={`분당 ${data.currentChatFire.count}회`}
-              className={styles.CardItem}
-            />
-            <StatisticsCard
-              head="금일 최고 채팅 화력"
-              body={`분당 ${data.dayTopChatFire.count}회`}
-              className={styles.CardItem}
-            />
-            <StatisticsCard
-              head="역대 최고 채팅 화력"
-              body={`분당 ${data.entireTopChatFire.count}회`}
-              className={styles.CardItem}
-            />
+          <Box className={styles.TableBox}>
+            <MostUsedTable rows={data.mostUsedWord} />
+            <Box className={styles.CardList}>
+              <StatisticsCard
+                head="현재 채팅 화력🔥"
+                body={`분당 ${data.currentChatFire.count}회`}
+                className={styles.CardItem}
+              />
+              <StatisticsCard
+                head="금일 최고 채팅 화력🔥"
+                body={`분당 ${data.dayTopChatFire.count}회`}
+                className={styles.CardItem}
+              />
+              <StatisticsCard
+                head="역대 최고 채팅 화력🔥"
+                body={`분당 ${data.entireTopChatFire.count}회`}
+                className={styles.CardItem}
+              />
+            </Box>
           </Box>
         </Box>
       </div>
