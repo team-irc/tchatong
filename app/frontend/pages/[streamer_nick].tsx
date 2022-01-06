@@ -13,7 +13,6 @@ import MostUsedTable from "../components/MostUsedTable";
 import dynamic from "next/dynamic";
 import useChart from "../components/hooks/useChart";
 import useBrushChart from "../components/hooks/useBrushChart";
-import { styled } from "@mui/material/styles";
 import useBadge from "../components/hooks/useBadge";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
@@ -87,6 +86,7 @@ const Statistics: NextPage<StatisticsProps> = ({
 }: InferGetServerSidePropsType<
   GetServerSideProps<StatisticsProps>
 >): JSX.Element => {
+  const [chartType, setChartType] = useState<ChartType>("line");
   const [candleType, setCandleType] = useState<CandleType>("fiveMinuteCandle");
   const badgeProps = useBadge(data.streamerInfo.onAir);
 
@@ -103,7 +103,7 @@ const Statistics: NextPage<StatisticsProps> = ({
   };
 
   const series = chatfireToSeries(data[candleType]);
-  const [lineChartOption, setChartSeries] = useChart(series);
+  const [lineChartOption, setChartSeries, setType] = useChart(series);
   const [brushChartOption, setBrushChartSeries] = useBrushChart(series);
 
   useEffect(() => {
@@ -111,6 +111,10 @@ const Statistics: NextPage<StatisticsProps> = ({
     setChartSeries(series);
     setBrushChartSeries(series);
   }, [candleType, data, setChartSeries, setBrushChartSeries]);
+
+  useEffect(() => {
+    setType(chartType);
+  }, [chartType, setType]);
 
   return (
     <Header>
@@ -170,6 +174,13 @@ const Statistics: NextPage<StatisticsProps> = ({
               <MenuItem value={"fiveMinuteCandle"}>5분</MenuItem>
               <MenuItem value={"tenMinuteCandle"}>10분</MenuItem>
               <MenuItem value={"oneHourCandle"}>1시간</MenuItem>
+            </Select>
+            <Select
+              value={chartType}
+              onChange={(e) => setChartType(e.target.value as "line" | "bar")}
+            >
+              <MenuItem value={"line"}>꺾은선 그래프</MenuItem>
+              <MenuItem value={"bar"}>막대 그래프</MenuItem>
             </Select>
           </Box>
           <Chart {...lineChartOption} />

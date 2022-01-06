@@ -1,5 +1,5 @@
 import { ApexOptions } from "apexcharts";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 type ChartType =
   | "line"
@@ -44,7 +44,7 @@ const optionBrush: ApexOptions = {
       },
     },
   },
-  colors: ["#008FFB"],
+  colors: ["#8958d8"],
   fill: {
     type: "gradient",
     gradient: {
@@ -75,12 +75,12 @@ const optionBrush: ApexOptions = {
 const useBrushChart = <T extends Object>(
   initSeries: T[]
 ): UseBrushChartReturn<T> => {
-  const options = useRef<ApexOptions>(optionBrush);
+  const [options] = useState<ApexOptions>(optionBrush);
   const [series, setSeries] = useState<T[]>(initSeries);
 
   return [
     {
-      options: options.current,
+      options,
       series,
       type: "area",
       height: "130",
