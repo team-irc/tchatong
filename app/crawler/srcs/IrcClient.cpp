@@ -242,6 +242,13 @@ bool		is_ping_check(const std::string &msg)
 	return false;
 }
 
+static bool		is_bot(const std::string &id)
+{
+	if (id == "ssakddok" || id == "nightbot")
+		return true;
+	return false;
+}
+
 /*
 	@brief parse message to nick, content
 */
@@ -264,12 +271,13 @@ void	IrcClient::parse_chat(const std::string &msg, bool log)
 		if (cmd == "PRIVMSG")
 		{
 			chat.id = parse_id(msg);
+			if (is_bot(chat.id))
+				return ;
 			chat.channel = parse_channel(msg);
 			chat.content = parse_content(msg);
 			if (chat.content.length() > 256)
 				chat.content = chat.content.substr(0, 255);
-			sql = "INSERT INTO chatlog VALUES('" + chat.channel + "', default, '" + chat.id + "', '" + chat.content;
-			sql += "');";
+			sql = "INSERT INTO chatlog VALUES('" + chat.channel + "', default, '" + chat.content + "');";
 			_stmt->execute(sql.c_str());
 			++function_counter;
 		}
