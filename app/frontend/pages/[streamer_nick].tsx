@@ -5,16 +5,21 @@ import {
   NextPage,
 } from "next";
 import Image from "next/image";
-import { CSSProperties, FC, useCallback, useEffect, useState } from "react";
+import { CSSProperties, FC, useEffect, useState } from "react";
 import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
-import { Box, Card, MenuItem, Select } from "@mui/material";
-import { useRouter } from "next/router";
+import { Box, Card, MenuItem, Select, Badge } from "@mui/material";
 import MostUsedTable from "../components/MostUsedTable";
 import dynamic from "next/dynamic";
 import useChart from "../components/hooks/useChart";
 import useBrushChart from "../components/hooks/useBrushChart";
+import { styled } from "@mui/material/styles";
+import useBadge from "../components/hooks/useBadge";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+
+function numberWithCommas(num: number): string {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 type CandleType =
   | "oneMinuteCandle"
@@ -33,6 +38,9 @@ interface StatisticsProps {
       image_url: string;
       streamer_login: string;
       nick: string;
+      onAir: boolean;
+      viewers: number;
+      followers: number;
     };
     dayTopChatFire: { count: number };
     currentChatFire: { count: number };
@@ -80,6 +88,7 @@ const Statistics: NextPage<StatisticsProps> = ({
   GetServerSideProps<StatisticsProps>
 >): JSX.Element => {
   const [candleType, setCandleType] = useState<CandleType>("fiveMinuteCandle");
+  const badgeProps = useBadge(data.streamerInfo.onAir);
 
   const chatfireToSeries = (chatfire: ChartData[]) => {
     return [
@@ -107,13 +116,15 @@ const Statistics: NextPage<StatisticsProps> = ({
     <Header>
       <div className={styles.Frame}>
         <Box className={styles.StreamerInfo}>
-          <Image
-            src={data.streamerInfo.image_url}
-            width={133}
-            height={133}
-            className={styles.StreamerImg}
-            alt="streamer avatar image"
-          />
+          <Badge {...(badgeProps as any)}>
+            <Image
+              src={data.streamerInfo.image_url}
+              width={133}
+              height={133}
+              className={styles.StreamerImg}
+              alt="streamer avatar image"
+            />
+          </Badge>
           <span className={styles.StreamerInfoText}>
             <a
               href={`https://www.twitch.tv/${data.streamerInfo.streamer_login}`}
@@ -124,10 +135,12 @@ const Statistics: NextPage<StatisticsProps> = ({
               {data.streamerInfo.nick}
             </a>
             <br />
-            <span className={styles.StreamerFollowers}>팔로워: 30만명</span>
+            <span className={styles.StreamerFollowers}>
+              팔로워: {numberWithCommas(data.streamerInfo.followers)}명
+            </span>
             <br />
-            <span className={styles.StreamerLastStreaming}>
-              마지막 방송: 30분 전
+            <span className={styles.StreamerCurrentViewers}>
+              현재 시청자 수: {numberWithCommas(data.streamerInfo.viewers)}명
             </span>
           </span>
           <StatisticsCard
@@ -196,7 +209,14 @@ export const getServerSideProps: GetServerSideProps = async ({
       },
       body: JSON.stringify({
         query: `{
-          Streamer_getOneByNick(nick: "${params?.streamer_nick}") { image_url, streamer_login, nick }
+          Streamer_getOneByNick(nick: "${params?.streamer_nick}") {
+            image_url,
+            streamer_login,
+            nick,
+            onAir,
+            viewers,
+            followers
+           }
           Chatfire_getDayTopByNick(nick: "${params?.streamer_nick}") { count }
           Chatfire_getCurrentByNick(nick: "${params?.streamer_nick}") { count }
           Chatfire_getEntireTopByNick(nick: "${params?.streamer_nick}") { count }
