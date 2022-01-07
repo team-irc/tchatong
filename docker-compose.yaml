@@ -69,6 +69,7 @@ services:
       - ./app/proxy:/proxy
     ports:
       - 80:80
+      - 443:443
     working_dir: /proxy
     entrypoint: >
       sh -c 'nginx -g "daemon off;"'

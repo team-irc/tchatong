@@ -1,6 +1,8 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
 import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import Footer from "../layout/footer";
 import Metadata from "../components/metadata";
 import { createTheme, ThemeProvider } from "@mui/material";
@@ -16,6 +18,20 @@ const theme = createTheme({
 });
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleRouteChange = (url: string) => {
+      (window as any).gtag("config", "G-RHM561R4NS", {
+        page_path: url,
+      });
+    };
+    router.events.on("routeChangeComplete", handleRouteChange);
+    return () => {
+      router.events.off("routeChangeComplete", handleRouteChange);
+    };
+  }, [router.events]);
+
   return (
     <ThemeProvider theme={theme}>
       <Head>
