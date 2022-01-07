@@ -42,14 +42,16 @@ const StatisticsChart: FC<StatisticsChartProps> = ({
       },
       events: {
         dataPointSelection: (e, chart, options) => {
-          console.log(streamer_loginRef.current);
           const time: number = chart.data.twoDSeriesX[options.dataPointIndex];
           fetch(
             `${window.origin}/api/video?streamer_login=${streamer_loginRef.current}&time=${time}`
           )
             .then((res) => res.text())
-            .then((res) => window.open(res, "_blank"))
-            .catch((err) => alert(`Error: ${err}`));
+            .then((res) => {
+              if (res === "Video Not Found")
+                alert("다시보기를 찾을 수 없습니다.");
+              else window.open(res, "_blank");
+            });
         },
       },
     },
