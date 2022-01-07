@@ -74,22 +74,19 @@ export class VideoService {
 		}
 		throw new UserInputError("Video Not Found");
   }
-
 	/*
 		@todo 1. streamer 비디오 정보를 조회하기 위해서 streamer_id 를 가져오는 부분에서,
 					지금은 트위치 api를 호출해서 가져오지만, 이를 db에서 가져오도록 수정해야함
 	*/
 	async getVideoUrl(streamer_login: string, time: number) {
-		const streamer_info = await this.streamerService.getInsertInfoByLoginId(streamer_login);
 		try {
+			const streamer_info = await this.streamerService.getInsertInfoByLoginId(streamer_login);
 			// console.log('time:', time);
-			const date = new Date(time - 1);
+			const date = new Date(time - 9 * 60 * 60 * 1000);
 			// console.log('date:', date);
 			return await this.getTwitchVideo(streamer_info["streamer_id"], date);
-		}
-		catch (e) {
-			// console.log(e);
-			return `https://www.twitch.tv/${streamer_info.streamer_login}`;
+		} catch (err) {
+			return "";
 		}
 	}
 }

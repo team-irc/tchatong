@@ -5,16 +5,13 @@ import {
   NextPage,
 } from "next";
 import Image from "next/image";
-import { CSSProperties, FC, useEffect, useState } from "react";
+import { CSSProperties, FC, useState } from "react";
 import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
 import { Box, Card, MenuItem, Select, Badge } from "@mui/material";
 import MostUsedTable from "../components/MostUsedTable";
-import dynamic from "next/dynamic";
-import useChart from "../components/hooks/useChart";
-import useBrushChart from "../components/hooks/useBrushChart";
 import useBadge from "../components/hooks/useBadge";
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+import StatisticsChart from "../components/StatisticsChart";
 
 function numberWithCommas(num: number): string {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -75,7 +72,7 @@ type CandleType =
   | "fiveMinuteCandle"
   | "tenMinuteCandle"
   | "oneHourCandle";
-type ChartType = "line" | "bar";
+
 interface ChartData {
   count: number;
   time: string;
@@ -141,35 +138,8 @@ const Statistics: NextPage<StatisticsProps> = ({
 }: InferGetServerSidePropsType<
   GetServerSideProps<StatisticsProps>
 >): JSX.Element => {
-  const [chartType, setChartType] = useState<ChartType>("line");
   const [candleType, setCandleType] = useState<CandleType>("fiveMinuteCandle");
   const badgeProps = useBadge(data.streamerInfo.onAir);
-
-  const chatfireToSeries = (chatfire: ChartData[]) => {
-    return [
-      {
-        name: "평균 채팅 화력🔥",
-        data: chatfire.map((el) => {
-          const localTime = new Date(el.time).getTime() + 9 * 60 * 60 * 1000;
-          return [new Date(localTime).toISOString(), el.count];
-        }),
-      },
-    ];
-  };
-
-  const series = chatfireToSeries(data[candleType]);
-  const [lineChartOption, setChartSeries, setType] = useChart(series);
-  const [brushChartOption, setBrushChartSeries] = useBrushChart(series);
-
-  useEffect(() => {
-    const series = chatfireToSeries(data[candleType]);
-    setChartSeries(series);
-    setBrushChartSeries(series);
-  }, [candleType, data, setChartSeries, setBrushChartSeries]);
-
-  useEffect(() => {
-    setType(chartType);
-  }, [chartType, setType]);
 
   return (
     <Header>
@@ -233,16 +203,11 @@ const Statistics: NextPage<StatisticsProps> = ({
               <MenuItem value={"tenMinuteCandle"}>10분</MenuItem>
               <MenuItem value={"oneHourCandle"}>1시간</MenuItem>
             </Select>
-            <Select
-              value={chartType}
-              onChange={(e) => setChartType(e.target.value as "line" | "bar")}
-            >
-              <MenuItem value={"line"}>꺾은선 그래프</MenuItem>
-              <MenuItem value={"bar"}>막대 그래프</MenuItem>
-            </Select>
           </Box>
-          <Chart {...lineChartOption} />
-          <Chart {...brushChartOption} />
+          <StatisticsChart
+            data={data[candleType]}
+            streamer_login={data.streamerInfo.streamer_login}
+          />
           <Box className={styles.TableBox}>
             <MostUsedTable rows={data.mostUsedWord} />
             <Box className={styles.CardList}>
