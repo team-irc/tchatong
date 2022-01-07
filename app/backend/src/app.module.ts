@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { ChatfireModule } from './chatfire/chatfire.module';
 import { StreamerModule } from './streamer/streamer.module';
 import { TopwordModule } from './topword/topword.module';
+import { VideoModule } from './video/video.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { TopwordModule } from './topword/topword.module';
     ChatfireModule,
     StreamerModule,
     TopwordModule,
+    VideoModule,
   ],
   controllers: [AppController],
   providers: [AppService],
