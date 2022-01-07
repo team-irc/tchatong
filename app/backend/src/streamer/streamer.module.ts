@@ -7,5 +7,6 @@ import { Streamer } from '../entities/streamer.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([Streamer])],
   providers: [StreamerResolver, StreamerService],
+  exports: [StreamerService]
 })
 export class StreamerModule {}
