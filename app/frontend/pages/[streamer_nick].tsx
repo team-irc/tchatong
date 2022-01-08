@@ -5,13 +5,14 @@ import {
   NextPage,
 } from "next";
 import Image from "next/image";
-import { CSSProperties, FC, useState } from "react";
+import { CSSProperties, FC, useEffect, useState } from "react";
 import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
 import { Box, Card, MenuItem, Select, Badge } from "@mui/material";
 import MostUsedTable from "../components/MostUsedTable";
 import useBadge from "../components/hooks/useBadge";
 import StatisticsChart from "../components/StatisticsChart";
+import { useRouter } from "next/router";
 
 function numberWithCommas(num: number): string {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -36,7 +37,6 @@ const offAirNeonWrapper = {
 };
 
 const offAirNeonText = {
-  fontSize: "4rem",
   color: "#e8e8e8",
   padding: "0rem 3.5rem 0 3.5rem",
   textShadow: `
@@ -56,7 +56,6 @@ const onAirNeonWrapper = {
 };
 
 const onAirNeonText = {
-  fontSize: "4rem",
   color: "#e8e8e8",
   padding: "0rem 3.5rem 0 3.5rem",
   textShadow: `
@@ -84,18 +83,12 @@ interface StatisticsProps {
       image_url: string;
       streamer_login: string;
       nick: string;
-      onAir: boolean;
-      viewers: number;
-      followers: number;
     };
     dayTopChatFire: { count: number };
     currentChatFire: { count: number };
     entireTopChatFire: { count: number };
     mostUsedWord: string[];
-    oneMinuteCandle: ChartData[];
     fiveMinuteCandle: ChartData[];
-    tenMinuteCandle: ChartData[];
-    oneHourCandle: ChartData[];
   };
 }
 
@@ -138,8 +131,57 @@ const Statistics: NextPage<StatisticsProps> = ({
 }: InferGetServerSidePropsType<
   GetServerSideProps<StatisticsProps>
 >): JSX.Element => {
+  const router = useRouter();
   const [candleType, setCandleType] = useState<CandleType>("fiveMinuteCandle");
-  const badgeProps = useBadge(data.streamerInfo.onAir);
+  const [chatfireData, setChatfireData] = useState({
+    oneMinuteCandle: [],
+    fiveMinuteCandle: data.fiveMinuteCandle,
+    tenMinuteCandle: [],
+    oneHourCandle: [],
+  });
+  const [onAir, setOnAir] = useState(false);
+  const [followers, setFollowers] = useState(0);
+  const [viewers, setViewers] = useState(0);
+  const badgeProps = useBadge(onAir);
+
+  useEffect(() => {
+    const getData = async (): Promise<any> => {
+      const res: Response = await fetch(`${window.origin}/api/graphql`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          query: `{
+          Streamer_getOneByNick(nick: "${router.query.streamer_nick}") {
+            onAir,
+            viewers,
+            followers
+           }
+           Chatfire_getAverageOfaMinuteIntervalsForOneDayByNick(nick: "${router.query.streamer_nick}") { count, time }
+           Chatfire_getAverageOfTenMinuteIntervalsForOneDayByNick(nick: "${router.query.streamer_nick}") { count, time }
+           Chatfire_getAverageOfOneHourIntervalsForOneDayByNick(nick: "${router.query.streamer_nick}") { count, time }
+          }`,
+        }),
+      });
+      return await res.json();
+    };
+    getData().then((res) => {
+      setOnAir(res.data.Streamer_getOneByNick.onAir);
+      setFollowers(res.data.Streamer_getOneByNick.followers);
+      setViewers(res.data.Streamer_getOneByNick.viewers);
+      setChatfireData((prev) => ({
+        ...prev,
+        oneMinuteCandle:
+          res.data.Chatfire_getAverageOfaMinuteIntervalsForOneDayByNick,
+        tenMinuteCandle:
+          res.data.Chatfire_getAverageOfTenMinuteIntervalsForOneDayByNick,
+        oneHourCandle:
+          res.data.Chatfire_getAverageOfOneHourIntervalsForOneDayByNick,
+      }));
+    });
+  }, [router.query.streamer_nick]);
 
   return (
     <Header>
@@ -165,21 +207,21 @@ const Statistics: NextPage<StatisticsProps> = ({
             </a>
             <br />
             <span className={styles.StreamerFollowers}>
-              팔로워: {numberWithCommas(data.streamerInfo.followers)}명
+              팔로워: {numberWithCommas(followers)}명
             </span>
             <br />
             <span className={styles.StreamerCurrentViewers}>
-              현재 시청자 수: {numberWithCommas(data.streamerInfo.viewers)}명
+              현재 시청자 수: {numberWithCommas(viewers)}명
             </span>
           </span>
-          <div style={onAirWrapper}>
+          <div className={styles.NeonWrapper} style={onAirWrapper}>
             <div
-              style={
-                data.streamerInfo.onAir ? onAirNeonWrapper : offAirNeonWrapper
-              }
+              className={styles.NeonWrapper}
+              style={onAir ? onAirNeonWrapper : offAirNeonWrapper}
             >
               <div
-                style={data.streamerInfo.onAir ? onAirNeonText : offAirNeonText}
+                className={styles.NeonText}
+                style={onAir ? onAirNeonText : offAirNeonText}
               >
                 ON AIR
               </div>
@@ -191,12 +233,16 @@ const Statistics: NextPage<StatisticsProps> = ({
             style={{
               width: "100%",
               display: "flex",
-              justifyContent: "flex-end",
+              alignItems: "flex-end",
             }}
           >
+            <span style={{ color: "rgba(0,0,0,0.5)" }}>
+              &#8251;차트 클릭 시 다시보기로 연결됩니다.
+            </span>
             <Select
               value={candleType}
               onChange={(e) => setCandleType(e.target.value as CandleType)}
+              style={{ marginLeft: "auto" }}
             >
               <MenuItem value={"oneMinuteCandle"}>1분</MenuItem>
               <MenuItem value={"fiveMinuteCandle"}>5분</MenuItem>
@@ -205,7 +251,7 @@ const Statistics: NextPage<StatisticsProps> = ({
             </Select>
           </Box>
           <StatisticsChart
-            data={data[candleType]}
+            data={chatfireData[candleType]}
             streamer_login={data.streamerInfo.streamer_login}
           />
           <Box className={styles.TableBox}>
@@ -250,9 +296,6 @@ export const getServerSideProps: GetServerSideProps = async ({
             image_url,
             streamer_login,
             nick,
-            onAir,
-            viewers,
-            followers
            }
           Chatfire_getDayTopByNick(nick: "${params?.streamer_nick}") { count }
           Chatfire_getCurrentByNick(nick: "${params?.streamer_nick}") { count }
@@ -269,10 +312,7 @@ export const getServerSideProps: GetServerSideProps = async ({
             top9,
             top10
           }
-          Chatfire_getAverageOfaMinuteIntervalsForOneDayByNick(nick: "${params?.streamer_nick}") { count, time }
           Chatfire_getAverageOfFiveMinuteIntervalsForOneDayByNick(nick: "${params?.streamer_nick}") { count, time }
-          Chatfire_getAverageOfTenMinuteIntervalsForOneDayByNick(nick: "${params?.streamer_nick}") { count, time }
-          Chatfire_getAverageOfOneHourIntervalsForOneDayByNick(nick: "${params?.streamer_nick}") { count, time }
         }`,
       }),
     });
@@ -298,14 +338,8 @@ export const getServerSideProps: GetServerSideProps = async ({
           data.Topword_getTopwordByNick.top9,
           data.Topword_getTopwordByNick.top10,
         ],
-        oneMinuteCandle:
-          data.Chatfire_getAverageOfaMinuteIntervalsForOneDayByNick,
         fiveMinuteCandle:
           data.Chatfire_getAverageOfFiveMinuteIntervalsForOneDayByNick,
-        tenMinuteCandle:
-          data.Chatfire_getAverageOfTenMinuteIntervalsForOneDayByNick,
-        oneHourCandle:
-          data.Chatfire_getAverageOfOneHourIntervalsForOneDayByNick,
       },
     },
   };
