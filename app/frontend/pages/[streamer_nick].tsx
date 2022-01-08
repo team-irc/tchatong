@@ -37,7 +37,6 @@ const offAirNeonWrapper = {
 };
 
 const offAirNeonText = {
-  fontSize: "4rem",
   color: "#e8e8e8",
   padding: "0rem 3.5rem 0 3.5rem",
   textShadow: `
@@ -57,7 +56,6 @@ const onAirNeonWrapper = {
 };
 
 const onAirNeonText = {
-  fontSize: "4rem",
   color: "#e8e8e8",
   padding: "0rem 3.5rem 0 3.5rem",
   textShadow: `
@@ -216,9 +214,17 @@ const Statistics: NextPage<StatisticsProps> = ({
               현재 시청자 수: {numberWithCommas(viewers)}명
             </span>
           </span>
-          <div style={onAirWrapper}>
-            <div style={onAir ? onAirNeonWrapper : offAirNeonWrapper}>
-              <div style={onAir ? onAirNeonText : offAirNeonText}>ON AIR</div>
+          <div className={styles.NeonWrapper} style={onAirWrapper}>
+            <div
+              className={styles.NeonWrapper}
+              style={onAir ? onAirNeonWrapper : offAirNeonWrapper}
+            >
+              <div
+                className={styles.NeonText}
+                style={onAir ? onAirNeonText : offAirNeonText}
+              >
+                ON AIR
+              </div>
             </div>
           </div>
         </Box>
@@ -231,7 +237,7 @@ const Statistics: NextPage<StatisticsProps> = ({
             }}
           >
             <span style={{ color: "rgba(0,0,0,0.5)" }}>
-              &#8251;차트를 클릭하면 다시보기로 연결됩니다.
+              &#8251;차트 클릭 시 다시보기로 연결됩니다.
             </span>
             <Select
               value={candleType}
