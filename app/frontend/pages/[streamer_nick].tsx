@@ -191,12 +191,16 @@ const Statistics: NextPage<StatisticsProps> = ({
             style={{
               width: "100%",
               display: "flex",
-              justifyContent: "flex-end",
+              alignItems: "flex-end",
             }}
           >
+            <span style={{ color: "rgba(0,0,0,0.5)" }}>
+              &#8251;차트를 클릭하면 다시보기로 연결됩니다.
+            </span>
             <Select
               value={candleType}
               onChange={(e) => setCandleType(e.target.value as CandleType)}
+              style={{ marginLeft: "auto" }}
             >
               <MenuItem value={"oneMinuteCandle"}>1분</MenuItem>
               <MenuItem value={"fiveMinuteCandle"}>5분</MenuItem>
