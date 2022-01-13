@@ -1,1 +1,189 @@
-# twitch-chat-analyzer
+<div id="top"></div>
+
+<!-- PROJECT SHIELDS -->
+<!--
+*** I'm using markdown "reference style" links for readability.
+*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
+*** See the bottom of this document for the declaration of the reference variables
+*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
+*** https://www.markdownguide.org/basic-syntax/#reference-style-links
+-->
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
+[![Stargazers][stars-shield]][stars-url]
+[![Issues][issues-shield]][issues-url]
+[![MIT License][license-shield]][license-url]
+
+
+
+<!-- PROJECT LOGO -->
+<br />
+<div align="center">
+  <a href="https://github.com/team-irc/twitch-chat-analyzer">
+    <img src="images/logo.png" alt="Logo" width="80" height="80">
+  </a>
+
+<h3 align="center">트위치 채팅 통계 서비스</h3>
+
+  <p align="center">
+    <a href="https://tchatong.info">Goto Service</a>
+    ·
+    <a href="https://github.com/team-irc/twitch-chat-analyzer/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/team-irc/twitch-chat-analyzer/issues">Request Feature</a>
+  </p>
+</div>
+
+
+
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#prerequisites">Prerequisites</a></li>
+        <li><a href="#start">Start</a></li>
+      </ul>
+    </li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ol>
+</details>
+
+
+
+<!-- ABOUT THE PROJECT -->
+## About The Project
+
+[![Product Name Screen Shot][product-screenshot]](https://example.com)
+
+트채통은 인터넷 방송 플랫폼 "트위치"의 채팅로그를 분석, 시각화하여 보여주는 서비스 입니다.  
+
+트채통은 Twitch에서 운영하는 사이트가 아닙니다.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+### Built With
+
+* [Next.js](https://nextjs.org/)
+* [Nest.js](https://nestjs.com/)
+* [mariaDB](https://mariadb.org/)
+* [Nginx](https://www.nginx.com/)
+* [Grafana](https://grafana.com/)
+* [InfluxDB](https://www.influxdata.com/)
+* [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/)
+* [Docker](https://www.docker.com/)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+아래에서는 로컬에서 프로젝트를 실행하는 방법을 설명합니다.
+
+### Prerequisites
+
+다음과 같은 프로그램이 설치되어 있어야 합니다.
+* Docker
+* Docker Compose
+
+### Start
+
+1. 프로젝트를 클론 받습니다.
+   ```sh
+    git clone https://github.com/team-irc/twitch-chat-analyzer
+   ```
+2. 프로젝트의 루트에 `docker.env`라는 파일을 만들고 아래의 내용을 채웁니다.
+   ```dotenv
+    # github api
+    OCTOKIT_AUTH=YOUR_OCTOKIT_AUTH
+    
+    # mariaDB
+    DB_HOST=YOUR_DB_HOST
+    DB_USER=YOUR_DB_USER
+    DB_PASSWORD=YOUR_DB_PASSWORD
+    DB_NAME=YOUR_DB_NAME
+    
+    # twitch chat bot
+    TWITCH_ID=YOUR_TWITCH_IRC_ID
+    TWITCH_PW=YOUR_TWITCH_IRC_PASSWORD
+    
+    # twitch api
+    TWITCH_API_CLIENT_ID=YOUR_TWITCH_API_CLIENT_ID
+    TWITCH_API_CLIENT_SECRET=YOUR_TWITCH_API_CLIENT_SECRET
+    TWITCH_API_ACCESS_TOKEN=YOUR_TWITCH_API_ACCESS_TOKEN
+    
+    # influxDB
+    INFLUXDB_DB=YOUR_INFLUXDB_NAME
+    INFLUXDB_USER=YOUR_INFLUXDB_USER
+    INFLUXDB_ADMIN_ENABLED=true
+    INFLUXDB_ADMIN_USER=YOUR_INFLUXDB_ADMIN_USER
+    INFLUXDB_ADMIN_PASSWORD=YOUR_INFLUXDB_ADMIN_PASSWORD
+    
+    # grafana
+    GRAFANA_ADMIN=YOUR_GRAFANA_ADMIN
+    GRAFANA_ADMIN_PASSWORD=YOUR_GRAFANA_ADMIN_PASSWORD
+    
+    # phpmyadmin
+    PMA_HOST=YOUR_PMA_HOST
+    PMA_PORT=YOUR_PMA_PORT
+    PMA_ARBITRARY=YOUR_PMA_ARBITRARY
+    PMA_ABSOLUTE_URI=YOUR_PMA_ABSOLUTE_URI
+   ```
+3. app/db/srcs 폴더에 init_db.sql 파일을 생성하고 내용을 채웁니다.
+   ```sql
+    FLUSH PRIVILEGES;
+    CREATE DATABASE YOUR_DB_NAME;
+    CREATE USER YOUR_USER_NAME'%' IDENTIFIED BY 'YOUR_PASSWORD';
+    GRANT ALL ON *.* to YOUR_USER_NAME'%' IDENTIFIED BY 'YOUR_PASSWORD';
+    FLUSH PRIVILEGES;
+   ```
+4. 컨테이너를 실행시킵니다.
+   ```sh
+   docker-compose up --build
+   ```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- LICENSE -->
+## License
+
+MIT 라이선스에 따라 배포됩니다. 자세한 내용은 `LICENSE.txt`를 확인해주세요.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- CONTACT -->
+## Contact
+
+AMATEURTOSS - amateur.toss@gmail.com  
+HanGyeolN - ghnruf@gmail.com  
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+<!-- MARKDOWN LINKS & IMAGES -->
+<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+[contributors-shield]: https://img.shields.io/github/contributors/team-irc/twitch-chat-analyzer.svg?style=for-the-badge
+[contributors-url]: https://github.com/team-irc/twitch-chat-analyzer/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/team-irc/twitch-chat-analyzer.svg?style=for-the-badge
+[forks-url]: https://github.com/team-irc/twitch-chat-analyzer/network/members
+[stars-shield]: https://img.shields.io/github/stars/team-irc/twitch-chat-analyzer.svg?style=for-the-badge
+[stars-url]: https://github.com/team-irc/twitch-chat-analyzer/stargazers
+[issues-shield]: https://img.shields.io/github/issues/team-irc/twitch-chat-analyzer.svg?style=for-the-badge
+[issues-url]: https://github.com/team-irc/twitch-chat-analyzer/issues
+[license-shield]: https://img.shields.io/github/license/team-irc/twitch-chat-analyzer.svg?style=for-the-badge
+[license-url]: https://github.com/team-irc/twitch-chat-analyzer/blob/master/LICENSE.txt
+[product-screenshot]: images/screenshot.png
