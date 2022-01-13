@@ -185,5 +185,5 @@ HanGyeolN - ghnruf@gmail.com
 [issues-shield]: https://img.shields.io/github/issues/team-irc/twitch-chat-analyzer.svg?style=for-the-badge
 [issues-url]: https://github.com/team-irc/twitch-chat-analyzer/issues
 [license-shield]: https://img.shields.io/github/license/team-irc/twitch-chat-analyzer.svg?style=for-the-badge
-[license-url]: https://github.com/team-irc/twitch-chat-analyzer/blob/master/LICENSE.txt
+[license-url]: https://github.com/team-irc/twitch-chat-analyzer/blob/develop/LICENSE.txt
 [product-screenshot]: images/screenshot.png
