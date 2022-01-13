@@ -20,7 +20,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/team-irc/twitch-chat-analyzer">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
+    <img src="images/logo.png" alt="Logo" width="400" height="200">
   </a>
 
 <h3 align="center">트위치 채팅 통계 서비스</h3>
