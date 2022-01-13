@@ -23,15 +23,10 @@
     <img src="images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-<h3 align="center">Best-README-Template</h3>
+<h3 align="center">트위치 채팅 통계 서비스</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
-    <br />
-    <a href="https://github.com/team-irc/twitch-chat-analyzer"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/team-irc/twitch-chat-analyzer">View Demo</a>
+    <a href="https://tchatong.info">Goto Service</a>
     ·
     <a href="https://github.com/team-irc/twitch-chat-analyzer/issues">Report Bug</a>
     ·
@@ -55,15 +50,11 @@
       <a href="#getting-started">Getting Started</a>
       <ul>
         <li><a href="#prerequisites">Prerequisites</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#start">Start</a></li>
       </ul>
     </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
     <li><a href="#contact">Contact</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details>
 
@@ -74,16 +65,9 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
+트채통은 인터넷 방송 플랫폼 "트위치"의 채팅로그를 분석, 시각화하여 보여주는 서비스 입니다.  
 
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should implement DRY principles to the rest of your life :smile:
-
-Of course, no one template will serve all projects since your needs may be different. So I'll be adding more in the near future. You may also suggest changes by forking this repo and creating a pull request or opening an issue. Thanks to all the people have contributed to expanding this template!
-
-Use the `BLANK_README.md` to get started.
+트채통은 Twitch에서 운영하는 사이트가 아닙니다.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -91,16 +75,14 @@ Use the `BLANK_README.md` to get started.
 
 ### Built With
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-
 * [Next.js](https://nextjs.org/)
-* [React.js](https://reactjs.org/)
-* [Vue.js](https://vuejs.org/)
-* [Angular](https://angular.io/)
-* [Svelte](https://svelte.dev/)
-* [Laravel](https://laravel.com)
-* [Bootstrap](https://getbootstrap.com)
-* [JQuery](https://jquery.com)
+* [Nest.js](https://nestjs.com/)
+* [mariaDB](https://mariadb.org/)
+* [Nginx](https://www.nginx.com/)
+* [Grafana](https://grafana.com/)
+* [InfluxDB](https://www.influxdata.com/)
+* [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/)
+* [Docker](https://www.docker.com/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -109,89 +91,76 @@ This section should list any major frameworks/libraries used to bootstrap your p
 <!-- GETTING STARTED -->
 ## Getting Started
 
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
+아래에서는 로컬에서 프로젝트를 실행하는 방법을 설명합니다.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+다음과 같은 프로그램이 설치되어 있어야 합니다.
+* Docker
+* Docker Compose
 
-### Installation
+### Start
 
-_Below is an example of how you can instruct your audience on installing and setting up your app. This template doesn't rely on any external dependencies or services._
-
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
+1. 프로젝트를 클론 받습니다.
    ```sh
-   git clone https://github.com/your_username_/Project-Name.git
+    git clone https://github.com/team-irc/twitch-chat-analyzer
    ```
-3. Install NPM packages
+2. 프로젝트의 루트에 `docker.env`라는 파일을 만들고 아래의 내용을 채웁니다.
+   ```dotenv
+    # github api
+    OCTOKIT_AUTH=YOUR_OCTOKIT_AUTH
+    
+    # mariaDB
+    DB_HOST=YOUR_DB_HOST
+    DB_USER=YOUR_DB_USER
+    DB_PASSWORD=YOUR_DB_PASSWORD
+    DB_NAME=YOUR_DB_NAME
+    
+    # twitch chat bot
+    TWITCH_ID=YOUR_TWITCH_IRC_ID
+    TWITCH_PW=YOUR_TWITCH_IRC_PASSWORD
+    
+    # twitch api
+    TWITCH_API_CLIENT_ID=YOUR_TWITCH_API_CLIENT_ID
+    TWITCH_API_CLIENT_SECRET=YOUR_TWITCH_API_CLIENT_SECRET
+    TWITCH_API_ACCESS_TOKEN=YOUR_TWITCH_API_ACCESS_TOKEN
+    
+    # influxDB
+    INFLUXDB_DB=YOUR_INFLUXDB_NAME
+    INFLUXDB_USER=YOUR_INFLUXDB_USER
+    INFLUXDB_ADMIN_ENABLED=true
+    INFLUXDB_ADMIN_USER=YOUR_INFLUXDB_ADMIN_USER
+    INFLUXDB_ADMIN_PASSWORD=YOUR_INFLUXDB_ADMIN_PASSWORD
+    
+    # grafana
+    GRAFANA_ADMIN=YOUR_GRAFANA_ADMIN
+    GRAFANA_ADMIN_PASSWORD=YOUR_GRAFANA_ADMIN_PASSWORD
+    
+    # phpmyadmin
+    PMA_HOST=YOUR_PMA_HOST
+    PMA_PORT=YOUR_PMA_PORT
+    PMA_ARBITRARY=YOUR_PMA_ARBITRARY
+    PMA_ABSOLUTE_URI=YOUR_PMA_ABSOLUTE_URI
+   ```
+3. app/db/srcs 폴더에 init_db.sql 파일을 생성하고 내용을 채웁니다.
+   ```sql
+    FLUSH PRIVILEGES;
+    CREATE DATABASE YOUR_DB_NAME;
+    CREATE USER YOUR_USER_NAME'%' IDENTIFIED BY 'YOUR_PASSWORD';
+    GRANT ALL ON *.* to YOUR_USER_NAME'%' IDENTIFIED BY 'YOUR_PASSWORD';
+    FLUSH PRIVILEGES;
+   ```
+4. 컨테이너를 실행시킵니다.
    ```sh
-   npm install
-   ```
-4. Enter your API in `config.js`
-   ```js
-   const API_KEY = 'ENTER YOUR API';
+   docker-compose up --build
    ```
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- USAGE EXAMPLES -->
-## Usage
-
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
-
-_For more examples, please refer to the [Documentation](https://example.com)_
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
-
-See the [open issues](https://github.com/team-irc/twitch-chat-analyzer/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 <!-- LICENSE -->
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+MIT 라이선스에 따라 배포됩니다. 자세한 내용은 `LICENSE.txt`를 확인해주세요.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -200,31 +169,10 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@your_twitter](https://twitter.com/your_username) - email@example.com
-
-Project Link: [https://github.com/your_username/repo_name](https://github.com/your_username/repo_name)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
-
-* [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-* [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
-* [Malven's Grid Cheatsheet](https://grid.malven.co/)
-* [Img Shields](https://shields.io)
-* [GitHub Pages](https://pages.github.com)
-* [Font Awesome](https://fontawesome.com)
-* [React Icons](https://react-icons.github.io/react-icons/search)
+AMATEURTOSS - amateur.toss@gmail.com  
+HanGyeolN - ghnruf@gmail.com  
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
