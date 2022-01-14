@@ -22,12 +22,15 @@ export class StreamerResolver {
   async getOneByNick(@Args('nick') nick: string): Promise<Streamer> {
     return this.streamerService.findOneByNick(nick);
   }
-  
+
   @Query((returns) => StreamerInsertInfoDto, {
     name: 'Streamer_getInsertInfoByLoginId',
-    description: 'get streamers infomation to insert database by streamer login id',
+    description:
+      'get streamers infomation to insert database by streamer login id',
   })
-  async getInsertInfoByLoginId(@Args('streamer_login') streamer_login: string): Promise<StreamerInsertInfoDto> {
+  async getInsertInfoByLoginId(
+    @Args('streamer_login') streamer_login: string,
+  ): Promise<StreamerInsertInfoDto> {
     return await this.streamerService.getInsertInfoByLoginId(streamer_login);
   }
 
