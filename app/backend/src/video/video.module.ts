@@ -6,6 +6,6 @@ import { VideoService } from './video.service';
 @Module({
   imports: [forwardRef(() => StreamerModule)],
   controllers: [VideoController],
-  providers: [VideoService]
+  providers: [VideoService],
 })
 export class VideoModule {}
