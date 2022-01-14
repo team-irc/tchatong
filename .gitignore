@@ -8,3 +8,5 @@ docker.env
 init_db.sql
 app/db/data
 ssl/
+.frontend_init/
+.backend_init/
