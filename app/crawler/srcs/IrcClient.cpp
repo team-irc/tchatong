@@ -2,12 +2,12 @@
 #include "utils.hpp"
 
 std::string replace_all(std::string str, const std::string& from, const std::string& to) {
-    size_t start_pos = 0;
-    while((start_pos = str.find(from, start_pos)) != std::string::npos) {
-        str.replace(start_pos, from.length(), to);
-        start_pos += to.length(); // Handles case where 'to' is a substring of 'from'
-    }
-    return str;
+	size_t start_pos = 0;
+	while((start_pos = str.find(from, start_pos)) != std::string::npos) {
+		str.replace(start_pos, from.length(), to);
+		start_pos += to.length(); // Handles case where 'to' is a substring of 'from'
+	}
+	return str;
 }
 
 std::string	replace_special_characters(std::string const &str)
@@ -133,7 +133,7 @@ void	IrcClient::login_twitch()
 
 	id = std::getenv("TWITCH_ID");
 	code = std::getenv("TWITCH_PW");
-	
+
 	_socket->connect_to_twitch_irc_server();
 	code = "pass " + code;
 	id = "nick " + id;
@@ -184,7 +184,7 @@ void	IrcClient::recv_from_server()
 std::string		parse_id(const std::string &msg)
 {
 	size_t	idx;
-	
+
 	idx = msg.find_first_of('!', 0);
 	if (idx == std::string::npos)
 		throw (IrcError("parse_nick error | " + msg));
