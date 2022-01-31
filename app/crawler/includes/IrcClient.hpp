@@ -13,6 +13,7 @@
 #include <mysql.h> // mysql c++ connector
 #include "IrcError.hpp"
 #include "IrcSocket.hpp"
+#include "ChatStorage.hpp"
 #include "mysql_driver.h" // MySQL_Driver
 #include "mysql_connection.h" // Connection
 #include "mysql_error.h" 
@@ -31,9 +32,10 @@ typedef struct	s_chat
 class IrcClient 
 {
 private:
-	IrcSocket				*_socket;
+	IrcSocket		*_socket;
 	sql::Connection	*_con;
 	sql::Statement	*_stmt;
+	ChatStorage		_chat_storage;
 	
 public:
 	IrcClient();
