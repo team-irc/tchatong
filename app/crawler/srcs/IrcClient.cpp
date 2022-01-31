@@ -82,8 +82,8 @@ IrcClient::IrcClient()
 	char	sql[1024];
 
 	_socket = new IrcSocket();
-	connect_db();
-	init_db();
+	this->connect_db();
+	this->init_db();
 	std::cout << "IRC Client Constructed." << std::endl;
 }
 
@@ -170,11 +170,11 @@ void	IrcClient::recv_from_server()
 			if (line_buffer.length() != 0)
 			{
 				line_buffer = line_buffer + line;
-				parse_chat(line_buffer);
+				this->parse_chat(line_buffer);
 				line_buffer = "";
 			}
 			else
-				parse_chat(line);
+				this->parse_chat(line);
 		} else { // 개행문자를 못찾은경우, 다음 데이터를 기다린다.
 			line_buffer = line_buffer + line;
 		}
@@ -277,8 +277,8 @@ void	IrcClient::parse_chat(const std::string &msg, bool log)
 			chat.content = parse_content(msg);
 			if (chat.content.length() > 256)
 				chat.content = chat.content.substr(0, 255);
-			sql = "INSERT INTO chatlog VALUES('" + chat.channel + "', default, '" + chat.content + "');";
-			_stmt->execute(sql.c_str());
+			this->_chat_storage.add(chat.channel, chat.content);
+			this->_chat_storage.insert_to_db(this->_stmt);
 			++function_counter;
 		}
 		else if (is_ping_check(msg))
