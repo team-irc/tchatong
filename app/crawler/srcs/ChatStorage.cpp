@@ -37,6 +37,6 @@ void ChatStorage::insert_to_db(sql::Statement *stmt) {
 	}
 	query.back() = ';';
 	stmt->execute(query.c_str());
-	std::cout << query << std::endl;
+	// std::cout << query << std::endl;
 	this->_chat_storage.clear();
 }
