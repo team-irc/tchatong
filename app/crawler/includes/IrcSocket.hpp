@@ -21,6 +21,7 @@ private:
 	int		_fd;
 
 public:
+	char	_buffer[MAX_DATA_SIZE];
 	IrcSocket();
 	virtual ~IrcSocket();
 	
