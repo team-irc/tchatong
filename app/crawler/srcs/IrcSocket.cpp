@@ -6,6 +6,7 @@
 IrcSocket::IrcSocket() 
 {
 	_fd = create_socket();
+	memset(this->_buffer, 0, MAX_DATA_SIZE);
 }
 
 IrcSocket::~IrcSocket() {}
@@ -73,12 +74,11 @@ std::string		IrcSocket::recv_msg()
 {
 	int		ret;
 	int		size;
-	char	buffer[MAX_DATA_SIZE];
-
-	memset(buffer, 0, MAX_DATA_SIZE);
-	size = recv(_fd, buffer, MAX_DATA_SIZE - 1, 0);
+	
+	size = recv(_fd, _buffer, MAX_DATA_SIZE - 1, 0);
+	_buffer[size] = 0;
 	if (size > 0)
-		return std::string(buffer);
+		return std::string(_buffer);
 	else if (size == 0)
 		throw (SocketDisconnectError("recv return 0"));
 	else // (size < 0)

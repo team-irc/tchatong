@@ -156,10 +156,10 @@ void	IrcClient::send_to_server(const std::string &msg)
 */
 void	IrcClient::recv_from_server()
 {
-	std::string buffer = _socket->recv_msg();
+	_socket->recv_msg();
 	static std::string line_buffer = "";
 	std::string line;
-	std::istringstream iss(buffer);
+	std::istringstream iss(_socket->_buffer);
 	std::string	sql;
 
 	while (std::getline(iss, line)) // LF 제거

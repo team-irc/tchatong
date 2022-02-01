@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS chatlog(
   FOREIGN KEY (streamer_login) REFERENCES streamer(streamer_login) ON UPDATE CASCADE
 );
 
+ALTER TABLE chatlog CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
 CREATE TABLE IF NOT EXISTS chatfire(
   `id`                  int          NOT NULL auto_increment PRIMARY KEY,
   `streamer_login`      VARCHAR(32),
@@ -51,3 +53,5 @@ CREATE TABLE IF NOT EXISTS topword(
   `top10`               VARCHAR(16),
   FOREIGN KEY (streamer_login) REFERENCES streamer(streamer_login) ON UPDATE CASCADE
 );
+
+ALTER TABLE topword CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
