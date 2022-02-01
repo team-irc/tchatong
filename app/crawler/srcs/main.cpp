@@ -65,10 +65,10 @@ int		main()
 		g_client->login_twitch();
 		g_client->join_streamer_channels();
 		// announce();
-		std::thread	thread(input_thread);
-		std::thread thread2(logging_thread);
-		thread.detach();
-		thread2.detach();
+		// std::thread	thread(input_thread);
+		// std::thread thread2(logging_thread);
+		// thread.detach();
+		// thread2.detach();
 		while (true)
 		{
 			try 
