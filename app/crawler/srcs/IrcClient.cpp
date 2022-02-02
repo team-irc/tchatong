@@ -294,5 +294,6 @@ void	IrcClient::parse_chat(const std::string &msg, bool log)
 	{
 		std::cerr << "[-] ";
 		std::cerr << e.what() << std::endl;
+		this->_chat_storage.clear();
 	}
 }

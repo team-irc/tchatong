@@ -40,3 +40,7 @@ void ChatStorage::insert_to_db(sql::Statement *stmt) {
 	// std::cout << query << std::endl;
 	this->_chat_storage.clear();
 }
+
+void ChatStorage::clear() {
+	this->_chat_storage.clear();
+}
