@@ -14,4 +14,5 @@ public:
 public:
 	void add(const std::string &channel, const std::string &content);
 	void insert_to_db(sql::Statement *_stmt);
+	void clear();
 };
