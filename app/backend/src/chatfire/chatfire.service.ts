@@ -136,12 +136,17 @@ export class ChatfireService {
 
     return this.calculateAverage(obj, interval);
   }
+  
+  private convertJsDateToSqlDate(date: Date): string {
+    return date.toISOString().slice(0, 19).replace('T', ' ');
+  }
 
   private async getChatfiresAfterDate(
     streamer_login: string,
     date: Date,
   ): Promise<Chatfire[]> {
-    const sql = `SELECT * FROM chatfire WHERE (streamer_login = '${streamer_login}' AND date >= '${date}');`;
+    const sql_date = this.convertJsDateToSqlDate(date);
+    const sql = `SELECT * FROM chatfire WHERE (streamer_login = '${streamer_login}' AND date >= '${sql_date}');`;
     return await this.chatFireRepository.query(sql);
   }
 
