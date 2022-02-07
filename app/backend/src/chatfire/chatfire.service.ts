@@ -189,7 +189,7 @@ export class ChatfireService {
   }
 
   private async saveEntireTopOfStreamer(entire_top: Chatfire) {
-    const legend = this.legendRepository.findOne({
+    const legend = await this.legendRepository.findOne({
       streamer_login: entire_top.streamer_login,
     });
     if (!legend) {
