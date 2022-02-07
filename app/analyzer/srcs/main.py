@@ -10,13 +10,17 @@ import konlpy
 
 DB_CONNECTION_RETRY_PERIOD: int = 10
 
-CHATFIRE_UPDATE_PERIOD: int = 30
+
 
 # TOPWORD를 계산하기 위해서 하루동안 쌓여있는 데이터가 이 구간 내에 있어야한다.
 # 너무 많으면 메모리 부족, 너무 적으면 TOP10 통계를 낼 수 없다.
 TOPWORD_FETCH_MIN = 100
 TOPWORD_FETCH_MAX = 10000
-TOPWORD_REFRESH_PERIOD = 3600
+CHATFIRE_UPDATE_PERIOD: int = 30
+# TOPWORD가 1일마다 갱신되도록
+TOPWORD_REFRESH_PERIOD = 2880 # 분당 2씩 증가 => 2 * 60(1시간) * 24(1일) = 2880
+CHATLOG_DELETE_PERIOD = 5760
+
 
 def get_last_date_from_chatfire(cursor: Cursor) -> tuple:
 	sql: str
@@ -145,6 +149,11 @@ def connect_db():
 		time.sleep(DB_CONNECTION_RETRY_PERIOD)
 		connect_db()
 
+def delete_chatlog(db, cursor):
+	two_day_ago = datetime.datetime.now() - datetime.timedelta(days=2)
+	sql = f"DELETE FROM chatlog WHERE date <= \'{two_day_ago}\';"
+	cursor.execute(sql)
+	db.commit()
 
 # 1분당 채팅수 기록
 # chatfire ('streamer_login', 'date', 'count')
@@ -159,14 +168,18 @@ def	main():
 	# t1.start()
 	refresh_topwords(db, cursor)
 	refresh_topword_counter = 0
+	delete_chatlog_counter = 0
 	while (True):
 		save_chatfire_from_last_date()
 		time.sleep(CHATFIRE_UPDATE_PERIOD)
-		refresh_topword_counter += CHATFIRE_UPDATE_PERIOD
+		refresh_topword_counter += 1
+		delete_chatlog_counter += 1
 		if (refresh_topword_counter > TOPWORD_REFRESH_PERIOD): #이 부분이 실행되는 동안 chatfire가 갱신되지 않는 문제는 어떻게 해결?? -> refresh_topwords 함수를 비동기로 바꾸던가 해야할듯
 			refresh_topwords(db, cursor)
 			refresh_topword_counter = 0
-
+		if (delete_chatlog_counter > CHATLOG_DELETE_PERIOD):
+			delete_chatlog(db, cursor)
+			delete_chatlog_counter = 0
 
 if __name__ == '__main__':
 	main()
