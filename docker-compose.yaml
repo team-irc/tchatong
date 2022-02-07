@@ -80,6 +80,8 @@ services:
       dockerfile: Dockerfile
     env_file:
       - docker.env
+    volumes:
+      - ./app/grafana/srcs:/usr/share/grafana/conf/provisioning/dashboards
   influxdb:
     platform: linux/x86_64
     container_name: influxdb
