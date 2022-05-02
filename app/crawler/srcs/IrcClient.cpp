@@ -54,12 +54,12 @@ void		IrcClient::init_db()
 														(default, '', '109ace', '철면수심', 'https://static-cdn.jtvnw.net/jtv_user_pictures/109ace-profile_image-579a869e5635763f-70x70.png'), \
 														(default, '', 'ronaronakr', '로나로나땅', 'https://static-cdn.jtvnw.net/jtv_user_pictures/51c7790b-6dbf-4544-b765-7707430cdaed-profile_image-150x150.png'), \
 														(default, '', 'woowakgood', '우왁굳', 'https://static-cdn.jtvnw.net/jtv_user_pictures/ebc60c08-721b-4572-8f51-8be7136a0c96-profile_image-150x150.png'), \
-														(default, '', 'cotton__123', '주르르', 'https://static-cdn.jtvnw.net/jtv_user_pictures/11f9c14e-342f-4ee6-b234-85cd77e45bc3-profile_image-70x70.png'), \
-														(default, '', 'gosegugosegu', '고세구', 'https://static-cdn.jtvnw.net/jtv_user_pictures/a7962a5e-3d39-4257-913b-fec5f21dcf26-profile_image-150x150.png'), \
-														(default, '', 'viichan6', '비챤', 'https://static-cdn.jtvnw.net/jtv_user_pictures/43f92c59-2457-4398-b4ea-26733f8c0695-profile_image-70x70.png'), \
-														(default, '', 'lilpaaaaaa', '릴파', 'https://static-cdn.jtvnw.net/jtv_user_pictures/328aa19f-3d07-4bee-8dee-3fa61a93be12-profile_image-150x150.png'), \
-														(default, '', 'jingburger', '징버거', 'https://static-cdn.jtvnw.net/jtv_user_pictures/1d981e78-e882-46f5-a3ea-77699c6c05bd-profile_image-70x70.png'), \
-														(default, '', 'vo_ine', '아이네', 'https://static-cdn.jtvnw.net/jtv_user_pictures/ec6626e2-657a-4762-b348-d972748aa58a-profile_image-150x150.png'), \
+														(default, '', 'cotton__123', '주르르', 'https://static-cdn.jtvnw.net/jtv_user_pictures/789fa11b-d136-4c85-ae68-abb8e582e21c-profile_image-150x150.png'), \
+														(default, '', 'gosegugosegu', '고세구', 'https://static-cdn.jtvnw.net/jtv_user_pictures/1e4cac72-a1cd-4f72-8ada-b2d10ac990d7-profile_image-150x150.png'), \
+														(default, '', 'viichan6', '비챤', 'https://static-cdn.jtvnw.net/jtv_user_pictures/700b60f8-4bbf-4567-918f-e72a4638d838-profile_image-150x150.png'), \
+														(default, '', 'lilpaaaaaa', '릴파', 'https://static-cdn.jtvnw.net/jtv_user_pictures/3b5e6d73-8935-449f-902b-1b94a386e137-profile_image-150x150.png'), \
+														(default, '', 'jingburger', '징버거', 'https://static-cdn.jtvnw.net/jtv_user_pictures/330b695d-63ec-41cb-baca-a191a7bbc441-profile_image-150x150.png'), \
+														(default, '', 'vo_ine', '아이네', 'https://static-cdn.jtvnw.net/jtv_user_pictures/ecd6ee59-9f18-4eec-b8f3-63cd2a9127a5-profile_image-150x150.png'), \
 														(default, '', 'torona1', '슈카월드', 'https://static-cdn.jtvnw.net/jtv_user_pictures/efa02ddd-0973-491c-b69e-3158966f956b-profile_image-150x150.jpg'), \
 														(default, '', 'aba4647', '랄로', 'https://static-cdn.jtvnw.net/jtv_user_pictures/e85f1e19-e793-4a07-bbc5-5135981dc4f8-profile_image-70x70.png'), \
 														(default, '', 'hanryang1125', '풍월량', 'https://static-cdn.jtvnw.net/jtv_user_pictures/hanryang1125-profile_image-58261d78af47d249-70x70.jpeg'), \
@@ -71,7 +71,7 @@ void		IrcClient::init_db()
 														(default, '', 'dopa24', '도파', 'https://static-cdn.jtvnw.net/jtv_user_pictures/4a35691a-b2af-40f8-af90-72cc31d295d6-profile_image-70x70.png'), \
 														(default, '', 'tmxk319', '괴물쥐', 'https://static-cdn.jtvnw.net/jtv_user_pictures/59b10cc7-772e-48a9-92df-066e9a35862b-profile_image-70x70.jpg'), \
 														(default, '', 'xkwhd', '피닉스박', 'https://static-cdn.jtvnw.net/jtv_user_pictures/00d773d6-0c5c-443a-947a-f3d765b95b4e-profile_image-70x70.jpg'), \
-														(default, '', 'lovelyyeon', '연두부', 'https://static-cdn.jtvnw.net/jtv_user_pictures/32077614-02cc-4a0e-b79e-3f2dc26d7ace-profile_image-70x70.png'), \
+														(default, '', 'lovelyyeon', '연두부', 'https://static-cdn.jtvnw.net/jtv_user_pictures/a1281685-d88d-420a-8aeb-437b6851a170-profile_image-150x150.png'), \
 														(default, '', 'zoodasa', '주다사', 'https://static-cdn.jtvnw.net/jtv_user_pictures/78858c8b-fcd5-4b76-9a91-cb89a15389f7-profile_image-150x150.png')");
 }
 /*
