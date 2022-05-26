@@ -1,13 +1,6 @@
-FROM ubuntu:18.04
+FROM golang:1.18.2-buster
 
-RUN apt-get update && \
-    apt-get install -y make \
-                       cmake \
-                       g++ \
-                       libmysqlcppconn-dev \
-                       libboost-all-dev \
-                       libmysqlclient-dev
-
-COPY ./ /crawler
+RUN apt-get update && apt-get install -y make
 
 WORKDIR /crawler
+COPY . .
