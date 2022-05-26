@@ -8,19 +8,20 @@ import (
 	"tchatong.info/crawler"
 )
 
-func getDbInfo() (string, string, string) {
+func getDbInfo() (string, string, string, string) {
+	dbHost := os.Getenv("DB_HOST")
 	dbUserName := os.Getenv("DB_USER")
 	dbPassWord := os.Getenv("DB_PASSWORD")
 	dbName := os.Getenv("DB_NAME")
-	if dbUserName == "" || dbPassWord == "" || dbName == "" {
+	if dbHost == "" || dbUserName == "" || dbPassWord == "" || dbName == "" {
 		panic("Can't find db info")
 	}
-	return dbUserName, dbPassWord, dbName
+	return dbHost, dbUserName, dbPassWord, dbName
 }
 
 func connectDB() *sql.DB {
-	dbUserName, dbPassWord, dbName := getDbInfo()
-	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s", dbUserName, dbPassWord, dbName))
+	dbHost, dbUserName, dbPassWord, dbName := getDbInfo()
+	db, err := sql.Open("mysql", fmt.Sprintf("%s:%s@tcp(%s)/%s", dbUserName, dbPassWord, dbHost, dbName))
 	if err != nil {
 		panic(err)
 	}

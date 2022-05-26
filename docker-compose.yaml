@@ -34,7 +34,7 @@ services:
       - ./app/crawler:/crawler
     working_dir: /crawler
     entrypoint: >
-      sh -c "make re && ./twicyrc"
+      sh -c "make && ./twicyrc"
   db:
     container_name: db
     build:

@@ -1,4 +1,4 @@
-NAME=server
+NAME=twicyrc
 
 build:
 	go build -o ${NAME} main.go
