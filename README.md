@@ -76,14 +76,18 @@
 
 ### Built With
 
-* [Next.js](https://nextjs.org/)
-* [Nest.js](https://nestjs.com/)
-* [mariaDB](https://mariadb.org/)
-* [Nginx](https://www.nginx.com/)
-* [Grafana](https://grafana.com/)
-* [InfluxDB](https://www.influxdata.com/)
-* [Telegraf](https://www.influxdata.com/time-series-platform/telegraf/)
-* [Docker](https://www.docker.com/)
+![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
+![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
+![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white)
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)
+![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
+![Grafana](https://img.shields.io/badge/grafana-%23E34F26.svg?style=for-the-badge&logo=grafana&logoColor=white)
+![InfluxDB](https://img.shields.io/badge/influxdb-%23323330.svg?style=for-the-badge&logo=influxdb&logoColor=blue)
+![Telegraf](https://img.shields.io/badge/telegraf-%23323330.svg?style=for-the-badge&logo=telegraf&logoColor=blue)
+![PhpMyAdmin](https://img.shields.io/badge/phpmyadmin-FE7A16.svg?style=for-the-badge&logo=phpmyadmin&logoColor=white)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
