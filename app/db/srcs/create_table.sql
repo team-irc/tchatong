@@ -4,11 +4,14 @@
 
 USE twchat;
 CREATE TABLE IF NOT EXISTS streamer(
-  `id`                  int          NOT NULL auto_increment UNIQUE KEY,
+  `id`                  INT          NOT NULL auto_increment UNIQUE KEY,
   `streamer_id`         VARCHAR(32)  NOT NULL,
   `streamer_login`      VARCHAR(32)  NOT NULL PRIMARY KEY,
   `nick`                VARCHAR(32)  NOT NULL,
-  `image_url`           VARCHAR(256) NOT NULL
+  `image_url`           VARCHAR(256) NOT NULL,
+  `on_air`              TINYINT(1),
+  `viewers`             INT,
+  `followers`           INT
 );
 
 CREATE TABLE IF NOT EXISTS chatlog(
