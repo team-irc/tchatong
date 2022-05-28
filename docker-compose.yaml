@@ -12,9 +12,7 @@ services:
       sh -c "./entrypoint.sh"
   backend:
     container_name: backend
-    build:
-      context: ./app/backend
-      dockerfile: Dockerfile
+    image: golang:1.18.2-buster
     working_dir: /backend
     volumes:
       - ./app/backend:/backend
@@ -25,9 +23,7 @@ services:
   crawler:
     container_name: crawler
     restart: always
-    build:
-      context: ./app/crawler
-      dockerfile: Dockerfile
+    image: golang:1.18.2-buster
     env_file:
       - docker.env
     volumes:
