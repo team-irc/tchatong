@@ -41,7 +41,7 @@ func overWatchStreamerList(db *sql.DB, ch chan string) {
 func crawlFromChannel(channel string, db *sql.DB) {
 	client := twitch.NewAnonymousClient()
 	client.OnPrivateMessage(func(message twitch.PrivateMessage) {
-		conn, err := db.Query("INSERT INTO chatlog VALUES (?, ?, ?)", message.Channel, time.Now().UTC(), message.Message)
+		conn, err := db.Query("INSERT INTO chatlog VALUES (?, ?, ?)", message.RoomID, time.Now().UTC(), message.Message)
 		defer func(conn *sql.Rows) {
 			err := conn.Close()
 			if err != nil {

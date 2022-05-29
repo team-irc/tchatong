@@ -15,34 +15,28 @@ CREATE TABLE IF NOT EXISTS streamer(
 );
 
 CREATE TABLE IF NOT EXISTS chatlog(
-  `streamer_login`      VARCHAR(32),
+  `streamer_id`         VARCHAR(32),
   `date`                TIMESTAMP    DEFAULT NOW(),
-  `content`             VARCHAR(256),
-  FOREIGN KEY (streamer_login) REFERENCES streamer(streamer_login) ON UPDATE CASCADE
+  `content`             VARCHAR(256)
 );
-
-ALTER TABLE chatlog CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS chatfire(
   `id`                  int          NOT NULL auto_increment PRIMARY KEY,
-  `streamer_login`      VARCHAR(32),
+  `streamer_id`         VARCHAR(32),
   `date`                TIMESTAMP    NOT NULL,
-  `count`               int,
-  FOREIGN KEY (streamer_login) REFERENCES streamer(streamer_login) ON UPDATE CASCADE
+  `count`               int
 );
 
 CREATE TABLE IF NOT EXISTS legend(
   `id`                  int          NOT NULL auto_increment PRIMARY KEY,
-  `streamer_login`      VARCHAR(32),
+  `streamer_id`         VARCHAR(32),
   `chatfire_id`         int          NOT NULL,
-  `last_update_date`    TIMESTAMP    NOT NULL,
-  FOREIGN KEY (streamer_login) REFERENCES streamer(streamer_login) ON UPDATE CASCADE,
-  FOREIGN KEY (chatfire_id) REFERENCES chatfire(id) ON UPDATE CASCADE
+  `last_update_date`    TIMESTAMP    NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS topword(
   `id`                  int          NOT NULL auto_increment PRIMARY KEY,
-  `streamer_login`      VARCHAR(32),
+  `streamer_id`         VARCHAR(32),
   `date`                TIMESTAMP    NOT NULL,
   `top1`                VARCHAR(16),
   `top2`                VARCHAR(16),
@@ -53,8 +47,7 @@ CREATE TABLE IF NOT EXISTS topword(
   `top7`                VARCHAR(16),
   `top8`                VARCHAR(16),
   `top9`                VARCHAR(16),
-  `top10`               VARCHAR(16),
-  FOREIGN KEY (streamer_login) REFERENCES streamer(streamer_login) ON UPDATE CASCADE
+  `top10`               VARCHAR(16)
 );
 
 ALTER TABLE topword CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
