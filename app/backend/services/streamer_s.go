@@ -1,10 +1,11 @@
 package services
 
 import (
+	"database/sql"
 	"tchatong.info/models"
 )
 
-func GetAllStreamer() []models.Streamer {
+func GetAllStreamer(db *sql.DB) []models.Streamer {
 	streamerList := make([]models.Streamer, 0)
 	res, err := db.Query("SELECT * FROM streamer")
 	if err != nil {
@@ -21,7 +22,7 @@ func GetAllStreamer() []models.Streamer {
 	return streamerList
 }
 
-func GetOneStreamer(streamerId string) models.Streamer {
+func GetOneStreamer(streamerId string, db *sql.DB) models.Streamer {
 	var streamer models.Streamer
 	err := db.QueryRow("SELECT * FROM streamer WHERE streamer_id=?", streamerId).Scan(&streamer.Id, &streamer.StreamerId, &streamer.StreamerLogin, &streamer.Nick, &streamer.ImageUrl, &streamer.OnAir, &streamer.Viewers, &streamer.Followers)
 	if err != nil {

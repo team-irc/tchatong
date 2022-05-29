@@ -1,6 +1,7 @@
 package daemons
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -57,7 +58,7 @@ func getFollowers(streamerId string) int {
 	return followerInfo.Total
 }
 
-func OverWatchStreamerTable() {
+func OverWatchStreamerTable(db *sql.DB) {
 	for {
 		res, err := db.Query("SELECT streamer_id FROM streamer")
 		if err != nil {
