@@ -82,7 +82,7 @@ func OverWatchStreamerTable(db *sql.DB) {
 					_ = fmt.Errorf(err.Error())
 				}
 			}
-			println(fmt.Sprintf("[%s]: streamer table update", time.Now().Local()))
+			println(fmt.Sprintf("[%s]: streamer table update", time.Now().Truncate(time.Second).Local()))
 		})()
 		time.Sleep(time.Minute)
 	}
