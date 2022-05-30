@@ -24,9 +24,27 @@ func getChatFireList(streamerId string, db *sql.DB) []models.ChatFire {
 	return chatFireList
 }
 
-// day top
 // entire top
-// current
+
+func GetDayTopChatFire(streamerId string, db *sql.DB) models.ChatFireResponse {
+	var aDayAgo time.Time
+	var dayTopChatFire models.ChatFire
+
+	dayTopChatFire = models.ChatFire{}
+	aDayAgo = time.Now().Add(time.Duration(-1) * time.Hour * 24)
+	(func() {
+		rows, _ := db.Query("SELECT * FROM chatfire WHERE streamer_id=? AND date >= ?", streamerId, aDayAgo)
+		defer rows.Close()
+		for rows.Next() {
+			var chatFire models.ChatFire
+			_ = rows.Scan(&chatFire.Id, &chatFire.StreamerId, &chatFire.Date, &chatFire.Count)
+			if chatFire.Count >= dayTopChatFire.Count {
+				dayTopChatFire = chatFire
+			}
+		}
+	})()
+	return models.ChatFireResponse{Time: dayTopChatFire.Date, Count: dayTopChatFire.Count}
+}
 
 func GetCurrentChatFire(streamerId string, db *sql.DB) models.ChatFireResponse {
 	var chatFire models.ChatFire
