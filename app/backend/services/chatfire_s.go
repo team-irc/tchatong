@@ -28,6 +28,14 @@ func getChatFireList(streamerId string, db *sql.DB) []models.ChatFire {
 // entire top
 // current
 
+func GetCurrentChatFire(streamerId string, db *sql.DB) models.ChatFireResponse {
+	var chatFire models.ChatFire
+
+	aMinuteAgo := time.Now().Add(time.Duration(-1) * time.Minute).Truncate(time.Minute)
+	_ = db.QueryRow("SELECT * FROM chatfire WHERE streamer_id=? AND date=?", streamerId, aMinuteAgo).Scan(&chatFire.Id, &chatFire.StreamerId, &chatFire.Date, &chatFire.Count)
+	return models.ChatFireResponse{Time: chatFire.Date, Count: chatFire.Count}
+}
+
 func GetChatFireByInterval(streamerId string, interval int, db *sql.DB) []models.ChatFireResponse {
 	chatFireList := getChatFireList(streamerId, db)
 	res := make([]models.ChatFireResponse, 0)
