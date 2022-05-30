@@ -5,8 +5,8 @@
 USE twchat;
 CREATE TABLE IF NOT EXISTS streamer(
   `id`                  INT          NOT NULL auto_increment UNIQUE KEY,
-  `streamer_id`         VARCHAR(32)  NOT NULL,
-  `streamer_login`      VARCHAR(32)  NOT NULL PRIMARY KEY,
+  `streamer_id`         VARCHAR(32)  NOT NULL PRIMARY KEY,
+  `streamer_login`      VARCHAR(32)  NOT NULL,
   `nick`                VARCHAR(32)  NOT NULL,
   `image_url`           VARCHAR(256) NOT NULL,
   `on_air`              TINYINT(1),
@@ -21,21 +21,21 @@ CREATE TABLE IF NOT EXISTS chatlog(
 );
 
 CREATE TABLE IF NOT EXISTS chatfire(
-  `id`                  int          NOT NULL auto_increment PRIMARY KEY,
+  `id`                  INT          NOT NULL auto_increment PRIMARY KEY,
   `streamer_id`         VARCHAR(32),
   `date`                TIMESTAMP    NOT NULL,
-  `count`               int
+  `count`               INT
 );
 
 CREATE TABLE IF NOT EXISTS legend(
-  `id`                  int          NOT NULL auto_increment PRIMARY KEY,
+  `id`                  INT          NOT NULL auto_increment PRIMARY KEY,
   `streamer_id`         VARCHAR(32),
-  `chatfire_id`         int          NOT NULL,
+  `chatfire_id`               INT          NOT NULL,
   `last_update_date`    TIMESTAMP    NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS topword(
-  `id`                  int          NOT NULL auto_increment PRIMARY KEY,
+  `id`                  INT          NOT NULL auto_increment PRIMARY KEY,
   `streamer_id`         VARCHAR(32),
   `date`                TIMESTAMP    NOT NULL,
   `top1`                VARCHAR(16),

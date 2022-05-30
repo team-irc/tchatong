@@ -41,7 +41,8 @@ func init() {
 	chatFireRouter := router.Group("/chat-fire")
 	routers.SetStreamerRouter(streamerRouter, db)
 	routers.SetChatFireRouter(chatFireRouter, db)
-	go daemons.OverWatchStreamerTable(db)
+	go daemons.UpdateStreamerTable(db)
+	go daemons.UpdateLegendTable(db)
 }
 
 func main() {

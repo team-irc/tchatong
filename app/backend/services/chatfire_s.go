@@ -24,7 +24,13 @@ func getChatFireList(streamerId string, db *sql.DB) []models.ChatFire {
 	return chatFireList
 }
 
-// entire top
+func GetEntireTopChatFire(streamerId string, db *sql.DB) models.ChatFireResponse {
+	var date string
+	var count int
+
+	_ = db.QueryRow("SELECT date, count FROM chatfire WHERE id=(SELECT chatfire_id FROM legend WHERE streamer_id=?)", streamerId).Scan(&date, &count)
+	return models.ChatFireResponse{Time: date, Count: count}
+}
 
 func GetDayTopChatFire(streamerId string, db *sql.DB) models.ChatFireResponse {
 	var aDayAgo time.Time

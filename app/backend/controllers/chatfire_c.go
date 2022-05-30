@@ -7,6 +7,13 @@ import (
 	"tchatong.info/services"
 )
 
+func GetEntireTopChatFire(c *gin.Context, db *sql.DB) {
+	var streamerId string
+
+	streamerId = c.Param("streamerId")
+	c.JSON(200, services.GetEntireTopChatFire(streamerId, db))
+}
+
 func GetChatFireByInterval(c *gin.Context, db *sql.DB) {
 	var streamerId string
 	var interval int
