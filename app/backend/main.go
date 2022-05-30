@@ -39,8 +39,10 @@ func init() {
 	router = gin.Default()
 	streamerRouter := router.Group("/streamer")
 	chatFireRouter := router.Group("/chat-fire")
+	topWordRouter := router.Group("/top-word")
 	routers.SetStreamerRouter(streamerRouter, db)
 	routers.SetChatFireRouter(chatFireRouter, db)
+	routers.SetTopWordRouter(topWordRouter, db)
 	go daemons.UpdateStreamerTable(db)
 	go daemons.UpdateLegendTable(db)
 }
