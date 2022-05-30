@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"sync"
 	"tchatong.info/models"
 	"time"
 )
@@ -58,32 +59,40 @@ func getFollowers(streamerId string) int {
 	return followerInfo.Total
 }
 
-func OverWatchStreamerTable(db *sql.DB) {
+func UpdateStreamerTable(db *sql.DB) {
 	for {
+		start := time.Now()
 		(func() {
-			res, err := db.Query("SELECT streamer_id FROM streamer")
-			defer res.Close()
+			rows, err := db.Query("SELECT streamer_id FROM streamer")
+			defer rows.Close()
 			if err != nil {
 				_ = fmt.Errorf(err.Error())
 			}
-			for res.Next() {
+			wg := sync.WaitGroup{}
+			for rows.Next() {
 				var streamerId string
-				err := res.Scan(&streamerId)
+				err := rows.Scan(&streamerId)
 				if err != nil {
 					_ = fmt.Errorf(err.Error())
 				}
-				onAir, viewers := getOnAirAndViewers(streamerId)
-				followers := getFollowers(streamerId)
-				(func() {
-					res, err = db.Query("UPDATE streamer SET on_air=?, viewers=?, followers=? WHERE streamer_id=?", onAir, viewers, followers, streamerId)
-					defer res.Close()
-				})()
-				if err != nil {
-					_ = fmt.Errorf(err.Error())
-				}
+				wg.Add(1)
+				go (func(streamerId string) {
+					defer wg.Done()
+					onAir, viewers := getOnAirAndViewers(streamerId)
+					followers := getFollowers(streamerId)
+					(func() {
+						res, _ := db.Query("UPDATE streamer SET on_air=?, viewers=?, followers=? WHERE streamer_id=?", onAir, viewers, followers, streamerId)
+						defer res.Close()
+					})()
+					if err != nil {
+						_ = fmt.Errorf(err.Error())
+					}
+				})(streamerId)
 			}
-			println(fmt.Sprintf("[%s]: streamer table update", time.Now().Truncate(time.Second).Local()))
+			wg.Wait()
 		})()
+		end := time.Since(start)
+		println(fmt.Sprintf("[%s]: streamer table update (wasted time: %s)", time.Now().Truncate(time.Second).Local(), end))
 		time.Sleep(time.Minute)
 	}
 }
