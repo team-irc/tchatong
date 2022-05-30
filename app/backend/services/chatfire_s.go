@@ -9,6 +9,7 @@ import (
 func getChatFireList(streamerId string, db *sql.DB) []models.ChatFire {
 	chatFireList := make([]models.ChatFire, 0)
 	res, err := db.Query("SELECT * FROM chatfire WHERE streamer_id=? AND date > now() - INTERVAL 1 DAY", streamerId)
+	defer res.Close()
 	if err != nil {
 		return nil
 	}
@@ -22,6 +23,10 @@ func getChatFireList(streamerId string, db *sql.DB) []models.ChatFire {
 	}
 	return chatFireList
 }
+
+// day top
+// entire top
+// current
 
 func GetChatFireByInterval(streamerId string, interval int, db *sql.DB) []models.ChatFireResponse {
 	chatFireList := getChatFireList(streamerId, db)

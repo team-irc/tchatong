@@ -8,6 +8,7 @@ import (
 func GetAllStreamer(db *sql.DB) []models.Streamer {
 	streamerList := make([]models.Streamer, 0)
 	res, err := db.Query("SELECT * FROM streamer")
+	defer res.Close()
 	if err != nil {
 		return streamerList
 	}

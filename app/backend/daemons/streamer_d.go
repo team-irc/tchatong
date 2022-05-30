@@ -60,24 +60,30 @@ func getFollowers(streamerId string) int {
 
 func OverWatchStreamerTable(db *sql.DB) {
 	for {
-		res, err := db.Query("SELECT streamer_id FROM streamer")
-		if err != nil {
-			_ = fmt.Errorf(err.Error())
-		}
-		for res.Next() {
-			var streamerId string
-			err := res.Scan(&streamerId)
+		(func() {
+			res, err := db.Query("SELECT streamer_id FROM streamer")
+			defer res.Close()
 			if err != nil {
 				_ = fmt.Errorf(err.Error())
 			}
-			onAir, viewers := getOnAirAndViewers(streamerId)
-			followers := getFollowers(streamerId)
-			_, err = db.Query("UPDATE streamer SET on_air=?, viewers=?, followers=? WHERE streamer_id=?", onAir, viewers, followers, streamerId)
-			if err != nil {
-				_ = fmt.Errorf(err.Error())
+			for res.Next() {
+				var streamerId string
+				err := res.Scan(&streamerId)
+				if err != nil {
+					_ = fmt.Errorf(err.Error())
+				}
+				onAir, viewers := getOnAirAndViewers(streamerId)
+				followers := getFollowers(streamerId)
+				(func() {
+					res, err = db.Query("UPDATE streamer SET on_air=?, viewers=?, followers=? WHERE streamer_id=?", onAir, viewers, followers, streamerId)
+					defer res.Close()
+				})()
+				if err != nil {
+					_ = fmt.Errorf(err.Error())
+				}
 			}
-		}
-		println(fmt.Sprintf("[%s]: streamer table update", time.Now().Local()))
+			println(fmt.Sprintf("[%s]: streamer table update", time.Now().Local()))
+		})()
 		time.Sleep(time.Minute)
 	}
 }
