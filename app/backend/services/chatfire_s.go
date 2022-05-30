@@ -62,23 +62,15 @@ func GetCurrentChatFire(streamerId string, db *sql.DB) models.ChatFireResponse {
 
 func GetChatFireByInterval(streamerId string, interval int, db *sql.DB) []models.ChatFireResponse {
 	chatFireList := getChatFireList(streamerId, db)
-	res := make([]models.ChatFireResponse, 0)
-	for _, chatFire := range chatFireList {
-		chatFireTime, _ := time.Parse("2006-01-02 15:04:05", chatFire.Date)
-		var minute = (chatFireTime.Minute() / interval) * interval
-		chatFire.Date = time.Date(chatFireTime.Year(), chatFireTime.Month(), chatFireTime.Day(), chatFireTime.Hour(), minute, chatFireTime.Second(), chatFireTime.Nanosecond(), chatFireTime.Location()).String()
-		if len(res) == 0 {
-			res = append(res, models.ChatFireResponse{Time: chatFire.Date, Count: chatFire.Count})
-		} else {
-			var contain = false
-			for i, a := range res {
-				if a.Time == chatFire.Date {
-					res[i].Count += chatFire.Count
-					contain = true
-				}
-			}
-			if !contain {
-				res = append(res, models.ChatFireResponse{Time: chatFire.Date, Count: chatFire.Count})
+	res := make([]models.ChatFireResponse, 60/interval*24)
+	aDayAgo := time.Now().Add(time.Duration(-1) * time.Hour * 24).Truncate(time.Hour)
+	for i := range res {
+		res[i].Time = aDayAgo.Add(time.Minute * time.Duration(i*interval)).UTC().String()
+		for _, chatFire := range chatFireList {
+			chatFireTime, _ := time.Parse("2006-01-02 15:04:05", chatFire.Date)
+			chatFire.Date = time.Date(chatFireTime.Year(), chatFireTime.Month(), chatFireTime.Day(), chatFireTime.Hour(), (chatFireTime.Minute()/interval)*interval, chatFireTime.Second(), chatFireTime.Nanosecond(), chatFireTime.Location()).String()
+			if res[i].Time == chatFire.Date {
+				res[i].Count += chatFire.Count
 			}
 		}
 	}
