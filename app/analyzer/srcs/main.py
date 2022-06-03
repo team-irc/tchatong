@@ -101,7 +101,7 @@ def save_topword_in_a_day(streamer_login, db, cursor):
 					result[word] += 1
 				else:
 					result[word] = 1
-			if mal[1] not in ["Josa", "Eomi", "Puntuation"]:
+			if mal[1] not in ["Josa", "Eomi", "Punctuation"]:
 				word = mal[0]
 				if word in result.keys():
 					result[word] += 1
