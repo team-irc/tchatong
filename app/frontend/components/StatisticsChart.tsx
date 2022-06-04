@@ -20,7 +20,8 @@ function chatfireToSeries(chatfire: ChartData[]) {
       name: "평균 채팅 화력🔥",
       data: chatfire.map((el) => {
         const localTime = new Date(el.time).getTime() + 9 * 60 * 60 * 1000;
-        return [new Date(localTime).toISOString(), el.count];
+        // return [new Date(localTime).toISOString(), el.count];
+        return el.count;
       }),
     },
   ];

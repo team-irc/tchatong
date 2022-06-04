@@ -10,7 +10,7 @@ interface AutocompleteProps {
   options: Streamer[];
   inputValue: string;
   onInputChange: (_: SyntheticEvent, value: string) => any;
-  getOptionLabel: (data: Streamer) => string;
+  getOptionLabel: (data: string | Streamer) => string;
   onKeyPress: (e: any) => void;
   renderInput: (params: AutocompleteRenderInputParams) => ReactNode;
 }
@@ -61,7 +61,12 @@ const useAutoComplete = (
       inputValue: textToSearch,
       onInputChange: (_: SyntheticEvent, value: string) =>
         setTextToSearch(value ? value : ""),
-      getOptionLabel: (data: Streamer) => data.nick ?? data,
+      getOptionLabel: (data: string | Streamer) => {
+        if (typeof(data) === "string") {
+          return data
+        }
+        return data.nick;
+      },
       onKeyPress: searchBarKeyDown,
       renderInput: (params: AutocompleteRenderInputParams) => (
         <TextField
