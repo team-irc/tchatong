@@ -2,14 +2,12 @@ version: "3.3"
 services:
   frontend:
     container_name: frontend
-    build:
-      context: ./app/frontend
-      dockerfile: Dockerfile
+    image: node:17-alpine3.12
     working_dir: /frontend
     volumes:
       - ./app/frontend:/frontend
     entrypoint: >
-      sh -c "./entrypoint.sh"
+      sh -c "npm ci && npm run build && npm run start"
   backend:
     container_name: backend
     image: golang:1.18.2-buster
@@ -19,7 +17,7 @@ services:
     env_file:
       - docker.env
     entrypoint: >
-      sh -c "./entrypoint.sh"
+      sh -c "make && make run"
   crawler:
     container_name: crawler
     restart: always
@@ -30,7 +28,7 @@ services:
       - ./app/crawler:/crawler
     working_dir: /crawler
     entrypoint: >
-      sh -c "make && ./twicyrc"
+      sh -c "make && make run"
   db:
     container_name: db
     build:
