@@ -59,6 +59,22 @@ func getFollowers(streamerId string) int {
 	return followerInfo.Total
 }
 
+func getImageUrl(streamerId string) string {
+	var userInfo models.UserInfo
+
+	url := fmt.Sprintf("https://api.twitch.tv/helix/users?id=%s", streamerId)
+	client := &http.Client{}
+	req, _ := http.NewRequest("GET", url, nil)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", twitchAccessToken))
+	req.Header.Set("Client-Id", twitchClientId)
+	res, _ := client.Do(req)
+	err := json.NewDecoder(res.Body).Decode(&userInfo)
+	if err != nil {
+		panic(err)
+	}
+	return userInfo.Data[0].ProfileImageURL
+}
+
 func UpdateStreamerTable(db *sql.DB) {
 	for {
 		start := time.Now()
@@ -80,8 +96,9 @@ func UpdateStreamerTable(db *sql.DB) {
 					defer wg.Done()
 					onAir, viewers := getOnAirAndViewers(streamerId)
 					followers := getFollowers(streamerId)
+					imageUrl := getImageUrl(streamerId)
 					(func() {
-						res, _ := db.Query("UPDATE streamer SET on_air=?, viewers=?, followers=? WHERE streamer_id=?", onAir, viewers, followers, streamerId)
+						res, _ := db.Query("UPDATE streamer SET image_url=?, on_air=?, viewers=?, followers=? WHERE streamer_id=?", imageUrl, onAir, viewers, followers, streamerId)
 						defer res.Close()
 					})()
 					if err != nil {
