@@ -4,6 +4,8 @@ services:
     container_name: frontend
     image: node:17-alpine3.12
     working_dir: /frontend
+    expose:
+      - "4000"
     volumes:
       - ./app/frontend:/frontend
     entrypoint: >
@@ -16,17 +18,6 @@ services:
       - ./app/backend:/backend
     env_file:
       - docker.env
-    entrypoint: >
-      sh -c "make && make run"
-  crawler:
-    container_name: crawler
-    restart: always
-    image: golang:1.18.2-buster
-    env_file:
-      - docker.env
-    volumes:
-      - ./app/crawler:/crawler
-    working_dir: /crawler
     entrypoint: >
       sh -c "make && make run"
   db:

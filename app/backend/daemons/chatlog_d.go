@@ -1,12 +1,20 @@
-package crawler
+package daemons
 
 import (
 	"database/sql"
 	"github.com/gempir/go-twitch-irc/v3"
 	"log"
-	"tchatong.info/utils"
 	"time"
 )
+
+func contains[T comparable](s []T, e T) bool {
+	for _, a := range s {
+		if a == e {
+			return true
+		}
+	}
+	return false
+}
 
 /**
  * @author  amateur.toss@gmail.com
@@ -25,7 +33,7 @@ func overWatchStreamerList(db *sql.DB, ch chan string) {
 			if err != nil {
 				log.Fatal(err)
 			}
-			if !utils.Contains(streamerList, streamer) {
+			if !contains(streamerList, streamer) {
 				streamerList = append(streamerList, streamer)
 				ch <- streamer
 			}

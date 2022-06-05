@@ -45,6 +45,7 @@ func init() {
 	routers.SetTopWordRouter(topWordRouter, db)
 	go daemons.UpdateStreamerTable(db)
 	go daemons.UpdateLegendTable(db)
+	go daemons.CrawlFromChannels(db)
 }
 
 func main() {
