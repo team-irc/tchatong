@@ -149,16 +149,10 @@ const Statistics = (): JSX.Element => {
     if (streamerId) {
       fetch(`${window.origin}/api/chat-fire/${streamerId}/1`)
         .then(res => res.json())
-        .then(res => {
-          console.log(res)
-          setOneMinuteCandle(res)
-        })
+        .then(res => setOneMinuteCandle(res))
       fetch(`${window.origin}/api/chat-fire/${streamerId}/5`)
         .then(res => res.json())
-        .then(res => {
-          console.log(res)
-          setFiveMinuteCandle(res)
-        })
+        .then(res => setFiveMinuteCandle(res))
       fetch(`${window.origin}/api/chat-fire/${streamerId}/10`)
         .then(res => res.json())
         .then(res => setTenMinuteCandle(res))

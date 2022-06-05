@@ -7,7 +7,7 @@ services:
     volumes:
       - ./app/frontend:/frontend
     entrypoint: >
-        sh -c "npm ci && npm run dev"
+        sh -c "npm ci && npm run build && npm run start"
   backend:
     container_name: backend
     image: golang:1.18.2-buster
@@ -37,8 +37,6 @@ services:
     volumes:
       - ./app/db/data:/var/lib/mysql
     working_dir: /
-    ports:
-      - 3306:3306
     env_file:
       - docker.env
     entrypoint: >
