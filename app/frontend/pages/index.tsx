@@ -26,7 +26,7 @@ const Home = () => {
             renderOption={(props, data) => (
               <li {...props}>
                 <Image
-                  src={data.image_url}
+                  src={data.imageUrl}
                   alt={`${data.nick}'s avatar`}
                   width={50}
                   height={50}

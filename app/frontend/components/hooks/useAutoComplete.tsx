@@ -1,6 +1,6 @@
 import { TextField } from "@mui/material";
 import router from "next/router";
-import { useState, useEffect, SyntheticEvent, ReactNode } from "react";
+import { ReactNode, SyntheticEvent, useEffect, useState } from "react";
 import { Streamer } from "../../interfaces/streamer";
 import { AutocompleteRenderInputParams } from "@mui/material/Autocomplete/Autocomplete";
 
@@ -25,27 +25,19 @@ const useAutoComplete = (
   const [textToSearch, setTextToSearch] = useState<string>(initTextToSearch);
 
   const fetchAutoCompleteData = async (): Promise<Streamer[]> => {
-    const res: Response = await fetch(`${window.origin}/api/graphql`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        query: "{ Streamer_getAll { nick, image_url } }",
-      }),
-    });
-    const data: Streamer[] = (await res.json()).data.Streamer_getAll;
-    return data;
+    const res: Response = await fetch(`${window.origin}/api/streamer`);
+    return (await res.json()).streamerList;
   };
 
   const searchButtonOnClick = () => {
-    router.push(`/${textToSearch}`);
+    const searchResult = autoCompleteData.filter((streamer) => streamer.nick === textToSearch)
+    router.push(`/${searchResult[0].streamerId}`);
   };
 
   const searchBarKeyDown = (e: any) => {
     if (e.code === "Enter" && e.target.value) {
-      router.push(`/${textToSearch}`);
+      const searchResult = autoCompleteData.filter((streamer) => streamer.nick === textToSearch)
+      router.push(`/${searchResult[0].streamerId}`);
     }
   };
 

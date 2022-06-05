@@ -14,14 +14,13 @@ interface StatisticsChartProps {
   streamer_login: string;
 }
 
-function chatfireToSeries(chatfire: ChartData[]) {
+function chatFireToSeries(chatFire: ChartData[]) {
   return [
     {
       name: "평균 채팅 화력🔥",
-      data: chatfire.map((el) => {
+      data: chatFire.map((el) => {
         const localTime = new Date(el.time).getTime() + 9 * 60 * 60 * 1000;
-        // return [new Date(localTime).toISOString(), el.count];
-        return el.count;
+        return [new Date(localTime).toISOString(), el.count];
       }),
     },
   ];
@@ -42,18 +41,18 @@ const StatisticsChart: FC<StatisticsChartProps> = ({
         autoScaleYaxis: true,
       },
       events: {
-        dataPointSelection: (e, chart, options) => {
-          const time: number = chart.data.twoDSeriesX[options.dataPointIndex];
-          fetch(
-            `${window.origin}/api/video?streamer_login=${streamer_loginRef.current}&time=${time}`
-          )
-            .then((res) => res.text())
-            .then((res) => {
-              if (res === "Video Not Found")
-                alert("다시보기를 찾을 수 없습니다.");
-              else window.open(res, "_blank");
-            });
-        },
+        // dataPointSelection: (e, chart, options) => {
+        //   const time: number = chart.data.twoDSeriesX[options.dataPointIndex];
+        //   fetch(
+        //     `${window.origin}/api/video?streamer_login=${streamer_loginRef.current}&time=${time}`
+        //   )
+        //     .then((res) => res.text())
+        //     .then((res) => {
+        //       if (res === "Video Not Found")
+        //         alert("다시보기를 찾을 수 없습니다.");
+        //       else window.open(res, "_blank");
+        //     });
+        // },
       },
     },
     colors: ["#8958d8"],
@@ -118,10 +117,10 @@ const StatisticsChart: FC<StatisticsChartProps> = ({
       tickAmount: 2,
     },
   };
-  const [series, setSeries] = useState(chatfireToSeries(data));
+  const [series, setSeries] = useState(chatFireToSeries(data));
 
   useEffect(() => {
-    setSeries(chatfireToSeries(data));
+    setSeries(chatFireToSeries(data));
   }, [data]);
 
   useEffect(() => {
@@ -130,8 +129,8 @@ const StatisticsChart: FC<StatisticsChartProps> = ({
 
   return (
     <>
-      <Chart type="line" series={series} options={option} height="230" />
-      <Chart type="area" series={series} options={brush} height="130" />
+      <Chart type="line" series={series as any} options={option} height="230" />
+      <Chart type="area" series={series as any} options={brush} height="130" />
     </>
   );
 };
