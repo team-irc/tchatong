@@ -2,6 +2,7 @@
 .vscode
 
 .DS_Store
+server
 twicyrc
 *.o
 docker.env

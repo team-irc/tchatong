@@ -1,6 +1,10 @@
 export interface Streamer {
-  id: number;
-  streamer_login: string;
-  nick: string;
-  image_url: string;
+  id: number,
+  streamerId: string,
+  streamerLogin: string,
+  nick: string,
+  imageUrl: string,
+  onAir: boolean,
+  viewers: number,
+  followers: number
 }

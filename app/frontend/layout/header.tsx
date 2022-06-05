@@ -47,7 +47,7 @@ const Header: FC = ({ children }): JSX.Element => {
             renderOption={(props, data) => (
               <li {...props}>
                 <img
-                  src={data.image_url}
+                  src={data.imageUrl}
                   alt={`${data.nick}'s avatar`}
                   className={styles.AutoCompleteAvatarImg}
                 />

@@ -1,6 +1,6 @@
 import { TextField } from "@mui/material";
 import router from "next/router";
-import { useState, useEffect, SyntheticEvent, ReactNode } from "react";
+import { ReactNode, SyntheticEvent, useEffect, useState } from "react";
 import { Streamer } from "../../interfaces/streamer";
 import { AutocompleteRenderInputParams } from "@mui/material/Autocomplete/Autocomplete";
 
@@ -10,7 +10,7 @@ interface AutocompleteProps {
   options: Streamer[];
   inputValue: string;
   onInputChange: (_: SyntheticEvent, value: string) => any;
-  getOptionLabel: (data: Streamer) => string;
+  getOptionLabel: (data: string | Streamer) => string;
   onKeyPress: (e: any) => void;
   renderInput: (params: AutocompleteRenderInputParams) => ReactNode;
 }
@@ -25,27 +25,19 @@ const useAutoComplete = (
   const [textToSearch, setTextToSearch] = useState<string>(initTextToSearch);
 
   const fetchAutoCompleteData = async (): Promise<Streamer[]> => {
-    const res: Response = await fetch(`${window.origin}/api/graphql`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify({
-        query: "{ Streamer_getAll { nick, image_url } }",
-      }),
-    });
-    const data: Streamer[] = (await res.json()).data.Streamer_getAll;
-    return data;
+    const res: Response = await fetch(`${window.origin}/api/streamer`);
+    return (await res.json()).streamerList;
   };
 
   const searchButtonOnClick = () => {
-    router.push(`/${textToSearch}`);
+    const searchResult = autoCompleteData.filter((streamer) => streamer.nick === textToSearch)
+    router.push(`/${searchResult[0].streamerId}`);
   };
 
   const searchBarKeyDown = (e: any) => {
     if (e.code === "Enter" && e.target.value) {
-      router.push(`/${textToSearch}`);
+      const searchResult = autoCompleteData.filter((streamer) => streamer.nick === textToSearch)
+      router.push(`/${searchResult[0].streamerId}`);
     }
   };
 
@@ -61,7 +53,12 @@ const useAutoComplete = (
       inputValue: textToSearch,
       onInputChange: (_: SyntheticEvent, value: string) =>
         setTextToSearch(value ? value : ""),
-      getOptionLabel: (data: Streamer) => data.nick ?? data,
+      getOptionLabel: (data: string | Streamer) => {
+        if (typeof(data) === "string") {
+          return data
+        }
+        return data.nick;
+      },
       onKeyPress: searchBarKeyDown,
       renderInput: (params: AutocompleteRenderInputParams) => (
         <TextField
