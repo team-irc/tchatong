@@ -2,6 +2,7 @@ package daemons
 
 import (
 	"database/sql"
+	"fmt"
 	"github.com/gempir/go-twitch-irc/v3"
 	"log"
 	"time"
@@ -49,15 +50,18 @@ func overWatchStreamerList(db *sql.DB, ch chan string) {
 func crawlFromChannel(channel string, db *sql.DB) {
 	client := twitch.NewAnonymousClient()
 	client.OnPrivateMessage(func(message twitch.PrivateMessage) {
+		if len(message.Message) >= 256 {
+			return
+		}
 		conn, err := db.Query("INSERT INTO chatlog VALUES (?, ?, ?)", message.RoomID, time.Now().UTC(), message.Message)
 		defer func(conn *sql.Rows) {
 			err := conn.Close()
 			if err != nil {
-				log.Fatal(err)
+				_ = fmt.Errorf(err.Error())
 			}
 		}(conn)
 		if err != nil {
-			log.Fatal(err)
+			_ = fmt.Errorf(err.Error())
 		}
 	})
 	client.Join(channel)
