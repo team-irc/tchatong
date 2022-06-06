@@ -1,10 +1,13 @@
-import { FC } from "react";
+import { FC, HTMLAttributes } from "react";
 import Link from "next/link";
-import { Button, Box, createTheme, ThemeProvider } from "@mui/material";
+import { Button, Box, createTheme, ThemeProvider, Badge } from "@mui/material";
 import Autocomplete from "@mui/material/Autocomplete";
 import SearchIcon from "@mui/icons-material/Search";
 import styles from "../styles/Header.module.css";
 import useAutoComplete from "../components/hooks/useAutoComplete";
+import { Streamer } from "../interfaces/streamer";
+import useBadge from "../components/hooks/useBadge";
+import Image from "next/image";
 
 const theme = createTheme({
   palette: {
@@ -27,6 +30,27 @@ const theme = createTheme({
   },
 });
 
+const AutoCompleteList: FC<{
+  props: HTMLAttributes<HTMLLIElement>,
+  streamer: Streamer
+}> = ({ props, streamer }) => {
+  const badgeProps = useBadge(streamer.onAir, 15, 15);
+
+  return <li {...props}>
+    <Badge {...badgeProps as any}>
+      <Image
+        src={streamer.imageUrl}
+        alt={`${streamer.nick}'s avatar`}
+        width={50}
+        height={50}
+        className={styles.AutoCompleteAvatarImg}
+      />
+    </Badge>
+    {streamer.nick}
+    <br />
+  </li>
+}
+
 const Header: FC = ({ children }): JSX.Element => {
   const [autoCompleteProps, searchButtonOnClick] = useAutoComplete(
     [],
@@ -45,15 +69,7 @@ const Header: FC = ({ children }): JSX.Element => {
             className={styles.SearchBar}
             {...autoCompleteProps}
             renderOption={(props, data) => (
-              <li {...props}>
-                <img
-                  src={data.imageUrl}
-                  alt={`${data.nick}'s avatar`}
-                  className={styles.AutoCompleteAvatarImg}
-                />
-                {data.nick}
-                <br />
-              </li>
+              <AutoCompleteList props={props} streamer={data} />
             )}
           />
           <Box className={styles.SearchButtonBox}>

@@ -127,7 +127,7 @@ const Statistics = (): JSX.Element => {
   const [dayTopChatFire, setDayTopChatFire] = useState(0);
   const [entireTopChatFire, setEntireTopChatFire] = useState(0);
   const [mostUsedWord, setMostUsedWord] = useState<string[]>([]);
-  const badgeProps = useBadge(streamerInfo.onAir);
+  const badgeProps = useBadge(streamerInfo.onAir, 35, 35);
 
   useEffect(() => {
     if (router.isReady) {

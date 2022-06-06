@@ -1,9 +1,33 @@
 import Image from "next/image";
-import { Box } from "@mui/material";
+import { Badge, Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete from "@mui/material/Autocomplete";
 import styles from "../styles/Home.module.css";
 import useAutoComplete from "../components/hooks/useAutoComplete";
+import useBadge from "../components/hooks/useBadge";
+import { FC, HTMLAttributes } from "react";
+import { Streamer } from "../interfaces/streamer";
+
+const AutoCompleteList: FC<{
+  props: HTMLAttributes<HTMLLIElement>,
+  streamer: Streamer
+}> = ({ props, streamer }) => {
+  const badgeProps = useBadge(streamer.onAir, 15, 15);
+
+  return <li {...props}>
+    <Badge {...badgeProps as any}>
+      <Image
+        src={streamer.imageUrl}
+        alt={`${streamer.nick}'s avatar`}
+        width={50}
+        height={50}
+        className={styles.AutoCompleteAvatarImg}
+      />
+    </Badge>
+    {streamer.nick}
+    <br />
+  </li>
+}
 
 const Home = () => {
   const [autoCompleteProps, searchButtonOnClick] = useAutoComplete(
@@ -24,17 +48,7 @@ const Home = () => {
             sx={{ width: "100%" }}
             {...autoCompleteProps}
             renderOption={(props, data) => (
-              <li {...props}>
-                <Image
-                  src={data.imageUrl}
-                  alt={`${data.nick}'s avatar`}
-                  width={50}
-                  height={50}
-                  className={styles.AutoCompleteAvatarImg}
-                />
-                {data.nick}
-                <br />
-              </li>
+              <AutoCompleteList props={props} streamer={data} />
             )}
           />
           <Box className={styles.SearchButtonBox}>
