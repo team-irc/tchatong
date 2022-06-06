@@ -49,7 +49,10 @@ const useAutoComplete = (
     {
       disablePortal: true,
       freeSolo: true,
-      options: autoCompleteData,
+      options: autoCompleteData.sort(function(x, y) {
+          // 방송중인 스트리머 먼저
+          return (x.onAir === y.onAir)? 0 : x.onAir? -1 : 1;
+        }),
       inputValue: textToSearch,
       onInputChange: (_: SyntheticEvent, value: string) =>
         setTextToSearch(value ? value : ""),
