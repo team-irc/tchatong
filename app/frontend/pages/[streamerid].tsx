@@ -238,9 +238,9 @@ const Statistics = (): JSX.Element => {
               alignItems: "flex-end",
             }}
           >
-            {/*<span style={{ color: "rgba(0,0,0,0.5)" }}>*/}
-            {/*  &#8251;차트 클릭 시 다시보기로 연결됩니다.*/}
-            {/*</span>*/}
+            <span style={{ color: "rgba(0,0,0,0.5)" }}>
+              &#8251;차트 클릭 시 다시보기로 연결됩니다.
+            </span>
             <Select
               value={candleType}
               onChange={(e) => setCandleType(e.target.value as CandleType)}
@@ -265,7 +265,7 @@ const Statistics = (): JSX.Element => {
                   return oneHourCandle;
               }
             })()}
-            streamer_login={streamerInfo.streamerLogin}
+            streamerId={streamerInfo.streamerId}
           />
           <Box className={styles.TableBox}>
             <MostUsedTable rows={mostUsedWord} />

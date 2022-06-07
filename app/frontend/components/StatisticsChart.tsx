@@ -11,7 +11,7 @@ interface ChartData {
 
 interface StatisticsChartProps {
   data: ChartData[];
-  streamer_login: string;
+  streamerId: string;
 }
 
 function chatFireToSeries(chatFire: ChartData[]) {
@@ -28,9 +28,9 @@ function chatFireToSeries(chatFire: ChartData[]) {
 
 const StatisticsChart: FC<StatisticsChartProps> = ({
   data,
-  streamer_login,
+  streamerId,
 }): JSX.Element => {
-  const streamer_loginRef = useRef(streamer_login);
+  const streamerIdRef = useRef(streamerId);
   const option: ApexOptions = {
     chart: {
       id: "chartArea",
@@ -41,18 +41,19 @@ const StatisticsChart: FC<StatisticsChartProps> = ({
         autoScaleYaxis: true,
       },
       events: {
-        // dataPointSelection: (e, chart, options) => {
-        //   const time: number = chart.data.twoDSeriesX[options.dataPointIndex];
-        //   fetch(
-        //     `${window.origin}/api/video?streamer_login=${streamer_loginRef.current}&time=${time}`
-        //   )
-        //     .then((res) => res.text())
-        //     .then((res) => {
-        //       if (res === "Video Not Found")
-        //         alert("다시보기를 찾을 수 없습니다.");
-        //       else window.open(res, "_blank");
-        //     });
-        // },
+        dataPointSelection: (e, chart, options) => {
+          const time: number = chart.data.twoDSeriesX[options.dataPointIndex];
+          const date = new Date(time)
+          fetch(
+            `${window.origin}/api/video/${streamerIdRef.current}/${date.setHours(date.getHours() - 9)}`
+          )
+            .then((res) => res.text())
+            .then((res) => {
+              if (res === "Can't found video")
+                alert("다시보기를 찾을 수 없습니다.");
+              else window.open(res, "_blank");
+            });
+        },
       },
     },
     colors: ["#8958d8"],
@@ -124,8 +125,8 @@ const StatisticsChart: FC<StatisticsChartProps> = ({
   }, [data]);
 
   useEffect(() => {
-    streamer_loginRef.current = streamer_login;
-  }, [streamer_login]);
+    streamerIdRef.current = streamerId;
+  }, [streamerId]);
 
   return (
     <>
