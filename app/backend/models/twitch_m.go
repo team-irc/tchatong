@@ -48,3 +48,25 @@ type FollowerInfo struct {
 		FollowedAt time.Time `json:"followed_at"`
 	} `json:"data"`
 }
+
+type VideoInfo struct {
+	Data []struct {
+		ID            string      `json:"id"`
+		StreamID      string      `json:"stream_id"`
+		UserID        string      `json:"user_id"`
+		UserLogin     string      `json:"user_login"`
+		UserName      string      `json:"user_name"`
+		Title         string      `json:"title"`
+		Description   string      `json:"description"`
+		CreatedAt     time.Time   `json:"created_at"`
+		PublishedAt   time.Time   `json:"published_at"`
+		URL           string      `json:"url"`
+		ThumbnailURL  string      `json:"thumbnail_url"`
+		Viewable      string      `json:"viewable"`
+		ViewCount     int         `json:"view_count"`
+		Language      string      `json:"language"`
+		Type          string      `json:"type"`
+		Duration      string      `json:"duration"`
+		MutedSegments interface{} `json:"muted_segments"`
+	} `json:"data"`
+}

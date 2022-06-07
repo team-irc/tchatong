@@ -14,3 +14,5 @@
   * <a href="./docs/chat-fire/entire-top/streamerId/get.md">GET /entire-top/:streamerId</a>
 * /top-word
   * <a href="./docs/top-word/streamerId/get.md">GET /:streamerId</a>
+* /video
+  * <a href="./docs/video/streamerId/time/get.md">GET /:streamerId/:time</a>

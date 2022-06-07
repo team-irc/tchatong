@@ -3,6 +3,7 @@ package services
 import (
 	"database/sql"
 	"tchatong.info/models"
+	"tchatong.info/utils"
 	"time"
 )
 
@@ -67,7 +68,7 @@ func GetChatFireByInterval(streamerId string, interval int, db *sql.DB) []models
 	for i := range res {
 		res[i].Time = aDayAgo.Add(time.Minute * time.Duration(i*interval)).UTC().String()
 		for _, chatFire := range chatFireList {
-			chatFireTime, _ := time.Parse("2006-01-02 15:04:05", chatFire.Date)
+			chatFireTime, _ := utils.ParseTime(chatFire.Date)
 			chatFire.Date = time.Date(chatFireTime.Year(), chatFireTime.Month(), chatFireTime.Day(), chatFireTime.Hour(), (chatFireTime.Minute()/interval)*interval, chatFireTime.Second(), chatFireTime.Nanosecond(), chatFireTime.Location()).String()
 			if res[i].Time == chatFire.Date {
 				res[i].Count += chatFire.Count
