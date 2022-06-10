@@ -63,8 +63,8 @@ func GetCurrentChatFire(streamerId string, db *sql.DB) models.ChatFireResponse {
 
 func GetChatFireByInterval(streamerId string, interval int, db *sql.DB) []models.ChatFireResponse {
 	chatFireList := getChatFireList(streamerId, db)
-	res := make([]models.ChatFireResponse, 60/interval*24)
-	aDayAgo := time.Now().Add(time.Duration(-1) * time.Hour * 24).Truncate(time.Hour)
+	res := make([]models.ChatFireResponse, 60/interval*24+1)
+	aDayAgo := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute()/interval*interval, 0, 0, time.Now().Location()).Add(time.Duration(-1) * time.Hour * 24)
 	for i := range res {
 		res[i].Time = aDayAgo.Add(time.Minute * time.Duration(i*interval)).UTC().String()
 		for _, chatFire := range chatFireList {
