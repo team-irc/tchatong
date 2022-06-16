@@ -74,6 +74,7 @@ func GetChatFireByInterval(streamerId string, interval int, db *sql.DB) []models
 				res[i].Count += chatFire.Count
 			}
 		}
+		res[i].Count /= interval
 	}
 	return res
 }
