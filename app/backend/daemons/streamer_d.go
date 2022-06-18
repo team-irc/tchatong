@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"sync"
+	"tchatong.info/db"
 	"tchatong.info/models"
 	"time"
 )
@@ -75,12 +76,14 @@ func getImageUrl(streamerId string) string {
 	return userInfo.Data[0].ProfileImageURL
 }
 
-func UpdateStreamerTable(db *sql.DB) {
+func UpdateStreamerTable(mariaDB *db.MariaDB) {
 	for {
 		start := time.Now()
 		(func() {
-			rows, err := db.Query("SELECT streamer_id FROM streamer")
-			defer rows.Close()
+			rows, err := mariaDB.Query("SELECT streamer_id FROM streamer")
+			defer func(rows *sql.Rows) {
+				_ = rows.Close()
+			}(rows)
 			if err != nil {
 				_ = fmt.Errorf(err.Error())
 			}
@@ -98,8 +101,10 @@ func UpdateStreamerTable(db *sql.DB) {
 					followers := getFollowers(streamerId)
 					imageUrl := getImageUrl(streamerId)
 					(func() {
-						res, _ := db.Query("UPDATE streamer SET image_url=?, on_air=?, viewers=?, followers=? WHERE streamer_id=?", imageUrl, onAir, viewers, followers, streamerId)
-						defer res.Close()
+						res, _ := mariaDB.Query("UPDATE streamer SET image_url=?, on_air=?, viewers=?, followers=? WHERE streamer_id=?", imageUrl, onAir, viewers, followers, streamerId)
+						defer func(res *sql.Rows) {
+							_ = res.Close()
+						}(res)
 					})()
 					if err != nil {
 						_ = fmt.Errorf(err.Error())

@@ -1,20 +1,20 @@
 package controllers
 
 import (
-	"database/sql"
 	"github.com/gin-gonic/gin"
 	"strconv"
+	"tchatong.info/db"
 	"tchatong.info/services"
 )
 
-func GetEntireTopChatFire(c *gin.Context, db *sql.DB) {
+func GetEntireTopChatFire(c *gin.Context, mariaDB *db.MariaDB) {
 	var streamerId string
 
 	streamerId = c.Param("streamerId")
-	c.JSON(200, services.GetEntireTopChatFire(streamerId, db))
+	c.JSON(200, services.GetEntireTopChatFire(streamerId, mariaDB))
 }
 
-func GetChatFireByInterval(c *gin.Context, db *sql.DB) {
+func GetChatFireByInterval(c *gin.Context, mariaDB *db.MariaDB) {
 	var streamerId string
 	var interval int
 
@@ -25,20 +25,20 @@ func GetChatFireByInterval(c *gin.Context, db *sql.DB) {
 	} else if err != nil {
 		c.String(400, "interval should be number")
 	} else {
-		c.JSON(200, services.GetChatFireByInterval(streamerId, interval, db))
+		c.JSON(200, services.GetChatFireByInterval(streamerId, interval, mariaDB))
 	}
 }
 
-func GetDayTopChatFire(c *gin.Context, db *sql.DB) {
+func GetDayTopChatFire(c *gin.Context, mariaDB *db.MariaDB) {
 	var streamerId string
 
 	streamerId = c.Param("streamerId")
-	c.JSON(200, services.GetDayTopChatFire(streamerId, db))
+	c.JSON(200, services.GetDayTopChatFire(streamerId, mariaDB))
 }
 
-func GetCurrentChatFire(c *gin.Context, db *sql.DB) {
+func GetCurrentChatFire(c *gin.Context, mariaDB *db.MariaDB) {
 	var streamerId string
 
 	streamerId = c.Param("streamerId")
-	c.JSON(200, services.GetCurrentChatFire(streamerId, db))
+	c.JSON(200, services.GetCurrentChatFire(streamerId, mariaDB))
 }
