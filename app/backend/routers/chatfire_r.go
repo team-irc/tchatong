@@ -6,9 +6,9 @@ import (
 	"tchatong.info/db"
 )
 
-func SetChatFireRouter(router *gin.RouterGroup, mariaDB *db.MariaDB) {
+func SetChatFireRouter(router *gin.RouterGroup, mariaDB *db.MariaDB, redisDB *db.RedisDB) {
 	router.GET("/:streamerId", func(c *gin.Context) { controllers.GetCurrentChatFire(c, mariaDB) })
-	router.GET("/:streamerId/:interval", func(c *gin.Context) { controllers.GetChatFireByInterval(c, mariaDB) })
+	router.GET("/:streamerId/:interval", func(c *gin.Context) { controllers.GetChatFireByInterval(c, mariaDB, redisDB) })
 	router.GET("/day-top/:streamerId", func(c *gin.Context) { controllers.GetDayTopChatFire(c, mariaDB) })
 	router.GET("/entire-top/:streamerId", func(c *gin.Context) { controllers.GetEntireTopChatFire(c, mariaDB) })
 }

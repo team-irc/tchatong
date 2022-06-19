@@ -13,13 +13,14 @@ var router *gin.Engine
 
 func init() {
 	mariaDB := db.MariaDB{}.New()
+	redisDB := db.RedisDB{}.New()
 	router = gin.Default()
 	streamerRouter := router.Group("/streamer")
 	chatFireRouter := router.Group("/chat-fire")
 	topWordRouter := router.Group("/top-word")
 	videoRouter := router.Group("/video")
 	routers.SetStreamerRouter(streamerRouter, mariaDB)
-	routers.SetChatFireRouter(chatFireRouter, mariaDB)
+	routers.SetChatFireRouter(chatFireRouter, mariaDB, redisDB)
 	routers.SetTopWordRouter(topWordRouter, mariaDB)
 	routers.SetVideoRouter(videoRouter)
 	go daemons.UpdateStreamerTable(mariaDB)
