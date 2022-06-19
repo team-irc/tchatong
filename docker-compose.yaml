@@ -38,6 +38,8 @@ services:
     container_name: redis
     image: redis:6.2.7
     restart: always
+    expose:
+      - "6379"
   analyzer:
     container_name: analyzer
     build:
