@@ -78,10 +78,10 @@
 
 ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
 ![MariaDB](https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)
 ![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
 ![Go](https://img.shields.io/badge/go-%2300ADD8.svg?style=for-the-badge&logo=go&logoColor=white)
 ![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
-![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)
 ![Nginx](https://img.shields.io/badge/nginx-%23009639.svg?style=for-the-badge&logo=nginx&logoColor=white)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Grafana](https://img.shields.io/badge/grafana-%23E34F26.svg?style=for-the-badge&logo=grafana&logoColor=white)
@@ -112,8 +112,9 @@
    ```
 2. 프로젝트의 루트에 `docker.env`라는 파일을 만들고 아래의 내용을 채웁니다.
    ```dotenv
-    # github api
-    OCTOKIT_AUTH=YOUR_OCTOKIT_AUTH
+    # redis
+    REDIS_HOST=YOUR_REDIS_HOST
+    REDIS_PORT=YOUR_REDIS_PORT
     
     # mariaDB
     DB_HOST=YOUR_DB_HOST
