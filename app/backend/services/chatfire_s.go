@@ -2,15 +2,22 @@ package services
 
 import (
 	"database/sql"
+	"fmt"
+	"tchatong.info/db"
 	"tchatong.info/models"
 	"tchatong.info/utils"
 	"time"
 )
 
-func getChatFireList(streamerId string, db *sql.DB) []models.ChatFire {
+func getChatFireList(streamerId string, mariaDB *db.MariaDB) []models.ChatFire {
 	chatFireList := make([]models.ChatFire, 0)
-	res, err := db.Query("SELECT * FROM chatfire WHERE streamer_id=? AND date > now() - INTERVAL 1 DAY", streamerId)
-	defer res.Close()
+	res, err := mariaDB.Query("SELECT * FROM chatfire WHERE streamer_id=? AND date > now() - INTERVAL 1 DAY", streamerId)
+	defer func(res *sql.Rows) {
+		err := res.Close()
+		if err != nil {
+			_ = fmt.Errorf(err.Error())
+		}
+	}(res)
 	if err != nil {
 		return nil
 	}
@@ -25,23 +32,28 @@ func getChatFireList(streamerId string, db *sql.DB) []models.ChatFire {
 	return chatFireList
 }
 
-func GetEntireTopChatFire(streamerId string, db *sql.DB) models.ChatFireResponse {
+func GetEntireTopChatFire(streamerId string, mariaDB *db.MariaDB) models.ChatFireResponse {
 	var date string
 	var count int
 
-	_ = db.QueryRow("SELECT date, count FROM chatfire WHERE id=(SELECT chatfire_id FROM legend WHERE streamer_id=?)", streamerId).Scan(&date, &count)
+	_ = mariaDB.QueryRow("SELECT date, count FROM chatfire WHERE id=(SELECT chatfire_id FROM legend WHERE streamer_id=?)", streamerId).Scan(&date, &count)
 	return models.ChatFireResponse{Time: date, Count: count}
 }
 
-func GetDayTopChatFire(streamerId string, db *sql.DB) models.ChatFireResponse {
+func GetDayTopChatFire(streamerId string, mariaDB *db.MariaDB) models.ChatFireResponse {
 	var aDayAgo time.Time
 	var dayTopChatFire models.ChatFire
 
 	dayTopChatFire = models.ChatFire{}
 	aDayAgo = time.Now().Add(time.Duration(-1) * time.Hour * 24)
 	(func() {
-		rows, _ := db.Query("SELECT * FROM chatfire WHERE streamer_id=? AND date >= ?", streamerId, aDayAgo)
-		defer rows.Close()
+		rows, _ := mariaDB.Query("SELECT * FROM chatfire WHERE streamer_id=? AND date >= ?", streamerId, aDayAgo)
+		defer func(rows *sql.Rows) {
+			err := rows.Close()
+			if err != nil {
+				_ = fmt.Errorf(err.Error())
+			}
+		}(rows)
 		for rows.Next() {
 			var chatFire models.ChatFire
 			_ = rows.Scan(&chatFire.Id, &chatFire.StreamerId, &chatFire.Date, &chatFire.Count)
@@ -53,16 +65,16 @@ func GetDayTopChatFire(streamerId string, db *sql.DB) models.ChatFireResponse {
 	return models.ChatFireResponse{Time: dayTopChatFire.Date, Count: dayTopChatFire.Count}
 }
 
-func GetCurrentChatFire(streamerId string, db *sql.DB) models.ChatFireResponse {
+func GetCurrentChatFire(streamerId string, mariaDB *db.MariaDB) models.ChatFireResponse {
 	var chatFire models.ChatFire
 
 	aMinuteAgo := time.Now().Add(time.Duration(-1) * time.Minute).Truncate(time.Minute)
-	_ = db.QueryRow("SELECT * FROM chatfire WHERE streamer_id=? AND date=?", streamerId, aMinuteAgo).Scan(&chatFire.Id, &chatFire.StreamerId, &chatFire.Date, &chatFire.Count)
+	_ = mariaDB.QueryRow("SELECT * FROM chatfire WHERE streamer_id=? AND date=?", streamerId, aMinuteAgo).Scan(&chatFire.Id, &chatFire.StreamerId, &chatFire.Date, &chatFire.Count)
 	return models.ChatFireResponse{Time: chatFire.Date, Count: chatFire.Count}
 }
 
-func GetChatFireByInterval(streamerId string, interval int, db *sql.DB) []models.ChatFireResponse {
-	chatFireList := getChatFireList(streamerId, db)
+func GetChatFireByInterval(streamerId string, interval int, mariaDB *db.MariaDB) []models.ChatFireResponse {
+	chatFireList := getChatFireList(streamerId, mariaDB)
 	res := make([]models.ChatFireResponse, 60/interval*24+1)
 	aDayAgo := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute()/interval*interval, 0, 0, time.Now().Location()).Add(time.Duration(-1) * time.Hour * 24)
 	for i := range res {

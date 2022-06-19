@@ -1,12 +1,12 @@
 package routers
 
 import (
-	"database/sql"
 	"github.com/gin-gonic/gin"
 	"tchatong.info/controllers"
+	"tchatong.info/db"
 )
 
-func SetStreamerRouter(router *gin.RouterGroup, db *sql.DB) {
-	router.GET("", func(c *gin.Context) { controllers.GetAllStreamer(c, db) })
-	router.GET("/:streamerId", func(c *gin.Context) { controllers.GetOneStreamer(c, db) })
+func SetStreamerRouter(router *gin.RouterGroup, mariaDB *db.MariaDB) {
+	router.GET("", func(c *gin.Context) { controllers.GetAllStreamer(c, mariaDB) })
+	router.GET("/:streamerId", func(c *gin.Context) { controllers.GetOneStreamer(c, mariaDB) })
 }

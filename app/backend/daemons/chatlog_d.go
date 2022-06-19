@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/gempir/go-twitch-irc/v3"
 	"log"
+	"tchatong.info/db"
 	"time"
 )
 
@@ -21,10 +22,10 @@ func contains[T comparable](s []T, e T) bool {
  * @author  amateur.toss@gmail.com
  * @details 10초마다 streamer 테이블이 변경되었는지 감시하는 함수
  */
-func overWatchStreamerList(db *sql.DB, ch chan string) {
+func overWatchStreamerList(mariaDB *db.MariaDB, ch chan string) {
 	var streamerList []string
 	for {
-		res, err := db.Query("SELECT streamer_login FROM streamer")
+		res, err := mariaDB.Query("SELECT streamer_login FROM streamer")
 		if err != nil {
 			panic(err)
 		}
@@ -47,13 +48,13 @@ func overWatchStreamerList(db *sql.DB, ch chan string) {
  * @author  amateur.toss@gmail.com
  * @details	지정된 채널로부터 채팅로그를 수집, db에 저장하는 함수
  */
-func crawlFromChannel(channel string, db *sql.DB) {
+func crawlFromChannel(channel string, mariaDB *db.MariaDB) {
 	client := twitch.NewAnonymousClient()
 	client.OnPrivateMessage(func(message twitch.PrivateMessage) {
 		if len(message.Message) >= 256 {
 			return
 		}
-		conn, err := db.Query("INSERT INTO chatlog VALUES (?, ?, ?)", message.RoomID, time.Now().UTC(), message.Message)
+		conn, err := mariaDB.Query("INSERT INTO chatlog VALUES (?, ?, ?)", message.RoomID, time.Now().UTC(), message.Message)
 		defer func(conn *sql.Rows) {
 			err := conn.Close()
 			if err != nil {
@@ -71,11 +72,11 @@ func crawlFromChannel(channel string, db *sql.DB) {
 	}
 }
 
-func CrawlFromChannels(db *sql.DB) {
+func CrawlFromChannels(mariaDB *db.MariaDB) {
 	ch := make(chan string)
-	go overWatchStreamerList(db, ch)
+	go overWatchStreamerList(mariaDB, ch)
 	for {
 		var channel = <-ch
-		go crawlFromChannel(channel, db)
+		go crawlFromChannel(channel, mariaDB)
 	}
 }

@@ -3,41 +3,48 @@ package daemons
 import (
 	"database/sql"
 	"fmt"
+	"tchatong.info/db"
 	"tchatong.info/models"
 	"time"
 )
 
-func updateRow(streamerId string, db *sql.DB) {
+func updateRow(streamerId string, mariaDB *db.MariaDB) {
 	var chatFireId string
 	var currentLegend int
 	var newLegend int
 
-	_ = db.QueryRow("SELECT id FROM chatfire WHERE streamer_id=? ORDER BY count DESC", streamerId).Scan(&chatFireId)
-	_ = db.QueryRow("SELECT count FROM chatfire WHERE id=(SELECT chatfire_id FROM legend WHERE streamer_id=?)", streamerId).Scan(&currentLegend)
-	_ = db.QueryRow("SELECT count FROM chatfire WHERE id=?", chatFireId).Scan(&newLegend)
+	_ = mariaDB.QueryRow("SELECT id FROM chatfire WHERE streamer_id=? ORDER BY count DESC", streamerId).Scan(&chatFireId)
+	_ = mariaDB.QueryRow("SELECT count FROM chatfire WHERE id=(SELECT chatfire_id FROM legend WHERE streamer_id=?)", streamerId).Scan(&currentLegend)
+	_ = mariaDB.QueryRow("SELECT count FROM chatfire WHERE id=?", chatFireId).Scan(&newLegend)
 	if newLegend >= currentLegend {
-		res, _ := db.Query("UPDATE legend SET chatfire_id=?, last_update_date=? WHERE streamer_id=?", chatFireId, time.Now(), streamerId)
-		defer res.Close()
+		res, _ := mariaDB.Query("UPDATE legend SET chatfire_id=?, last_update_date=? WHERE streamer_id=?", chatFireId, time.Now(), streamerId)
+		defer func(res *sql.Rows) {
+			_ = res.Close()
+		}(res)
 	}
 }
 
-func insertRow(streamerId string, db *sql.DB) {
+func insertRow(streamerId string, mariaDB *db.MariaDB) {
 	var chatFireId string
 
-	_ = db.QueryRow("SELECT id FROM chatfire WHERE streamer_id=? ORDER BY count DESC", streamerId).Scan(&chatFireId)
+	_ = mariaDB.QueryRow("SELECT id FROM chatfire WHERE streamer_id=? ORDER BY count DESC", streamerId).Scan(&chatFireId)
 	if chatFireId == "" {
 		return
 	}
-	res, _ := db.Query("INSERT INTO legend VALUES (default, ?, ?, ?)", streamerId, chatFireId, time.Now())
-	defer res.Close()
+	res, _ := mariaDB.Query("INSERT INTO legend VALUES (default, ?, ?, ?)", streamerId, chatFireId, time.Now())
+	defer func(res *sql.Rows) {
+		_ = res.Close()
+	}(res)
 }
 
-func UpdateLegendTable(db *sql.DB) {
+func UpdateLegendTable(mariaDB *db.MariaDB) {
 	for {
 		start := time.Now()
 		(func() {
-			rows, err := db.Query("SELECT streamer_id FROM streamer")
-			defer rows.Close()
+			rows, err := mariaDB.Query("SELECT streamer_id FROM streamer")
+			defer func(rows *sql.Rows) {
+				_ = rows.Close()
+			}(rows)
 			if err != nil {
 				_ = fmt.Errorf(err.Error())
 			}
@@ -48,11 +55,11 @@ func UpdateLegendTable(db *sql.DB) {
 				if err != nil {
 					_ = fmt.Errorf(err.Error())
 				}
-				_ = db.QueryRow("SELECT * FROM legend WHERE streamer_id=?", streamerId).Scan(&legend.Id, &legend.StreamerId, &legend.ChatFireId, &legend.LastUpdate)
+				_ = mariaDB.QueryRow("SELECT * FROM legend WHERE streamer_id=?", streamerId).Scan(&legend.Id, &legend.StreamerId, &legend.ChatFireId, &legend.LastUpdate)
 				if (legend == models.Legend{}) {
-					insertRow(streamerId, db)
+					insertRow(streamerId, mariaDB)
 				} else {
-					updateRow(streamerId, db)
+					updateRow(streamerId, mariaDB)
 				}
 			}
 		})()

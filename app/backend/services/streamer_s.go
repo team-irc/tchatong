@@ -2,13 +2,16 @@ package services
 
 import (
 	"database/sql"
+	"tchatong.info/db"
 	"tchatong.info/models"
 )
 
-func GetAllStreamer(db *sql.DB) []models.Streamer {
+func GetAllStreamer(mariaDB *db.MariaDB) []models.Streamer {
 	streamerList := make([]models.Streamer, 0)
-	res, err := db.Query("SELECT * FROM streamer")
-	defer res.Close()
+	res, err := mariaDB.Query("SELECT * FROM streamer")
+	defer func(res *sql.Rows) {
+		_ = res.Close()
+	}(res)
 	if err != nil {
 		return streamerList
 	}
@@ -23,9 +26,9 @@ func GetAllStreamer(db *sql.DB) []models.Streamer {
 	return streamerList
 }
 
-func GetOneStreamer(streamerId string, db *sql.DB) models.Streamer {
+func GetOneStreamer(streamerId string, mariaDB *db.MariaDB) models.Streamer {
 	var streamer models.Streamer
-	err := db.QueryRow("SELECT * FROM streamer WHERE streamer_id=?", streamerId).Scan(&streamer.Id, &streamer.StreamerId, &streamer.StreamerLogin, &streamer.Nick, &streamer.ImageUrl, &streamer.OnAir, &streamer.Viewers, &streamer.Followers)
+	err := mariaDB.QueryRow("SELECT * FROM streamer WHERE streamer_id=?", streamerId).Scan(&streamer.Id, &streamer.StreamerId, &streamer.StreamerLogin, &streamer.Nick, &streamer.ImageUrl, &streamer.OnAir, &streamer.Viewers, &streamer.Followers)
 	if err != nil {
 		return models.Streamer{}
 	}

@@ -1,11 +1,11 @@
 package routers
 
 import (
-	"database/sql"
 	"github.com/gin-gonic/gin"
 	"tchatong.info/controllers"
+	"tchatong.info/db"
 )
 
-func SetTopWordRouter(router *gin.RouterGroup, db *sql.DB) {
-	router.GET("/:streamerId", func(c *gin.Context) { controllers.GetTopWord(c, db) })
+func SetTopWordRouter(router *gin.RouterGroup, mariaDB *db.MariaDB) {
+	router.GET("/:streamerId", func(c *gin.Context) { controllers.GetTopWord(c, mariaDB) })
 }
