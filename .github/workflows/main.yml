@@ -16,4 +16,5 @@ jobs:
           script: |
             cd /home/ubuntu/tchatong
             docker-compose down
+            sudo chmod -R 777 /home/ubuntu/tchatong/app/db/data
             docker-compose up -d --build
