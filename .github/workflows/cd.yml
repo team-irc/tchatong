@@ -1,4 +1,4 @@
-name: CI
+name: CD
 on:
   push:
     branches: [ "main" ]
@@ -7,10 +7,10 @@ on:
       - "**/.gitignore"
       - "images/*"
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy
+      - name: deploy
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
