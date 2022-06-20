@@ -64,7 +64,7 @@
 ## About The Project
 
 [![Product Name Screen Shot][product-screenshot]](https://tchatong.info)
-![server](https://github.com/team-irc/twitch-chat-analyzer/blob/develop/images/server.png)
+![server](https://github.com/team-irc/twitch-chat-analyzer/blob/main/images/server.png)
 
 트채통은 인터넷 방송 플랫폼 "트위치"의 채팅로그를 분석, 시각화하여 보여주는 서비스 입니다.  
 
