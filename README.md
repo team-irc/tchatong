@@ -122,6 +122,12 @@
     DB_PASSWORD=YOUR_DB_PASSWORD
     DB_NAME=YOUR_DB_NAME
     
+    # google big query
+    GOOGLE_PROJECT_ID=YOUR_GOOGLE_PROJECT_ID
+    GOOGLE_DATASET_ID=YOUR_GOOGLE_DATASET_ID
+    GOOGLE_TABLE_ID=YOUR_GOOGLE_TABLE_ID
+    GOOGLE_APPLICATION_CREDENTIALS=/backend/key_name.json
+    
     # twitch chat bot
     TWITCH_ID=YOUR_TWITCH_IRC_ID
     TWITCH_PW=YOUR_TWITCH_IRC_PASSWORD
@@ -156,7 +162,8 @@
     GRANT ALL ON *.* to YOUR_USER_NAME'%' IDENTIFIED BY 'YOUR_PASSWORD';
     FLUSH PRIVILEGES;
    ```
-4. 컨테이너를 실행시킵니다.
+4. app/backend 폴더에 Google Big Query Key를 넣습니다.
+5. 컨테이너를 실행시킵니다.
    ```sh
    docker-compose up --build
    ```
