@@ -11,3 +11,4 @@ app/db/data
 ssl/
 .frontend_init/
 .backend_init/
+tchatong_big_query_key.json
