@@ -14,6 +14,7 @@ var router *gin.Engine
 func init() {
 	mariaDB := db.MariaDB{}.New()
 	redisDB := db.RedisDB{}.New()
+	bigQueryDB := db.BigQuery{}.New()
 	router = gin.Default()
 	streamerRouter := router.Group("/streamer")
 	chatFireRouter := router.Group("/chat-fire")
@@ -25,7 +26,7 @@ func init() {
 	routers.SetVideoRouter(videoRouter)
 	go daemons.UpdateStreamerTable(mariaDB)
 	go daemons.UpdateLegendTable(mariaDB)
-	go daemons.CrawlFromChannels(mariaDB)
+	go daemons.CrawlFromChannels(mariaDB, bigQueryDB)
 }
 
 func main() {

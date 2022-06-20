@@ -6,6 +6,7 @@ import (
 	"github.com/gempir/go-twitch-irc/v3"
 	"log"
 	"tchatong.info/db"
+	"tchatong.info/models"
 	"time"
 )
 
@@ -48,12 +49,13 @@ func overWatchStreamerList(mariaDB *db.MariaDB, ch chan string) {
  * @author  amateur.toss@gmail.com
  * @details	지정된 채널로부터 채팅로그를 수집, db에 저장하는 함수
  */
-func crawlFromChannel(channel string, mariaDB *db.MariaDB) {
+func crawlFromChannel(channel string, mariaDB *db.MariaDB, bigQueryDB *db.BigQuery) {
 	client := twitch.NewAnonymousClient()
 	client.OnPrivateMessage(func(message twitch.PrivateMessage) {
 		if len(message.Message) >= 256 {
 			return
 		}
+		bigQueryDB.InsertRow(models.ChatLog{StreamerId: message.RoomID, StreamerLogin: message.Channel, Date: time.Now().UTC(), Content: message.Message})
 		conn, err := mariaDB.Query("INSERT INTO chatlog VALUES (?, ?, ?)", message.RoomID, time.Now().UTC(), message.Message)
 		defer func(conn *sql.Rows) {
 			err := conn.Close()
@@ -72,11 +74,11 @@ func crawlFromChannel(channel string, mariaDB *db.MariaDB) {
 	}
 }
 
-func CrawlFromChannels(mariaDB *db.MariaDB) {
+func CrawlFromChannels(mariaDB *db.MariaDB, bigQueryDB *db.BigQuery) {
 	ch := make(chan string)
 	go overWatchStreamerList(mariaDB, ch)
 	for {
 		var channel = <-ch
-		go crawlFromChannel(channel, mariaDB)
+		go crawlFromChannel(channel, mariaDB, bigQueryDB)
 	}
 }
