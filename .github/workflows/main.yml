@@ -2,6 +2,10 @@ name: CI
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - "**/*.md"
+      - "**/.gitignore"
+      - "images/*"
 jobs:
   build:
     runs-on: ubuntu-latest
