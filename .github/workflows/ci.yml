@@ -1,0 +1,29 @@
+name: CI
+on:
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  build-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 17.4.0
+      - name: npm install
+        working-directory: ./app/frontend
+        run: npm install
+      - name: npm build
+        working-directory: ./app/frontend
+        run: npm run build
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-go@v3
+        with:
+          go-version: '1.18.3'
+      - name: build
+        working-directory: ./app/backend
+        run: make
