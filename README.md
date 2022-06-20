@@ -108,7 +108,7 @@
 
 1. 프로젝트를 클론 받습니다.
    ```sh
-    git clone https://github.com/team-irc/twitch-chat-analyzer
+    git clone https://github.com/team-irc/tchatong
    ```
 2. 프로젝트의 루트에 `docker.env`라는 파일을 만들고 아래의 내용을 채웁니다.
    ```dotenv
