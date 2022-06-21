@@ -15,6 +15,7 @@ func init() {
 	mariaDB := db.MariaDB{}.New()
 	redisDB := db.RedisDB{}.New()
 	bigQueryDB := db.BigQuery{}.New()
+	gin.SetMode(gin.DebugMode)
 	router = gin.Default()
 	streamerRouter := router.Group("/streamer")
 	chatFireRouter := router.Group("/chat-fire")
