@@ -2,6 +2,7 @@
 import pymysql
 import pandas as pd
 from pymysql.cursors import Cursor
+import redis
 import time
 import os
 import threading
@@ -46,6 +47,7 @@ def get_chatlog_after_last_date(cursor: Cursor, res) -> tuple:
 	return res
 
 def save_chatfire_from_chatlog(cursor: Cursor, res3: tuple):
+	global rd
 	df: pd.DataFrame
 	chatlog: pd.DataFrame
 	chatfire: pd.DataFrame
@@ -54,8 +56,8 @@ def save_chatfire_from_chatlog(cursor: Cursor, res3: tuple):
 	df = pd.DataFrame(res3)
 	chatlog = df.set_index('date', drop=True) # Change date column to index for resample
 	chatfire = chatlog.groupby('streamer_id').resample('1T').count().content.reset_index(level=['streamer_id', 'date']).rename(columns = {'content': 'count'})
-
-	sql = f"INSERT INTO chatfire VALUES(default, %s, %s, %s);"
+	chatfire['viewers'] = [rd.get(f"streamer:viewers:{streamer_id}") for streamer_id in chatfire['streamer_id'].tolist()]
+	sql = f"INSERT INTO chatfire VALUES(default, %s, %s, %s, %s);"
 
 	cursor.executemany(sql, chatfire.values.tolist())
 	db.commit()
@@ -77,8 +79,9 @@ def save_chatfire_from_last_date():
 				save_chatfire_from_chatlog(cursor, res2)
 				res2 = cursor.fetchmany(100)
 
-	except:
+	except Exception as e:
 		print('[-] save_chatfire error')
+		print(e)
 		exit(1)
 
 def save_topword_in_a_day(streamer_id, db, cursor):
@@ -149,6 +152,10 @@ def connect_db():
 		time.sleep(DB_CONNECTION_RETRY_PERIOD)
 		connect_db()
 
+def connect_redis():
+	global rd
+	rd = redis.Redis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), db=0, charset="utf-8", decode_responses=True)
+
 def delete_chatlog(db, cursor):
 	two_day_ago = datetime.datetime.now() - datetime.timedelta(days=2)
 	sql = f"DELETE FROM chatlog WHERE date <= \'{two_day_ago}\';"
@@ -163,7 +170,7 @@ def delete_chatlog(db, cursor):
 # 	 - 중복 방지
 def	main():
 	connect_db()
-
+	connect_redis()
 	# t1 = threading.Thread(target=refresh_topwords_thread_func, args=(db, cursor))
 	# t1.start()
 	refresh_topwords(db, cursor)

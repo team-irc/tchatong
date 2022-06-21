@@ -31,6 +31,10 @@ RUN python3 -m pip install tweepy==3.10.0
 
 RUN python3 -m pip install PyMySQL
 
+# Install Redis Client
+
+RUN python3 -m pip install redis
+
 RUN python3 -m pip install pandas
 
 # Install Locale
