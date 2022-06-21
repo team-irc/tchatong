@@ -23,21 +23,25 @@ func getChatFireList(streamerId string, mariaDB *db.MariaDB) []models.ChatFire {
 	}
 	for res.Next() {
 		var chatFire models.ChatFire
-		err := res.Scan(&chatFire.Id, &chatFire.StreamerId, &chatFire.Date, &chatFire.Count)
+		var viewers sql.NullInt64
+		err := res.Scan(&chatFire.Id, &chatFire.StreamerId, &chatFire.Date, &chatFire.Count, &viewers)
 		if err != nil {
+			_ = fmt.Errorf(err.Error())
 			return chatFireList
 		}
+		chatFire.Viewers = int(viewers.Int64)
 		chatFireList = append(chatFireList, chatFire)
 	}
 	return chatFireList
 }
 
 func GetEntireTopChatFire(streamerId string, mariaDB *db.MariaDB) models.ChatFireResponse {
-	var date string
-	var count int
+	var res models.ChatFireResponse
+	var viewers sql.NullInt64
 
-	_ = mariaDB.QueryRow("SELECT date, count FROM chatfire WHERE id=(SELECT chatfire_id FROM legend WHERE streamer_id=?)", streamerId).Scan(&date, &count)
-	return models.ChatFireResponse{Time: date, Count: count}
+	_ = mariaDB.QueryRow("SELECT date, count, viewers FROM chatfire WHERE id=(SELECT chatfire_id FROM legend WHERE streamer_id=?)", streamerId).Scan(&res.Time, &res.Count, &viewers)
+	res.Viewers = int(viewers.Int64)
+	return res
 }
 
 func GetDayTopChatFire(streamerId string, mariaDB *db.MariaDB) models.ChatFireResponse {
@@ -56,7 +60,9 @@ func GetDayTopChatFire(streamerId string, mariaDB *db.MariaDB) models.ChatFireRe
 		}(rows)
 		for rows.Next() {
 			var chatFire models.ChatFire
-			_ = rows.Scan(&chatFire.Id, &chatFire.StreamerId, &chatFire.Date, &chatFire.Count)
+			var viewers sql.NullInt64
+			_ = rows.Scan(&chatFire.Id, &chatFire.StreamerId, &chatFire.Date, &chatFire.Count, &viewers)
+			chatFire.Viewers = int(viewers.Int64)
 			if chatFire.Count >= dayTopChatFire.Count {
 				dayTopChatFire = chatFire
 			}
@@ -79,14 +85,18 @@ func GetChatFireByInterval(streamerId string, interval int, mariaDB *db.MariaDB)
 	aDayAgo := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute()/interval*interval, 0, 0, time.Now().Location()).Add(time.Duration(-1) * time.Hour * 24)
 	for i := range res {
 		res[i].Time = aDayAgo.Add(time.Minute * time.Duration(i*interval)).UTC().String()
+		var divCount int = 0
 		for _, chatFire := range chatFireList {
 			chatFireTime, _ := utils.ParseTime(chatFire.Date)
 			chatFire.Date = time.Date(chatFireTime.Year(), chatFireTime.Month(), chatFireTime.Day(), chatFireTime.Hour(), (chatFireTime.Minute()/interval)*interval, chatFireTime.Second(), chatFireTime.Nanosecond(), chatFireTime.Location()).String()
 			if res[i].Time == chatFire.Date {
 				res[i].Count += chatFire.Count
+				res[i].Viewers += chatFire.Viewers
+				divCount += 1
 			}
 		}
-		res[i].Count /= interval
+		res[i].Count /= divCount
+		res[i].Viewers /= divCount
 	}
 	return res
 }
