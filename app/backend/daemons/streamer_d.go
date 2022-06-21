@@ -76,7 +76,7 @@ func getImageUrl(streamerId string) string {
 	return userInfo.Data[0].ProfileImageURL
 }
 
-func UpdateStreamerTable(mariaDB *db.MariaDB) {
+func UpdateStreamerTable(mariaDB *db.MariaDB, redis *db.RedisDB) {
 	for {
 		start := time.Now()
 		(func() {
@@ -100,6 +100,7 @@ func UpdateStreamerTable(mariaDB *db.MariaDB) {
 					onAir, viewers := getOnAirAndViewers(streamerId)
 					followers := getFollowers(streamerId)
 					imageUrl := getImageUrl(streamerId)
+					redis.Set("streamer:viewers:"+streamerId, viewers, 2*time.Minute)
 					(func() {
 						res, _ := mariaDB.Query("UPDATE streamer SET image_url=?, on_air=?, viewers=?, followers=? WHERE streamer_id=?", imageUrl, onAir, viewers, followers, streamerId)
 						defer func(res *sql.Rows) {
