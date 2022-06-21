@@ -20,5 +20,11 @@ jobs:
           script: |
             cd /home/ubuntu/tchatong
             docker-compose down
+            git restore .
+            git pull
+            sed -i '' 's/npm run dev/npm run build \&\& npm start/' docker-compose.yaml
+            sed -i '' 's/# //g' docker-compose.yaml
+            sed -i '' 's/# //' ./app/proxy/srcs/nginx.conf
+            sed -i '' 's/gin.DebugMode/gin.ReleaseMode/g' ./app/backend/main.go
             sudo chmod -R 777 /home/ubuntu/tchatong/app/db/data
             docker-compose up -d --build
