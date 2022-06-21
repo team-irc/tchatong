@@ -22,9 +22,9 @@ jobs:
             docker-compose down
             git restore .
             git pull
-            sed -i '' 's/npm run dev/npm run build \&\& npm start/' docker-compose.yaml
-            sed -i '' 's/# //g' docker-compose.yaml
-            sed -i '' 's/# //' ./app/proxy/srcs/nginx.conf
-            sed -i '' 's/gin.DebugMode/gin.ReleaseMode/g' ./app/backend/main.go
+            sed -i 'docker-compose.yaml' -e 's/npm run dev/npm run build \&\& npm start/'
+            sed -i 'docker-compose.yaml' -e 's/# //g'
+            sed -i './app/proxy/srcs/nginx.conf' -e 's/# //'
+            sed -i './app/backend/main.go' -e 's/gin.DebugMode/gin.ReleaseMode/g'
             sudo chmod -R 777 /home/ubuntu/tchatong/app/db/data
             docker-compose up -d --build
