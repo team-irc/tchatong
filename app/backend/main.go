@@ -25,7 +25,7 @@ func init() {
 	routers.SetChatFireRouter(chatFireRouter, mariaDB, redisDB)
 	routers.SetTopWordRouter(topWordRouter, mariaDB)
 	routers.SetVideoRouter(videoRouter)
-	go daemons.UpdateStreamerTable(mariaDB)
+	go daemons.UpdateStreamerTable(mariaDB, redisDB)
 	go daemons.UpdateLegendTable(mariaDB)
 	go daemons.CrawlFromChannels(mariaDB, bigQueryDB)
 }

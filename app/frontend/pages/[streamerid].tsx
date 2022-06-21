@@ -67,8 +67,9 @@ type CandleType =
   | "oneHourCandle";
 
 interface ChartData {
-  count: number;
   time: string;
+  count: number;
+  viewers: number;
 }
 
 const StatisticsCard: FC<{

@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS chatfire(
   `id`                  INT          NOT NULL auto_increment PRIMARY KEY,
   `streamer_id`         VARCHAR(32),
   `date`                TIMESTAMP    NOT NULL,
-  `count`               INT
+  `count`               INT,
+  `viewers`             INT
 );
 
 CREATE TABLE IF NOT EXISTS legend(
