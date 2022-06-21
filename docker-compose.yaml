@@ -9,7 +9,7 @@ services:
     volumes:
       - ./app/frontend:/frontend
     entrypoint: >
-        sh -c "npm ci && npm dev"
+        sh -c "npm ci && npm run dev"
   backend:
     container_name: backend
     image: golang:1.18.2-buster
