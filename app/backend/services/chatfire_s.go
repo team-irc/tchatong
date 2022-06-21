@@ -95,8 +95,10 @@ func GetChatFireByInterval(streamerId string, interval int, mariaDB *db.MariaDB)
 				divCount += 1
 			}
 		}
-		res[i].Count /= divCount
-		res[i].Viewers /= divCount
+		if divCount != 0 {
+			res[i].Count /= divCount
+			res[i].Viewers /= divCount
+		}
 	}
 	return res
 }
