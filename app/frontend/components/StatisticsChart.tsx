@@ -5,8 +5,9 @@ import dynamic from "next/dynamic";
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
 interface ChartData {
-  count: number;
   time: string;
+  count: number;
+  viewers: number;
 }
 
 interface StatisticsChartProps {
@@ -21,6 +22,13 @@ function chatFireToSeries(chatFire: ChartData[]) {
       data: chatFire.map((el) => {
         const localTime = new Date(el.time).getTime() + 9 * 60 * 60 * 1000;
         return [new Date(localTime).toISOString(), el.count];
+      }),
+    },
+    {
+      name: "평균 시청자 수👨",
+      data: chatFire.map((el) => {
+        const localTime = new Date(el.time).getTime() + 9 * 60 * 60 * 1000;
+        return [new Date(localTime).toISOString(), el.viewers];
       }),
     },
   ];
@@ -56,7 +64,7 @@ const StatisticsChart: FC<StatisticsChartProps> = ({
         },
       },
     },
-    colors: ["#8958d8"],
+    colors: ["#8958d8","#3B64A1"],
     stroke: {
       width: 3,
     },
@@ -81,9 +89,18 @@ const StatisticsChart: FC<StatisticsChartProps> = ({
     xaxis: {
       type: "datetime",
     },
-    yaxis: {
+    yaxis: [{
+      title: {
+        text: "평균 채팅 화력🔥"
+      },
       forceNiceScale: true,
-    },
+    }, {
+      title: {
+        text: "평균 시청자 수👨"
+      },
+      opposite: true,
+      forceNiceScale: true,
+    }]
   };
   const brush: ApexOptions = {
     chart: {
@@ -100,7 +117,7 @@ const StatisticsChart: FC<StatisticsChartProps> = ({
         },
       },
     },
-    colors: ["#8958d8"],
+    colors: ["#8958d8", "#3B64A1"],
     fill: {
       type: "gradient",
       gradient: {
@@ -114,9 +131,18 @@ const StatisticsChart: FC<StatisticsChartProps> = ({
         enabled: false,
       },
     },
-    yaxis: {
-      tickAmount: 2,
-    },
+    yaxis: [{
+      title: {
+        text: "평균 채팅 화력🔥"
+      },
+      forceNiceScale: true,
+    }, {
+      title: {
+        text: "평균 시청자 수👨"
+      },
+      opposite: true,
+      forceNiceScale: true,
+    }]
   };
   const [series, setSeries] = useState(chatFireToSeries(data));
 
