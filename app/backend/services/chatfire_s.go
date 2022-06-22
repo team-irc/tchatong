@@ -73,10 +73,11 @@ func GetDayTopChatFire(streamerId string, mariaDB *db.MariaDB) models.ChatFireRe
 
 func GetCurrentChatFire(streamerId string, mariaDB *db.MariaDB) models.ChatFireResponse {
 	var chatFire models.ChatFire
+	var viewers sql.NullInt64
 
 	aMinuteAgo := time.Now().Add(time.Duration(-1) * time.Minute).Truncate(time.Minute)
-	_ = mariaDB.QueryRow("SELECT * FROM chatfire WHERE streamer_id=? AND date=?", streamerId, aMinuteAgo).Scan(&chatFire.Id, &chatFire.StreamerId, &chatFire.Date, &chatFire.Count)
-	return models.ChatFireResponse{Time: chatFire.Date, Count: chatFire.Count}
+	_ = mariaDB.QueryRow("SELECT * FROM chatfire WHERE streamer_id=? AND date=?", streamerId, aMinuteAgo).Scan(&chatFire.Id, &chatFire.StreamerId, &chatFire.Date, &chatFire.Count, &viewers)
+	return models.ChatFireResponse{Time: chatFire.Date, Count: chatFire.Count, Viewers: int(viewers.Int64)}
 }
 
 func GetChatFireByInterval(streamerId string, interval int, mariaDB *db.MariaDB) []models.ChatFireResponse {
