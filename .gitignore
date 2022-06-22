@@ -8,6 +8,7 @@ twicyrc
 docker.env
 init_db.sql
 app/db/data
+app/redis/data
 ssl/
 .frontend_init/
 .backend_init/
