@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/gempir/go-twitch-irc/v3"
+	"github.com/gin-gonic/gin"
 	"log"
 	"tchatong.info/db"
 	"tchatong.info/models"
@@ -55,7 +56,9 @@ func crawlFromChannel(channel string, mariaDB *db.MariaDB, bigQueryDB *db.BigQue
 		if len(message.Message) >= 256 {
 			return
 		}
-		bigQueryDB.InsertRow(models.ChatLog{StreamerId: message.RoomID, StreamerLogin: message.Channel, Date: time.Now().UTC(), Content: message.Message})
+		if gin.Mode() == gin.ReleaseMode {
+			bigQueryDB.InsertRow(models.ChatLog{StreamerId: message.RoomID, StreamerLogin: message.Channel, Date: time.Now().UTC(), Content: message.Message})
+		}
 		conn, err := mariaDB.Query("INSERT INTO chatlog VALUES (?, ?, ?)", message.RoomID, time.Now().UTC(), message.Message)
 		defer func(conn *sql.Rows) {
 			err := conn.Close()
