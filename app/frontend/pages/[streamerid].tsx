@@ -1,4 +1,5 @@
 import { CSSProperties, FC, useEffect, useState } from "react";
+import Head from 'next/head'
 import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
 import { Box, Card, MenuItem, Select, Badge } from "@mui/material";
@@ -189,7 +190,11 @@ const Statistics = (): JSX.Element => {
   }, [streamerId])
 
   return (
-    <Header>
+    <>
+      <Head>
+        <title>트채통 | {streamerInfo.nick}</title>
+      </Head>
+      <Header>
       <div className={styles.Frame}>
         <Box className={styles.StreamerInfo}>
           <Badge {...(badgeProps as any)}>
@@ -291,6 +296,7 @@ const Statistics = (): JSX.Element => {
         </Box>
       </div>
     </Header>
+    </>
   );
 };
 
