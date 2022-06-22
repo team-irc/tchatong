@@ -19,7 +19,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/team-irc/twitch-chat-analyzer">
+  <a href="https://github.com/team-irc/tchatong">
     <img src="images/logo.png" alt="Logo" width="400" height="200">
   </a>
 
@@ -28,9 +28,9 @@
   <p align="center">
     <a href="https://tchatong.info">Goto Service</a>
     ·
-    <a href="https://github.com/team-irc/twitch-chat-analyzer/issues">Report Bug</a>
+    <a href="https://github.com/team-irc/tchatong/issues">Report Bug</a>
     ·
-    <a href="https://github.com/team-irc/twitch-chat-analyzer/issues">Request Feature</a>
+    <a href="https://github.com/team-irc/tchatong/issues">Request Feature</a>
   </p>
 </div>
 
@@ -64,7 +64,7 @@
 ## About The Project
 
 [![Product Name Screen Shot][product-screenshot]](https://tchatong.info)
-![server](https://github.com/team-irc/twitch-chat-analyzer/blob/main/images/server.png)
+![server](https://github.com/team-irc/tchatong/blob/main/images/server.png)
 
 트채통은 인터넷 방송 플랫폼 "트위치"의 채팅로그를 분석, 시각화하여 보여주는 서비스 입니다.  
 
@@ -189,14 +189,14 @@ HanGyeolN - ghnruf@gmail.com
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/team-irc/twitch-chat-analyzer.svg?style=for-the-badge
-[contributors-url]: https://github.com/team-irc/twitch-chat-analyzer/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/team-irc/twitch-chat-analyzer.svg?style=for-the-badge
-[forks-url]: https://github.com/team-irc/twitch-chat-analyzer/network/members
-[stars-shield]: https://img.shields.io/github/stars/team-irc/twitch-chat-analyzer.svg?style=for-the-badge
-[stars-url]: https://github.com/team-irc/twitch-chat-analyzer/stargazers
-[issues-shield]: https://img.shields.io/github/issues/team-irc/twitch-chat-analyzer.svg?style=for-the-badge
-[issues-url]: https://github.com/team-irc/twitch-chat-analyzer/issues
-[license-shield]: https://img.shields.io/github/license/team-irc/twitch-chat-analyzer.svg?style=for-the-badge
-[license-url]: https://github.com/team-irc/twitch-chat-analyzer/blob/develop/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/team-irc/tchatong.svg?style=for-the-badge
+[contributors-url]: https://github.com/team-irc/tchatong/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/team-irc/tchatong.svg?style=for-the-badge
+[forks-url]: https://github.com/team-irc/tchatong/network/members
+[stars-shield]: https://img.shields.io/github/stars/team-irc/tchatong.svg?style=for-the-badge
+[stars-url]: https://github.com/team-irc/tchatong/stargazers
+[issues-shield]: https://img.shields.io/github/issues/team-irc/tchatong.svg?style=for-the-badge
+[issues-url]: https://github.com/team-irc/tchatong/issues
+[license-shield]: https://img.shields.io/github/license/team-irc/tchatong.svg?style=for-the-badge
+[license-url]: https://github.com/team-irc/tchatong/blob/develop/LICENSE.txt
 [product-screenshot]: images/screenshot.png
