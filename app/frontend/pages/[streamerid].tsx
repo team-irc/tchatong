@@ -2,7 +2,7 @@ import { CSSProperties, FC, useEffect, useState } from "react";
 import Head from 'next/head'
 import Header from "../layout/header";
 import styles from "../styles/Statistics.module.css";
-import { Box, Card, MenuItem, Select, Badge } from "@mui/material";
+import { Box, Card, MenuItem, Select, Badge, CircularProgress } from "@mui/material";
 import MostUsedTable from "../components/MostUsedTable";
 import useBadge from "../components/hooks/useBadge";
 import StatisticsChart from "../components/StatisticsChart";
@@ -109,6 +109,7 @@ const StatisticsCard: FC<{
 
 const Statistics = (): JSX.Element => {
   const router = useRouter();
+  const [isReady, setIsReady] = useState(false);
   const [streamerInfo, setStreamerInfo] = useState<Streamer>({
     followers: 0,
     id: 0,
@@ -137,165 +138,169 @@ const Statistics = (): JSX.Element => {
     }
   }, [router.isReady, router.query.streamerid]);
 
-  // set streamer info
   useEffect(() => {
     if (streamerId) {
-      fetch(`${window.origin}/api/streamer/${streamerId}`)
-        .then(res => res.json())
-        .then(res => setStreamerInfo(res))
+      setIsReady(false);
+      Promise.all([
+        // get streamer info
+        fetch(`${window.origin}/api/streamer/${streamerId}`)
+          .then(res => res.json())
+          .then(res => setStreamerInfo(res)),
+        // get chat fire chart data
+        fetch(`${window.origin}/api/chat-fire/${streamerId}/1`)
+          .then(res => res.json())
+          .then(res => setOneMinuteCandle(res)),
+        fetch(`${window.origin}/api/chat-fire/${streamerId}/5`)
+          .then(res => res.json())
+          .then(res => setFiveMinuteCandle(res)),
+        fetch(`${window.origin}/api/chat-fire/${streamerId}/10`)
+          .then(res => res.json())
+          .then(res => setTenMinuteCandle(res)),
+        fetch(`${window.origin}/api/chat-fire/${streamerId}/60`)
+          .then(res => res.json())
+          .then(res => setOneHourCandle(res)),
+        // get current, day top, entire top chat fire
+        fetch(`${window.origin}/api/chat-fire/${streamerId}`)
+          .then(res => res.json())
+          .then(res => setCurrentChatFire(res.count)),
+        fetch(`${window.origin}/api/chat-fire/day-top/${streamerId}`)
+          .then(res => res.json())
+          .then(res => setDayTopChatFire(res.count)),
+        fetch(`${window.origin}/api/chat-fire/entire-top/${streamerId}`)
+          .then(res => res.json())
+          .then(res => setEntireTopChatFire(res.count)),
+        // get most used word
+        fetch(`${window.origin}/api/top-word/${streamerId}`)
+          .then(res => res.json())
+          .then(res => Object.keys(res).map((key) => res[key]))
+          .then(res => res.slice(3))
+          .then(res => setMostUsedWord(res))
+      ]).then(() => setIsReady(true));
     }
   }, [streamerId]);
 
-  // set chat fire chart data
-  useEffect(() => {
-    if (streamerId) {
-      fetch(`${window.origin}/api/chat-fire/${streamerId}/1`)
-        .then(res => res.json())
-        .then(res => setOneMinuteCandle(res))
-      fetch(`${window.origin}/api/chat-fire/${streamerId}/5`)
-        .then(res => res.json())
-        .then(res => setFiveMinuteCandle(res))
-      fetch(`${window.origin}/api/chat-fire/${streamerId}/10`)
-        .then(res => res.json())
-        .then(res => setTenMinuteCandle(res))
-      fetch(`${window.origin}/api/chat-fire/${streamerId}/60`)
-        .then(res => res.json())
-        .then(res => setOneHourCandle(res))
-    }
-  }, [streamerId]);
-
-  // set current, day top, entire top chat fire
-  useEffect(() => {
-    if (streamerId) {
-      fetch(`${window.origin}/api/chat-fire/${streamerId}`)
-        .then(res => res.json())
-        .then(res => setCurrentChatFire(res.count))
-      fetch(`${window.origin}/api/chat-fire/day-top/${streamerId}`)
-        .then(res => res.json())
-        .then(res => setDayTopChatFire(res.count))
-      fetch(`${window.origin}/api/chat-fire/entire-top/${streamerId}`)
-        .then(res => res.json())
-        .then(res => setEntireTopChatFire(res.count))
-    }
-  }, [streamerId]);
-
-  useEffect(() => {
-    if (streamerId) {
-      fetch(`${window.origin}/api/top-word/${streamerId}`)
-        .then(res => res.json())
-        .then(res => Object.keys(res).map((key) => res[key]))
-        .then(res => res.slice(3))
-        .then(res => setMostUsedWord(res))
-    }
-  }, [streamerId])
-
+  if (!isReady) {
+    return (
+      <>
+        <Head>
+          <title>트채통 | 로딩중...</title>
+        </Head>
+        <Header>
+          <div className={styles.Loading}>
+            <CircularProgress size="4rem"/>
+            <span>잠시만 기다려주세요</span>
+          </div>
+        </Header>
+      </>
+    );
+  }
   return (
     <>
       <Head>
         <title>트채통 | {streamerInfo.nick}</title>
       </Head>
       <Header>
-      <div className={styles.Frame}>
-        <Box className={styles.StreamerInfo}>
-          <Badge {...(badgeProps as any)}>
-            <img
-              src={streamerInfo.imageUrl}
-              className={styles.StreamerImg}
-              alt="streamer avatar image"
-            />
-          </Badge>
-          <span className={styles.StreamerInfoText}>
-            <a
-              href={`https://www.twitch.tv/${streamerInfo.streamerLogin}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.StreamerNick}
-            >
-              {streamerInfo.nick}
-            </a>
-            <br />
-            <span className={styles.StreamerFollowers}>
-              팔로워: {numberWithCommas(streamerInfo.followers)}명
-            </span>
-            <br />
-            <span className={styles.StreamerCurrentViewers}>
-              현재 시청자 수: {numberWithCommas(streamerInfo.viewers)}명
-            </span>
-          </span>
-          <div className={styles.NeonWrapper} style={onAirWrapper}>
-            <div
-              className={styles.NeonWrapper}
-              style={streamerInfo.onAir ? onAirNeonWrapper : offAirNeonWrapper}
-            >
-              <div
-                className={styles.NeonText}
-                style={streamerInfo.onAir ? onAirNeonText : offAirNeonText}
+        <div className={styles.Frame}>
+          <Box className={styles.StreamerInfo}>
+            <Badge {...(badgeProps as any)}>
+              <img
+                src={streamerInfo.imageUrl}
+                className={styles.StreamerImg}
+                alt="streamer avatar image"
+              />
+            </Badge>
+            <span className={styles.StreamerInfoText}>
+              <a
+                href={`https://www.twitch.tv/${streamerInfo.streamerLogin}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.StreamerNick}
               >
-                ON AIR
+                {streamerInfo.nick}
+              </a>
+              <br />
+              <span className={styles.StreamerFollowers}>
+                팔로워: {numberWithCommas(streamerInfo.followers)}명
+              </span>
+              <br />
+              <span className={styles.StreamerCurrentViewers}>
+                현재 시청자 수: {numberWithCommas(streamerInfo.viewers)}명
+              </span>
+            </span>
+            <div className={styles.NeonWrapper} style={onAirWrapper}>
+              <div
+                className={styles.NeonWrapper}
+                style={streamerInfo.onAir ? onAirNeonWrapper : offAirNeonWrapper}
+              >
+                <div
+                  className={styles.NeonText}
+                  style={streamerInfo.onAir ? onAirNeonText : offAirNeonText}
+                >
+                  ON AIR
+                </div>
               </div>
             </div>
-          </div>
-        </Box>
-        <Box style={{ width: "100%" }}>
-          <Box
-            style={{
-              width: "100%",
-              display: "flex",
-              alignItems: "flex-end",
-            }}
-          >
-            <span style={{ color: "rgba(0,0,0,0.5)" }}>
-              &#8251;차트 클릭 시 다시보기로 연결됩니다.
-            </span>
-            <Select
-              value={candleType}
-              onChange={(e) => setCandleType(e.target.value as CandleType)}
-              style={{ marginLeft: "auto" }}
-            >
-              <MenuItem value={"oneMinuteCandle"}>1분</MenuItem>
-              <MenuItem value={"fiveMinuteCandle"}>5분</MenuItem>
-              <MenuItem value={"tenMinuteCandle"}>10분</MenuItem>
-              <MenuItem value={"oneHourCandle"}>1시간</MenuItem>
-            </Select>
           </Box>
-          <StatisticsChart
-            data={(() => {
-              switch (candleType) {
-                case "oneMinuteCandle":
-                  return oneMinuteCandle;
-                case "fiveMinuteCandle":
-                  return fiveMinuteCandle;
-                case "tenMinuteCandle":
-                  return tenMinuteCandle;
-                case "oneHourCandle":
-                  return oneHourCandle;
-              }
-            })()}
-            streamerId={streamerInfo.streamerId}
-          />
-          <Box className={styles.TableBox}>
-            <MostUsedTable rows={mostUsedWord} />
-            <Box className={styles.CardList}>
-              <StatisticsCard
-                head="현재 채팅 화력🔥"
-                body={`분당 ${currentChatFire}회`}
-                className={styles.CardItem}
-              />
-              <StatisticsCard
-                head="금일 최고 채팅 화력🔥"
-                body={`분당 ${dayTopChatFire}회`}
-                className={styles.CardItem}
-              />
-              <StatisticsCard
-                head="역대 최고 채팅 화력🔥"
-                body={`분당 ${entireTopChatFire}회`}
-                className={styles.CardItem}
-              />
+            <Box style={{ width: "100%" }}>
+            <Box
+              style={{
+                width: "100%",
+                display: "flex",
+                alignItems: "flex-end",
+              }}
+            >
+              <span style={{ color: "rgba(0,0,0,0.5)" }}>
+                &#8251;차트 클릭 시 다시보기로 연결됩니다.
+              </span>
+              <Select
+                value={candleType}
+                onChange={(e) => setCandleType(e.target.value as CandleType)}
+                style={{ marginLeft: "auto" }}
+              >
+                <MenuItem value={"oneMinuteCandle"}>1분</MenuItem>
+                <MenuItem value={"fiveMinuteCandle"}>5분</MenuItem>
+                <MenuItem value={"tenMinuteCandle"}>10분</MenuItem>
+                <MenuItem value={"oneHourCandle"}>1시간</MenuItem>
+              </Select>
+            </Box>
+            <StatisticsChart
+              data={(() => {
+                switch (candleType) {
+                  case "oneMinuteCandle":
+                    return oneMinuteCandle;
+                  case "fiveMinuteCandle":
+                    return fiveMinuteCandle;
+                  case "tenMinuteCandle":
+                    return tenMinuteCandle;
+                  case "oneHourCandle":
+                    return oneHourCandle;
+                }
+              })()}
+              streamerId={streamerInfo.streamerId}
+            />
+            <Box className={styles.TableBox}>
+              <MostUsedTable rows={mostUsedWord} />
+              <Box className={styles.CardList}>
+                <StatisticsCard
+                  head="현재 채팅 화력🔥"
+                  body={`분당 ${currentChatFire}회`}
+                  className={styles.CardItem}
+                />
+                <StatisticsCard
+                  head="금일 최고 채팅 화력🔥"
+                  body={`분당 ${dayTopChatFire}회`}
+                  className={styles.CardItem}
+                />
+                <StatisticsCard
+                  head="역대 최고 채팅 화력🔥"
+                  body={`분당 ${entireTopChatFire}회`}
+                  className={styles.CardItem}
+                />
+              </Box>
             </Box>
           </Box>
-        </Box>
-      </div>
-    </Header>
+        </div>
+      </Header>
     </>
   );
 };
