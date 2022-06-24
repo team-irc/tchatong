@@ -1,5 +1,5 @@
 ---
-name: "\b버그 제보"
+name: "버그 제보"
 about: 버그를 알려주시면 큰 힘이 돼요!
 title: "[BUG]"
 labels: bug
