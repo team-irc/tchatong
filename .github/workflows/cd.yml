@@ -18,7 +18,7 @@ jobs:
           key: ${{ secrets.KEY }}
           port: ${{ secrets.PORT }}
           script: |
-            cd /home/ubuntu/tchatong
+            cd /home/tchatong/tchatong
             docker-compose down
             git restore .
             git pull
@@ -26,5 +26,5 @@ jobs:
             sed -i 'docker-compose.yaml' -e 's/# //g'
             sed -i './app/proxy/srcs/nginx.conf' -e 's/# //'
             sed -i './app/backend/main.go' -e 's/gin.DebugMode/gin.ReleaseMode/g'
-            sudo chmod -R 777 /home/ubuntu/tchatong/app/db/data
+            sudo chmod -R 777 /home/tchatong/tchatong/app/db/data
             docker-compose up -d --build
