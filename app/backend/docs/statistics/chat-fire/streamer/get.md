@@ -12,107 +12,107 @@ Content:
 ```json
 [
   {
-    "streamerLogin": "woowakgood",
-    "chatLogCount": 453917
+    "streamerNick": "우왁굳",
+    "chatLogCount": 453977
   },
   {
-    "streamerLogin": "handongsuk",
-    "chatLogCount": 296367
+    "streamerNick": "한동숙",
+    "chatLogCount": 296375
   },
   {
-    "streamerLogin": "hanryang1125",
-    "chatLogCount": 276436
+    "streamerNick": "풍월량",
+    "chatLogCount": 294421
   },
   {
-    "streamerLogin": "viichan6",
-    "chatLogCount": 197075
+    "streamerNick": "비챤",
+    "chatLogCount": 197092
   },
   {
-    "streamerLogin": "vo_ine",
-    "chatLogCount": 181221
+    "streamerNick": "아이네",
+    "chatLogCount": 181227
   },
   {
-    "streamerLogin": "runner0608",
+    "streamerNick": "러너교",
     "chatLogCount": 180596
   },
   {
-    "streamerLogin": "saddummy",
+    "streamerNick": "서새봄냥",
     "chatLogCount": 161471
   },
   {
-    "streamerLogin": "lilpaaaaaa",
-    "chatLogCount": 147966
+    "streamerNick": "릴파",
+    "chatLogCount": 147969
   },
   {
-    "streamerLogin": "cotton__123",
-    "chatLogCount": 147190
+    "streamerNick": "주르르",
+    "chatLogCount": 147197
   },
   {
-    "streamerLogin": "naseongkim",
-    "chatLogCount": 107595
+    "streamerNick": "김나성",
+    "chatLogCount": 109014
   },
   {
-    "streamerLogin": "nokduro",
+    "streamerNick": "녹두로",
     "chatLogCount": 106675
   },
   {
-    "streamerLogin": "kanetv8",
-    "chatLogCount": 95584
+    "streamerNick": "케인",
+    "chatLogCount": 95586
   },
   {
-    "streamerLogin": "zilioner",
+    "streamerNick": "침착맨",
     "chatLogCount": 93459
   },
   {
-    "streamerLogin": "pacific8815",
-    "chatLogCount": 81562
+    "streamerNick": "쌍베",
+    "chatLogCount": 87457
   },
   {
-    "streamerLogin": "jingburger",
-    "chatLogCount": 64657
+    "streamerNick": "연두부",
+    "chatLogCount": 66238
   },
   {
-    "streamerLogin": "xkwhd",
+    "streamerNick": "징버거",
+    "chatLogCount": 64660
+  },
+  {
+    "streamerNick": "피닉스박",
     "chatLogCount": 64516
   },
   {
-    "streamerLogin": "lovelyyeon",
-    "chatLogCount": 64317
+    "streamerNick": "괴물쥐",
+    "chatLogCount": 62559
   },
   {
-    "streamerLogin": "tmxk319",
-    "chatLogCount": 60452
+    "streamerNick": "철면수심",
+    "chatLogCount": 61327
   },
   {
-    "streamerLogin": "109ace",
-    "chatLogCount": 56614
+    "streamerNick": "파카",
+    "chatLogCount": 27993
   },
   {
-    "streamerLogin": "paka9999",
-    "chatLogCount": 22517
+    "streamerNick": "꽃핀",
+    "chatLogCount": 14561
   },
   {
-    "streamerLogin": "cherrypach",
-    "chatLogCount": 14552
+    "streamerNick": "주다사",
+    "chatLogCount": 9779
   },
   {
-    "streamerLogin": "zoodasa",
-    "chatLogCount": 9776
-  },
-  {
-    "streamerLogin": "dopa24",
+    "streamerNick": "도파",
     "chatLogCount": 6107
   },
   {
-    "streamerLogin": "ronaronakr",
+    "streamerNick": "로나로나땅",
     "chatLogCount": 3653
   },
   {
-    "streamerLogin": "gosegugosegu",
-    "chatLogCount": 2583
+    "streamerNick": "고세구",
+    "chatLogCount": 2609
   },
   {
-    "streamerLogin": "aba4647",
+    "streamerNick": "랄로",
     "chatLogCount": 105
   }
 ]

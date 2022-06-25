@@ -6,7 +6,7 @@ import (
 	"tchatong.info/db"
 )
 
-func SetStatisticsRouter(router *gin.RouterGroup, redisDB *db.RedisDB, bigQueryDB *db.BigQuery) {
+func SetStatisticsRouter(router *gin.RouterGroup, mariaDB *db.MariaDB, redisDB *db.RedisDB, bigQueryDB *db.BigQuery) {
 	router.GET("/chat-fire/hour", func(c *gin.Context) { controllers.GetChatfirePerHour(c, redisDB, bigQueryDB) })
-	router.GET("/chat-fire/streamer", func(c *gin.Context) { controllers.GetChatfirePerStreamer(c, redisDB, bigQueryDB) })
+	router.GET("/chat-fire/streamer", func(c *gin.Context) { controllers.GetChatfirePerStreamer(c, mariaDB, redisDB, bigQueryDB) })
 }

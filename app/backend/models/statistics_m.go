@@ -6,6 +6,11 @@ type ChatfirePerHour struct {
 }
 
 type ChatFirePerStreamer struct {
-	StreamerLogin string `json:"streamerLogin" bigquery:"StreamerLogin"`
-	ChatLogCount  int    `json:"chatLogCount" bigquery:"ChatLogCount"`
+	StreamerId   string `bigquery:"StreamerId"`
+	ChatLogCount int    `bigquery:"ChatLogCount"`
+}
+
+type ChatFirePerStreamerResponse struct {
+	StreamerNick string `json:"streamerNick"`
+	ChatLogCount int    `json:"chatLogCount"`
 }

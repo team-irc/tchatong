@@ -40,19 +40,19 @@ func GetChatfirePerHour(bigQueryDB *db.BigQuery) []models.ChatfirePerHour {
 	return ret
 }
 
-func GetChatfirePerStreamer(bigQueryDB *db.BigQuery) []models.ChatFirePerStreamer {
-	var ret = make([]models.ChatFirePerStreamer, 0)
+func GetChatfirePerStreamer(mariaDB *db.MariaDB, bigQueryDB *db.BigQuery) []models.ChatFirePerStreamerResponse {
+	var ret = make([]models.ChatFirePerStreamerResponse, 0)
 	datasetID := os.Getenv("GOOGLE_DATASET_ID")
 	tableID := os.Getenv("GOOGLE_TABLE_ID")
 	iter, err := bigQueryDB.Query(fmt.Sprintf(`
 		SELECT
-		  	StreamerLogin, COUNT(*) AS ChatLogCount
+		  	StreamerId, COUNT(*) AS ChatLogCount
 		FROM
 		  	%s.%s
 		WHERE
 		 	date BETWEEN TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL -30 DAY) AND TIMESTAMP_ADD(CURRENT_TIMESTAMP(), INTERVAL -1 DAY)
 		GROUP BY
-		  	StreamerLogin
+		  	StreamerId
 		ORDER BY
 			ChatLogCount DESC;
 	`, datasetID, tableID))
@@ -68,7 +68,12 @@ func GetChatfirePerStreamer(bigQueryDB *db.BigQuery) []models.ChatFirePerStreame
 		if err != nil {
 			_ = fmt.Errorf("error iterating through results: %v", err)
 		}
-		ret = append(ret, row)
+		var nick string
+		_ = mariaDB.QueryRow("SELECT nick FROM streamer WHERE streamer_id=?", row.StreamerId).Scan(&nick)
+		ret = append(ret, models.ChatFirePerStreamerResponse{
+			StreamerNick: nick,
+			ChatLogCount: row.ChatLogCount,
+		})
 	}
 	return ret
 }

@@ -12,7 +12,7 @@ interface ChatFireByHour {
 }
 
 interface ChatFireByStreamer {
-  streamerLogin: string;
+  streamerNick: string;
   chatLogCount: number;
 }
 
@@ -51,7 +51,7 @@ const Statistics = () => {
         enabled: false
       },
       xaxis: {
-        categories: chatFireByStreamer.map(el => `${el.streamerLogin}`),
+        categories: chatFireByStreamer.map(el => `${el.streamerNick}`),
       },
     })
   }, [chatFireByStreamer]);

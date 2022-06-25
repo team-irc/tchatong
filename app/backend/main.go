@@ -18,7 +18,7 @@ func init() {
 	gin.SetMode(gin.DebugMode)
 	router = gin.Default()
 	routers.SetStreamerRouter(router.Group("/streamer"), mariaDB)
-	routers.SetStatisticsRouter(router.Group("/statistics"), redisDB, bigQueryDB)
+	routers.SetStatisticsRouter(router.Group("/statistics"), mariaDB, redisDB, bigQueryDB)
 	routers.SetChatFireRouter(router.Group("/chat-fire"), mariaDB, redisDB)
 	routers.SetTopWordRouter(router.Group("/top-word"), mariaDB)
 	routers.SetVideoRouter(router.Group("/video"))
