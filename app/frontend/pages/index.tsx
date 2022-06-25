@@ -2,11 +2,13 @@ import Image from "next/image";
 import { Badge, Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete from "@mui/material/Autocomplete";
+import BarChartIcon from '@mui/icons-material/BarChart';
 import styles from "../styles/Home.module.css";
 import useAutoComplete from "../components/hooks/useAutoComplete";
 import useBadge from "../components/hooks/useBadge";
 import { FC, HTMLAttributes } from "react";
 import { Streamer } from "../interfaces/streamer";
+import Link from "next/link";
 
 const AutoCompleteList: FC<{
   props: HTMLAttributes<HTMLLIElement>,
@@ -62,6 +64,12 @@ const Home = () => {
             />
           </Box>
         </Box>
+        <Link href="/statistics">
+          <div className={styles.StatisticsButtonLink}>
+            <BarChartIcon />
+            종합 통계 보기
+          </div>
+        </Link>
       </main>
     </>
   );
