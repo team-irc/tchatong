@@ -37,3 +37,8 @@ func (bigQuery BigQuery) InsertRow(item models.ChatLog) {
 		_ = fmt.Errorf(err.Error())
 	}
 }
+
+func (bigQuery BigQuery) Query(query string) (*bigquery.RowIterator, error) {
+	q := bigQuery.client.Query(query)
+	return q.Read(context.Background())
+}
