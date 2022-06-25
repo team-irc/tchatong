@@ -7,6 +7,9 @@
 * /streamer
   * <a href="./docs/streamer/get.md">GET /</a>
   * <a href="./docs/streamer/streamerId/get.md">GET /:streamerId</a>
+* /statistics
+  * <a href="./docs/statistics/chat-fire/hour/get.md">GET /chat-fire/hour</a>
+  * <a href="./docs/statistics/chat-fire/streamer/get.md">GET /chat-fire/streamer</a>
 * /chat-fire
   * <a href="./docs/chat-fire/streamerId/get.md">GET /:streamerId</a>
   * <a href="./docs/chat-fire/streamerId/interval/get.md">GET /:streamerId/:interval</a>
