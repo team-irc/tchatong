@@ -129,7 +129,7 @@ const Statistics = (): JSX.Element => {
   const [currentChatFire, setCurrentChatFire] = useState(0);
   const [dayTopChatFire, setDayTopChatFire] = useState(0);
   const [entireTopChatFire, setEntireTopChatFire] = useState(0);
-  const [mostUsedWord, setMostUsedWord] = useState<string[]>([]);
+  const [mostUsedWord, setMostUsedWord] = useState<{word: string, count: number}[]>([]);
   const badgeProps = useBadge(streamerInfo.onAir, 35, 35);
 
   useEffect(() => {
@@ -173,8 +173,13 @@ const Statistics = (): JSX.Element => {
         fetch(`${window.origin}/api/top-word/${streamerId}`)
           .then(res => res.json())
           .then(res => Object.keys(res).map((key) => res[key]))
-          .then(res => res.slice(3))
-          .then(res => setMostUsedWord(res))
+          .then(res => res.slice(2))
+          .then(res => res.map((el, idx) => {
+            if (idx % 2 === 1) {
+              return {word: el as string, count: res[idx + 1] as number}
+            }
+          }).filter(Boolean))
+          .then(res => setMostUsedWord(res as {count: number, word: string}[]))
       ]).then(() => setIsReady(true));
     }
   }, [streamerId]);

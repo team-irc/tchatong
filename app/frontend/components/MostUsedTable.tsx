@@ -29,16 +29,14 @@ const StyledTableRow = styled(TableRow)({
 });
 
 interface MostUsedTableProps {
-  rows: string[];
+  rows: {
+    word: string,
+    count: number
+  }[];
 }
 
 const MostUsedTable: FC<MostUsedTableProps> = ({ rows }) => {
-  if (
-    rows?.reduce((acc, cur) => {
-      if (cur !== "") acc.push(cur);
-      return acc;
-    }, [] as string[]).length === 0
-  )
+  if (rows.length === 0)
     return <></>;
   return (
     <TableContainer component={Paper}>
@@ -47,19 +45,19 @@ const MostUsedTable: FC<MostUsedTableProps> = ({ rows }) => {
           <StyledTableRow>
             <StyledTableCell>순위</StyledTableCell>
             <StyledTableCell>주로 쓰인 단어들</StyledTableCell>
-            {/*<StyledTableCell align="right">사용횟수</StyledTableCell>*/}
+            <StyledTableCell>사용횟수</StyledTableCell>
           </StyledTableRow>
         </TableHead>
         <TableBody>
           {rows.map((row, idx) => (
-            <StyledTableRow key={row}>
+            <StyledTableRow key={idx}>
               <TableCell component="th" scope="row">
                 {idx + 1}
               </TableCell>
               <TableCell component="th" scope="row">
-                {row}
+                {row.word}
               </TableCell>
-              {/*<TableCell align="right">{row.count}</TableCell>*/}
+              <TableCell>{row.count}</TableCell>
             </StyledTableRow>
           ))}
         </TableBody>
