@@ -36,7 +36,9 @@ func GetTopWord(streamerId string, mariaDB *db.MariaDB) models.TopWord {
 				FROM
 					topword
 				WHERE
-					streamer_id=?`, streamerId).Scan(
+					streamer_id=?
+				ORDER BY
+					date DESC`, streamerId).Scan(
 		&topWord.Id,
 		&topWord.StreamerId,
 		&topWord.Date,
