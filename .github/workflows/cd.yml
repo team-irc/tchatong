@@ -19,7 +19,7 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd ~/goinfre/tchatong
-            docker-compose down
+            sudo docker-compose down
             git restore .
             git pull
             sed -i 'docker-compose.yaml' -e 's/npm run dev/npm run build \&\& npm start/'
@@ -27,4 +27,4 @@ jobs:
             sed -i './app/proxy/srcs/nginx.conf' -e 's/# //'
             sed -i './app/backend/main.go' -e 's/gin.DebugMode/gin.ReleaseMode/g'
             sudo chmod -R 777 ./app/db/data
-            docker-compose up -d --build
+            sudo docker-compose up -d --build
