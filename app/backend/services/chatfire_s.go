@@ -3,6 +3,7 @@ package services
 import (
 	"database/sql"
 	"fmt"
+	"strings"
 	"tchatong.info/db"
 	"tchatong.info/models"
 	"tchatong.info/utils"
@@ -81,15 +82,16 @@ func GetCurrentChatFire(streamerId string, mariaDB *db.MariaDB) models.ChatFireR
 }
 
 func GetChatFireByInterval(streamerId string, interval int, mariaDB *db.MariaDB) []models.ChatFireResponse {
+	loc, _ := time.LoadLocation("Asia/Seoul")
 	chatFireList := getChatFireList(streamerId, mariaDB)
 	res := make([]models.ChatFireResponse, 60/interval*24+1)
-	aDayAgo := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute()/interval*interval, 0, 0, time.Now().Location()).Add(time.Duration(-1) * time.Hour * 24)
+	aDayAgo := time.Date(time.Now().Year(), time.Now().Month(), time.Now().Day(), time.Now().Hour(), time.Now().Minute()/interval*interval, 0, 0, time.Now().Location()).Add(time.Duration(-1) * time.Hour * 24).In(loc)
 	for i := range res {
-		res[i].Time = aDayAgo.Add(time.Minute * time.Duration(i*interval)).UTC().String()
-		var divCount int = 0
+		res[i].Time = aDayAgo.Add(time.Minute * time.Duration(i*interval)).String()
+		var divCount = 0
 		for _, chatFire := range chatFireList {
 			chatFireTime, _ := utils.ParseTime(chatFire.Date)
-			chatFire.Date = time.Date(chatFireTime.Year(), chatFireTime.Month(), chatFireTime.Day(), chatFireTime.Hour(), (chatFireTime.Minute()/interval)*interval, chatFireTime.Second(), chatFireTime.Nanosecond(), chatFireTime.Location()).String()
+			chatFire.Date = time.Date(chatFireTime.Year(), chatFireTime.Month(), chatFireTime.Day(), chatFireTime.Hour(), (chatFireTime.Minute()/interval)*interval, chatFireTime.Second(), chatFireTime.Nanosecond(), chatFireTime.Location()).In(loc).String()
 			if res[i].Time == chatFire.Date {
 				res[i].Count += chatFire.Count
 				res[i].Viewers += chatFire.Viewers
@@ -100,6 +102,7 @@ func GetChatFireByInterval(streamerId string, interval int, mariaDB *db.MariaDB)
 			res[i].Count /= divCount
 			res[i].Viewers /= divCount
 		}
+		res[i].Time = strings.Replace(res[i].Time[0:19], " ", "T", 1)
 	}
 	return res
 }
