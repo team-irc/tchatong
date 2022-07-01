@@ -3,6 +3,22 @@ on:
   pull_request:
     branches: [ "main" ]
 jobs:
+  lighthouseci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: 17
+      - name: npm install
+        working-directory: ./app/frontend
+        run: npm install && npm install -g @lhci/cli@0.8.x
+      - name: npm build
+        working-directory: ./app/frontend
+        run: npm run build
+      - name: lighthouse
+        working-directory: ./app/frontend
+        run: lhci autorun
   build-frontend:
     runs-on: ubuntu-latest
     steps:
