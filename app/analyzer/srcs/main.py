@@ -20,7 +20,7 @@ TOPWORD_FETCH_MAX = 10000
 CHATFIRE_UPDATE_PERIOD: int = 30
 # TOPWORD가 1일마다 갱신되도록
 TOPWORD_REFRESH_PERIOD = 2880 # 분당 2씩 증가 => 2 * 60(1시간) * 24(1일) = 2880
-CHATLOG_DELETE_PERIOD = 5760
+DELETE_OUTDATED_PERIOD = 5760
 
 
 def get_last_date_from_chatfire(cursor: Cursor) -> tuple:
@@ -156,10 +156,9 @@ def connect_redis():
 	global rd
 	rd = redis.Redis(host=os.getenv("REDIS_HOST"), port=os.getenv("REDIS_PORT"), db=0, charset="utf-8", decode_responses=True)
 
-def delete_chatlog(db, cursor):
-	two_day_ago = datetime.datetime.now() - datetime.timedelta(days=2)
-	sql = f"DELETE FROM chatlog WHERE date <= \'{two_day_ago}\';"
-	cursor.execute(sql)
+def delete_outdated(db, cursor):
+	cursor.execute("DELETE FROM chatlog WHERE date < DATE_ADD(CURRENT_DATE(), INTERVAL -2 DAY)")
+	cursor.execute("DELETE FROM chatfire WHERE date < DATE_ADD(CURRENT_DATE(), INTERVAL -2 DAY)")
 	db.commit()
 
 # 1분당 채팅수 기록
@@ -175,18 +174,18 @@ def	main():
 	# t1.start()
 	refresh_topwords(db, cursor)
 	refresh_topword_counter = 0
-	delete_chatlog_counter = 0
+	delete_outdated_counter = 0
 	while (True):
 		save_chatfire_from_last_date()
 		time.sleep(CHATFIRE_UPDATE_PERIOD)
 		refresh_topword_counter += 1
-		delete_chatlog_counter += 1
+		delete_outdated_counter += 1
 		if (refresh_topword_counter > TOPWORD_REFRESH_PERIOD): #이 부분이 실행되는 동안 chatfire가 갱신되지 않는 문제는 어떻게 해결?? -> refresh_topwords 함수를 비동기로 바꾸던가 해야할듯
 			refresh_topwords(db, cursor)
 			refresh_topword_counter = 0
-		if (delete_chatlog_counter > CHATLOG_DELETE_PERIOD):
-			delete_chatlog(db, cursor)
-			delete_chatlog_counter = 0
+		if (delete_outdated_counter > DELETE_OUTDATED_PERIOD):
+			delete_outdated(db, cursor)
+			delete_outdated_counter = 0
 
 if __name__ == '__main__':
 	main()
