@@ -113,7 +113,7 @@ def save_topword_in_a_day(streamer_id, db, cursor):
 	res = sorted(result.items(), key=lambda x: x[1])
 	if (len(res) > 10):
 		try:
-			sql = f"INSERT INTO topword VALUES (default, '{streamer_id}', '{datetime.datetime.now()}', '{res[-1][0]}', '{res[-1][1]}', '{res[-2][0]}', '{res[-2][1]}', '{res[-3][0]}', '{res[-3][1]}', '{res[-4][0]}', '{res[-4][1]}', '{res[-5][0]}', '{res[-5][1]}', '{res[-6][0]}', '{res[-6][1]}', '{res[-7][0]}', '{res[-7][1]}', '{res[-8][0]}', '{res[-8][1]}', '{res[-9][0]}', '{res[-9][1]}', '{res[-10][0]}', '{res[-1][1]}')"
+			sql = f"INSERT INTO topword VALUES (default, '{streamer_id}', '{datetime.datetime.now()}', '{res[-1][0]}', '{res[-1][1]}', '{res[-2][0]}', '{res[-2][1]}', '{res[-3][0]}', '{res[-3][1]}', '{res[-4][0]}', '{res[-4][1]}', '{res[-5][0]}', '{res[-5][1]}', '{res[-6][0]}', '{res[-6][1]}', '{res[-7][0]}', '{res[-7][1]}', '{res[-8][0]}', '{res[-8][1]}', '{res[-9][0]}', '{res[-9][1]}', '{res[-10][0]}', '{res[-10][1]}')"
 			cursor.execute(sql)
 			db.commit()
 		except:
