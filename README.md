@@ -179,7 +179,22 @@ MIT 라이선스에 따라 배포됩니다. 자세한 내용은 `LICENSE.txt`를
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+<!-- HISTORY -->
+## History
 
+### v1.0.0
+Next.js, Nest.js, GraphQL, MariaDB 등을 사용해 트채통 서비스 구축
+### v2.0.0
+Nest.js + GraphQL로 구현된 백엔드 서버가 느려서
+Golang + RESTful API로 마이그레이션
+### v2.0.1
+redis를 사용해서 API 응답 캐싱
+### v2.1.0
+Google Big Query 서비스를 이용해 종합 통계 기능 추가
+### v2.1.1
+백엔드 서버에서 주는 timestamp를 safari에서 파싱하지 못하는 버그 수정
+### v2.1.2
+top word 카운트 버그 수정
 
 <!-- CONTACT -->
 ## Contact
