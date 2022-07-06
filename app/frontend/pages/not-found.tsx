@@ -3,13 +3,6 @@ import Head from "next/head";
 import SentimentDissatisfiedIcon from '@mui/icons-material/SentimentDissatisfied';
 import { useState } from "react";
 
-interface window {
-  Tawk_API: {
-    maximize: () => void;
-    minimize: () => void;
-  }
-}
-
 const Statistics = () => {
   const [isOpened, setIsOpened] = useState<boolean>(false);
   return (
@@ -24,10 +17,10 @@ const Statistics = () => {
           <button onClick={() => {
             if (!isOpened) {
               setIsOpened(true);
-              (window as window).Tawk_API.maximize();
+              (window as any).Tawk_API.maximize();
             } else {
               setIsOpened(false);
-              (window as window).Tawk_API.minimize();
+              (window as any).Tawk_API.minimize();
             }
           }} style={{
             fontSize: "1rem",
