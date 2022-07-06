@@ -31,13 +31,15 @@ const useAutoComplete = (
 
   const searchButtonOnClick = () => {
     const searchResult = autoCompleteData.filter((streamer) => streamer.nick === textToSearch)
-    router.push(`/${searchResult[0].streamerId}`);
+    if (!searchResult[0]) router.push("/not-found");
+    else router.push(`/${searchResult[0].streamerId}`);
   };
 
   const searchBarKeyDown = (e: any) => {
     if (e.code === "Enter" && e.target.value) {
       const searchResult = autoCompleteData.filter((streamer) => streamer.nick === textToSearch)
-      router.push(`/${searchResult[0].streamerId}`);
+      if (!searchResult[0]) router.push("/not-found");
+      else router.push(`/${searchResult[0].streamerId}`);
     }
   };
 
