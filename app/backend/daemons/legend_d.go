@@ -17,10 +17,14 @@ func updateRow(streamerId string, mariaDB *db.MariaDB) {
 	_ = mariaDB.QueryRow("SELECT count FROM chatfire WHERE id=(SELECT chatfire_id FROM legend WHERE streamer_id=?)", streamerId).Scan(&currentLegend)
 	_ = mariaDB.QueryRow("SELECT count FROM chatfire WHERE id=?", chatFireId).Scan(&newLegend)
 	if newLegend >= currentLegend {
-		res, _ := mariaDB.Query("UPDATE legend SET chatfire_id=?, last_update_date=? WHERE streamer_id=?", chatFireId, time.Now(), streamerId)
-		defer func(res *sql.Rows) {
-			_ = res.Close()
-		}(res)
+		res, err := mariaDB.Query("UPDATE legend SET chatfire_id=?, last_update_date=? WHERE streamer_id=?", chatFireId, time.Now(), streamerId)
+		if err != nil {
+			_ = fmt.Errorf(err.Error())
+		} else {
+			defer func(res *sql.Rows) {
+				_ = res.Close()
+			}(res)
+		}
 	}
 }
 
