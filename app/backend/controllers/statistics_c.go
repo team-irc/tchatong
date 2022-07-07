@@ -33,10 +33,10 @@ func GetChatfirePerStreamer(c *gin.Context, mariaDB *db.MariaDB, redisDB *db.Red
 		_ = json.Unmarshal([]byte(cache), &cachedData)
 		c.JSON(200, cachedData)
 	} else {
-		// 캐시가 없을 시 response와 캐시(1시간 뒤 만료) 생성하고 반환
+		// 캐시가 없을 시 response와 캐시(하루 뒤 만료) 생성하고 반환
 		res := services.GetChatfirePerStreamer(mariaDB, bigQueryDB)
 		b, _ := json.Marshal(res)
-		redisDB.Set("statistics:chatfire:streamer", string(b), time.Hour)
+		redisDB.Set("statistics:chatfire:streamer", string(b), time.Hour * 24)
 		c.JSON(200, res)
 	}
 }
