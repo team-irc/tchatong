@@ -37,7 +37,7 @@ class MyDocument extends Document {
             }}
           />
           {/* Google AdSense */}
-          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2606689224387389" crossorigin="anonymous" />
+          <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2606689224387389" crossOrigin="anonymous" />
           {/* Tawk To */}
           <script
             dangerouslySetInnerHTML={{
