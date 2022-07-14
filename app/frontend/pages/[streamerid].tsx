@@ -6,8 +6,9 @@ import { Box, Card, MenuItem, Select, Badge, CircularProgress } from "@mui/mater
 import MostUsedTable from "../components/MostUsedTable";
 import useBadge from "../components/hooks/useBadge";
 import StatisticsChart from "../components/StatisticsChart";
-import { useRouter } from "next/router";
 import { Streamer } from "../interfaces/streamer";
+import { GetServerSideProps, GetServerSidePropsResult, NextPage } from "next";
+import NotFound from "./not-found";
 
 function numberWithCommas(num: number): string {
   return num?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -107,20 +108,12 @@ const StatisticsCard: FC<{
   );
 };
 
-const Statistics = (): JSX.Element => {
-  const router = useRouter();
+interface Statistics {
+  streamerInfo: Streamer | null;
+}
+
+const Statistics: NextPage<Statistics> = ({ streamerInfo }): JSX.Element => {
   const [isReady, setIsReady] = useState(false);
-  const [streamerInfo, setStreamerInfo] = useState<Streamer>({
-    followers: 0,
-    id: 0,
-    imageUrl: "",
-    nick: "",
-    onAir: false,
-    streamerId: "",
-    streamerLogin: "",
-    viewers: 0
-  });
-  const [streamerId, setStreamerId] = useState<string>("");
   const [candleType, setCandleType] = useState<CandleType>("fiveMinuteCandle");
   const [oneMinuteCandle, setOneMinuteCandle] = useState<ChartData[]>([]);
   const [fiveMinuteCandle, setFiveMinuteCandle] = useState<ChartData[]>([]);
@@ -130,47 +123,37 @@ const Statistics = (): JSX.Element => {
   const [dayTopChatFire, setDayTopChatFire] = useState(0);
   const [entireTopChatFire, setEntireTopChatFire] = useState(0);
   const [mostUsedWord, setMostUsedWord] = useState<{word: string, count: number}[]>([]);
-  const badgeProps = useBadge(streamerInfo.onAir, 35, 35);
+  const badgeProps = useBadge(streamerInfo?.onAir ?? false, 35, 35);
 
   useEffect(() => {
-    if (router.isReady) {
-      setStreamerId(router.query.streamerid as string);
-    }
-  }, [router.isReady, router.query.streamerid]);
-
-  useEffect(() => {
-    if (streamerId) {
+    if (streamerInfo) {
       setIsReady(false);
       Promise.all([
-        // get streamer info
-        fetch(`${window.origin}/api/streamer/${streamerId}`)
-          .then(res => res.json())
-          .then(res => setStreamerInfo(res)),
         // get chat fire chart data
-        fetch(`${window.origin}/api/chat-fire/${streamerId}/1`)
+        fetch(`${window.origin}/api/chat-fire/${streamerInfo.streamerId}/1`)
           .then(res => res.json())
           .then(res => setOneMinuteCandle(res)),
-        fetch(`${window.origin}/api/chat-fire/${streamerId}/5`)
+        fetch(`${window.origin}/api/chat-fire/${streamerInfo.streamerId}/5`)
           .then(res => res.json())
           .then(res => setFiveMinuteCandle(res)),
-        fetch(`${window.origin}/api/chat-fire/${streamerId}/10`)
+        fetch(`${window.origin}/api/chat-fire/${streamerInfo.streamerId}/10`)
           .then(res => res.json())
           .then(res => setTenMinuteCandle(res)),
-        fetch(`${window.origin}/api/chat-fire/${streamerId}/60`)
+        fetch(`${window.origin}/api/chat-fire/${streamerInfo.streamerId}/60`)
           .then(res => res.json())
           .then(res => setOneHourCandle(res)),
         // get current, day top, entire top chat fire
-        fetch(`${window.origin}/api/chat-fire/${streamerId}`)
+        fetch(`${window.origin}/api/chat-fire/${streamerInfo.streamerId}`)
           .then(res => res.json())
           .then(res => setCurrentChatFire(res.count)),
-        fetch(`${window.origin}/api/chat-fire/day-top/${streamerId}`)
+        fetch(`${window.origin}/api/chat-fire/day-top/${streamerInfo.streamerId}`)
           .then(res => res.json())
           .then(res => setDayTopChatFire(res.count)),
-        fetch(`${window.origin}/api/chat-fire/entire-top/${streamerId}`)
+        fetch(`${window.origin}/api/chat-fire/entire-top/${streamerInfo.streamerId}`)
           .then(res => res.json())
           .then(res => setEntireTopChatFire(res.count)),
         // get most used word
-        fetch(`${window.origin}/api/top-word/${streamerId}`)
+        fetch(`${window.origin}/api/top-word/${streamerInfo.streamerId}`)
           .then(res => res.json())
           .then(res => Object.keys(res).map((key) => res[key]))
           .then(res => res.slice(2))
@@ -182,8 +165,9 @@ const Statistics = (): JSX.Element => {
           .then(res => setMostUsedWord(res as {count: number, word: string}[]))
       ]).then(() => setIsReady(true));
     }
-  }, [streamerId]);
+  }, []);
 
+  if (!streamerInfo) return <NotFound />;
   return (
     <>
       <Head>
@@ -299,6 +283,16 @@ const Statistics = (): JSX.Element => {
       </Header>
     </>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async ({ params}): Promise<GetServerSidePropsResult<Statistics>> => {
+  if (params) {
+    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+    const id = params.streamerid;
+    const streamerInfo: Streamer = await (await fetch(`http://proxy/api/streamer/${id}`)).json()
+    return { props: { streamerInfo } }
+  }
+  return { props: { streamerInfo: null } }
 };
 
 export default Statistics;
