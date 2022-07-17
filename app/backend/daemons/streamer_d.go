@@ -60,7 +60,7 @@ func getFollowers(streamerId string) int {
 	return followerInfo.Total
 }
 
-func getImageUrl(streamerId string) string {
+func getImageUrl(streamerId string) (string, error) {
 	var userInfo models.UserInfo
 
 	url := fmt.Sprintf("https://api.twitch.tv/helix/users?id=%s", streamerId)
@@ -73,7 +73,10 @@ func getImageUrl(streamerId string) string {
 	if err != nil {
 		panic(err)
 	}
-	return userInfo.Data[0].ProfileImageURL
+	if len(userInfo.Data) <= 0 {
+		return "", nil
+	}
+	return userInfo.Data[0].ProfileImageURL, nil
 }
 
 func UpdateStreamerTable(mariaDB *db.MariaDB, redis *db.RedisDB) {
@@ -99,7 +102,10 @@ func UpdateStreamerTable(mariaDB *db.MariaDB, redis *db.RedisDB) {
 					defer wg.Done()
 					onAir, viewers := getOnAirAndViewers(streamerId)
 					followers := getFollowers(streamerId)
-					imageUrl := getImageUrl(streamerId)
+					imageUrl, err := getImageUrl(streamerId)
+					if err != nil {
+						return
+					}
 					redis.Set("streamer:viewers:"+streamerId, viewers, 2*time.Minute)
 					(func() {
 						res, _ := mariaDB.Query("UPDATE streamer SET image_url=?, on_air=?, viewers=?, followers=? WHERE streamer_id=?", imageUrl, onAir, viewers, followers, streamerId)
