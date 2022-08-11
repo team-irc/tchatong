@@ -26,8 +26,7 @@
 <h3 align="center">트위치 채팅 통계 서비스</h3>
 
   <p align="center">
-    <a href="https://tchatong.info">Goto Service</a>
-    ·
+    <!-- <a href="https://tchatong.info">Goto Service</a> -->
     <a href="https://github.com/team-irc/tchatong/issues">Report Bug</a>
     ·
     <a href="https://github.com/team-irc/tchatong/issues">Request Feature</a>
